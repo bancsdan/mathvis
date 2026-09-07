@@ -56,6 +56,13 @@ npm run dev      # dev server
 npm run build    # type-check + production build
 ```
 
+## Deploy
+
+Pushing to `main` builds and publishes the site to GitHub Pages via
+[.github/workflows/deploy.yml](.github/workflows/deploy.yml). The Vite `base`
+is set to `/mathvis/` to match the repo name. Live at
+<https://bancsdan.github.io/mathvis/>.
+
 ## Implementation notes
 
 - Dependency-free iterative radix-2 Cooley–Tukey FFT in
