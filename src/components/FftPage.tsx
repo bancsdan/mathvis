@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { AliasingDemo } from './AliasingDemo'
 import { BinExplainer } from './BinExplainer'
 import { LineChart } from './LineChart'
@@ -7,12 +8,12 @@ import { componentSamples, fmt, formulaTex, oneSidedBins, rmsError, sampleFuncti
 import { Tex } from './Tex'
 import { forwardFFT, inverseTopK } from '../lib/fft'
 
-const PRESETS: Array<{ name: string; expr: string }> = [
-  { name: 'Two sines + offset', expr: 'sin(2*pi*3*x) + 0.5*sin(2*pi*7*x) + 0.3' },
-  { name: 'Square wave', expr: 'sign(sin(2*pi*2*x))' },
-  { name: 'Sawtooth', expr: '2*(3*x - floor(3*x + 0.5))' },
-  { name: 'Gaussian pulse', expr: 'exp(-(x - 0.5)^2 / 0.005)' },
-  { name: 'Chirp', expr: 'sin(2*pi*(2 + 20*x)*x)' },
+const PRESETS: Array<{ name: string; expr: string; labelKey: string }> = [
+  { name: 'twoSines', expr: 'sin(2*pi*3*x) + 0.5*sin(2*pi*7*x) + 0.3', labelKey: 'fft.presetTwoSines' },
+  { name: 'square', expr: 'sign(sin(2*pi*2*x))', labelKey: 'fft.presetSquare' },
+  { name: 'saw', expr: '2*(3*x - floor(3*x + 0.5))', labelKey: 'fft.presetSaw' },
+  { name: 'gauss', expr: 'exp(-(x - 0.5)^2 / 0.005)', labelKey: 'fft.presetGauss' },
+  { name: 'chirp', expr: 'sin(2*pi*(2 + 20*x)*x)', labelKey: 'fft.presetChirp' },
 ]
 
 const SIZES = [64, 128, 256, 512, 1024]
@@ -30,6 +31,7 @@ interface Result {
 }
 
 export function FftPage() {
+  const { t } = useTranslation()
   const [expr, setExpr] = useState(PRESETS[0].expr)
   const [n, setN] = useState(256)
   const [period, setPeriod] = useState(1)
@@ -88,17 +90,11 @@ export function FftPage() {
 
   return (
     <>
-      <p className="subtitle lesson-text">
-        The Fourier transform's claim: any repeating signal is secretly a sum of simple waves.
-        This page lets you test the claim. Type a function, and the app measures it at N
-        points, finds which waves hide inside (the FFT), throws away all but the strongest
-        ones, and rebuilds the signal from what's left (the inverse FFT). If the rebuilt curve
-        still matches, a few waves were enough to carry the whole signal.
-      </p>
+      <p className="subtitle lesson-text">{t('fft.subtitle')}</p>
 
       <section className="controls card">
         <label className="field field-wide">
-          <span className="field-label">f(x) over one period</span>
+          <span className="field-label">{t('fft.fxLabel')}</span>
           <input
             type="text"
             value={expr}
@@ -108,7 +104,7 @@ export function FftPage() {
           />
         </label>
         <label className="field">
-          <span className="field-label">Preset</span>
+          <span className="field-label">{t('fft.presetLabel')}</span>
           <select
             value={PRESETS.find((p) => p.expr === expr)?.name ?? ''}
             onChange={(e) => {
@@ -117,15 +113,17 @@ export function FftPage() {
             }}
           >
             <option value="" disabled>
-              Custom
+              {t('fft.customOption')}
             </option>
             {PRESETS.map((p) => (
-              <option key={p.name}>{p.name}</option>
+              <option key={p.name} value={p.name}>
+                {t(p.labelKey)}
+              </option>
             ))}
           </select>
         </label>
         <label className="field">
-          <span className="field-label">Samples N</span>
+          <span className="field-label">{t('fft.samplesLabel')}</span>
           <select value={n} onChange={(e) => setN(Number(e.target.value))}>
             {SIZES.map((s) => (
               <option key={s} value={s}>
@@ -135,18 +133,18 @@ export function FftPage() {
           </select>
         </label>
         <label className="field">
-          <span className="field-label">Window</span>
+          <span className="field-label">{t('fft.windowLabel')}</span>
           <select value={period} onChange={(e) => setPeriod(Number(e.target.value))}>
             {WINDOWS.map((w) => (
               <option key={w} value={w}>
-                {w} period{w === 1 ? '' : 's'}
+                {t('fft.windowOption', { count: w })}
               </option>
             ))}
           </select>
         </label>
         <label className="field field-wide">
           <span className="field-label">
-            Strongest components to keep (zero-amplitude bins are skipped): <strong>{Math.min(keep, maxKeep)}</strong>
+            <Trans i18nKey="fft.keepLabel" components={{ b: <strong /> }} values={{ n: Math.min(keep, maxKeep) }} />
           </span>
           <input
             type="range"
@@ -160,7 +158,7 @@ export function FftPage() {
 
       {result.error && (
         <p className="error" role="alert">
-          Could not evaluate the function: {result.error}
+          {t('fft.errorEval', { msg: result.error })}
         </p>
       )}
 
@@ -168,22 +166,19 @@ export function FftPage() {
         <>
           <section className="card">
             <div className="card-head">
-              <h2>Time domain</h2>
+              <h2>{t('fft.timeTitle')}</h2>
               <div className="legend">
                 <span className="legend-item">
-                  <span className="chip" style={{ background: 'var(--series-1)' }} /> f(x) sampled
+                  <span className="chip" style={{ background: 'var(--series-1)' }} /> {t('fft.legendSampled')}
                 </span>
                 <span className="legend-item">
                   <span className="chip chip-dashed" style={{ background: 'var(--series-2)' }} />{' '}
-                  inverse FFT of {d.kept.size} kept component{d.kept.size === 1 ? '' : 's'}
+                  {t('fft.legendInverse', { count: d.kept.size })}
                 </span>
               </div>
             </div>
             <p className="card-note lesson-text">
-              The blue curve is your function, measured at N points. The dashed orange curve is
-              the rebuilt version — the inverse FFT of only the kept components. Where the two
-              hug each other, those few waves already tell the whole story; drag the
-              "components" slider down and watch the orange curve lose detail first, then shape.
+              {t('fft.timeNote')}
             </p>
             <LineChart
               xs={d.xs}
@@ -191,27 +186,22 @@ export function FftPage() {
               yLabel="f(x)"
               series={[
                 { name: 'f(x)', color: 'var(--series-1)', values: d.samples },
-                { name: 'inverse FFT', color: 'var(--series-2)', values: d.recon, dashed: true },
+                { name: t('fft.seriesInverse'), color: 'var(--series-2)', values: d.recon, dashed: true },
               ]}
             />
           </section>
 
           <section className="card">
             <div className="card-head">
-              <h2>Wave components</h2>
+              <h2>{t('fft.waveTitle')}</h2>
               <div className="legend">
                 <span className="legend-item">
-                  <span className="chip" style={{ background: 'var(--series-3)' }} /> kept
-                  component
+                  <span className="chip" style={{ background: 'var(--series-3)' }} /> {t('fft.waveLegend')}
                 </span>
               </div>
             </div>
             <p className="card-note lesson-text">
-              Here are the hidden waves the FFT found, drawn one per row so you can see each
-              ingredient on its own — strongest first, all on the same y-scale so heights are
-              comparable. Each label gives the wave's recipe: strength × cos(speed × x + head
-              start). Add every row together, point by point, and you get exactly the dashed
-              orange curve above.
+              {t('fft.waveNote')}
             </p>
             {shownComponents.map((c) => (
               <div className="component-row" key={c.bin.k}>
@@ -225,7 +215,7 @@ export function FftPage() {
                   yLabel={c.label}
                   series={[
                     {
-                      name: c.bin.k === 0 ? 'constant' : `f = ${fmt(c.bin.freq, 4)}`,
+                      name: c.bin.k === 0 ? t('fft.seriesConstant') : `f = ${fmt(c.bin.freq, 4)}`,
                       color: 'var(--series-3)',
                       values: c.values,
                     },
@@ -235,41 +225,35 @@ export function FftPage() {
             ))}
             {d.kept.size > MAX_PANELS && (
               <p className="card-note">
-                Showing the strongest {MAX_PANELS} of {d.kept.size} components.
+                {t('fft.waveShowing', { shown: MAX_PANELS, total: d.kept.size })}
               </p>
             )}
           </section>
 
           <section className="card">
             <div className="card-head">
-              <h2>Frequency domain</h2>
+              <h2>{t('fft.freqTitle')}</h2>
               <div className="legend">
                 <span className="legend-item">
-                  <span className="chip" style={{ background: 'var(--series-1)' }} /> kept
+                  <span className="chip" style={{ background: 'var(--series-1)' }} /> {t('fft.legendKept')}
                 </span>
                 <span className="legend-item">
-                  <span className="chip" style={{ background: 'var(--mark-muted)' }} /> discarded
+                  <span className="chip" style={{ background: 'var(--mark-muted)' }} /> {t('fft.legendDiscarded')}
                 </span>
               </div>
             </div>
             <p className="card-note lesson-text">
-              The same information as a bar chart — the signal's "recipe card". One bar per
-              possible frequency (bin k = 0 … N/2): its position says how fast that wave
-              repeats, its height says how strongly it is present. Most bars are near zero
-              because most frequencies simply aren't in the signal. Hover a bar for its exact
-              frequency, amplitude and phase; click one to see its value computed step by step
-              below.
+              {t('fft.freqNote')}
             </p>
             <SpectrumChart bins={d.bins} kept={d.kept} selected={inspected} onSelect={setInspectK} />
           </section>
 
           <section className="card">
             <div className="card-head">
-              <h2>How bin k is computed</h2>
+              <h2>{t('fft.binTitle')}</h2>
             </div>
             <p className="card-note">
-              Pick a bin with the +/− buttons, or click any bar in the spectrum above, and watch
-              its value worked out by hand.
+              {t('fft.binNote')}
             </p>
             <BinExplainer
               xs={d.xs}
@@ -283,32 +267,30 @@ export function FftPage() {
 
           <section className="card">
             <div className="card-head">
-              <h2>Result</h2>
+              <h2>{t('fft.resultTitle')}</h2>
             </div>
             <div className="stats">
               <div className="stat">
-                <span className="stat-label">Components kept</span>
+                <span className="stat-label">{t('fft.statKept')}</span>
                 <span className="stat-value">{d.kept.size}</span>
               </div>
               <div className="stat">
-                <span className="stat-label">RMS reconstruction error</span>
+                <span className="stat-label">{t('fft.statRms')}</span>
                 <span className="stat-value">{fmt(d.error, 3)}</span>
               </div>
             </div>
             <p className="card-note lesson-text">
-              The recipe in one line — this sum of simple waves is what the inverse FFT actually
-              draws as the dashed curve. The RMS error above says how far that drawing is from
-              your function, averaged over all sample points (0 means a perfect match).
+              {t('fft.resultNote')}
             </p>
             <Tex block tex={d.formula} />
             <div className="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    <th>bin k</th>
-                    <th>frequency</th>
-                    <th>amplitude</th>
-                    <th>phase</th>
+                    <th>{t('fft.thBin')}</th>
+                    <th>{t('fft.thFreq')}</th>
+                    <th>{t('fft.thAmp')}</th>
+                    <th>{t('fft.thPhase')}</th>
                   </tr>
                 </thead>
                 <tbody>

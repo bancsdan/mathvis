@@ -1,52 +1,63 @@
 # MathVis
 
-Interactive math lessons in the browser. A small React app with three topic
-tabs, each teaching one concept by letting you drag its central idea around.
+Interactive math lessons in the browser, in Hungarian and English. A React
+app where each lesson teaches one concept by letting you drag its central idea
+around. Free, open source, aimed at Hungarian students.
 
 ## Topics
 
-### Derivative
+The left-hand menu has two collapsible groups. Each topic is deep-linkable via
+its hash, e.g. `#derivative`. Topics without a lesson yet appear in the menu
+with a "soon" badge and show a placeholder page.
 
-The derivative as a limit. Pick a function, a point x₀, and drag h toward 0 to
-watch the secant through x₀ and x₀+h rotate onto the tangent, with the
-difference quotient computed live and a halving-h table showing the limit
-settle. The |x| preset demonstrates a corner where the left and right limits
-disagree and no derivative exists.
+### High school
 
-### Integral
+Follows the topic overview table of the Hungarian framework curriculum. No
+lessons written yet.
 
-The integral as a limit of Riemann sums. Pick a function and an interval,
-choose left/midpoint/right sampling, and drag the rectangle count up to watch
-the sum melt into the shaded true area, with a doubling-n table showing the
-convergence and why midpoint sampling converges faster.
+| Magyar | English |
+|---|---|
+| Halmazok | Sets |
+| Matematikai logika | Mathematical logic |
+| Kombinatorika, gráfok | Combinatorics, graphs |
+| Számhalmazok, műveletek | Number sets, operations |
+| Hatvány, gyök | Powers, roots |
+| Betűs kifejezések egyenletmegoldásban, függvényábrázolásban | Algebraic expressions in equations and graphs |
+| Arányosság, százalékszámítás | Proportionality, percentages |
+| Elsőfokú egyenletek, egyenlőtlenségek, egyenletrendszerek | Linear equations, inequalities, systems |
+| Másodfokú egyenletek, egyenlőtlenségek | Quadratic equations, inequalities |
+| A függvény fogalma, függvénytulajdonságok | Functions and their properties |
+| Geometriai alapismeretek | Geometry basics |
+| Háromszögek | Triangles |
+| Négyszögek, sokszögek | Quadrilaterals, polygons |
+| A kör és részei | The circle and its parts |
+| Transzformációk, szerkesztések | Transformations, constructions |
+| Leíró statisztika | Descriptive statistics |
+| Valószínűség-számítás | Probability |
 
-### FFT
+### University
 
-Sample a function f(x), take its discrete Fourier transform, and rebuild it
-with an inverse FFT from only the strongest frequency components.
+All three have lessons today.
 
-- **Time domain** — the sampled function (blue) with the inverse-FFT
-  reconstruction (dashed orange) overlaid.
-- **Wave components** — each kept component drawn as its own labeled wave
-  (aqua) on a shared y-scale, strongest first. Summing them gives the
-  reconstruction.
-- **Frequency domain** — the one-sided amplitude spectrum (bins k = 0…N/2).
-  Kept bars are blue, discarded muted. Hover for frequency, amplitude, phase;
-  click a bar to inspect it below.
-- **How bin k is computed** — the clicked bin worked out on paper: the DFT
-  formula with numbers substituted, a term-by-term table, the column sums,
-  and the amplitude/phase assembly, plus a collapsible graphical view of why
-  the sums single out that frequency.
-- **Result** — the reconstruction as a sum of cosine terms, RMS error, and a
-  table of kept components.
-- **Aliasing demo** — a sine with adjustable true frequency sampled at N = 64
-  fixed points: the alias wave the samples actually describe, a zoomed view,
-  and a folding map of where every frequency lands. Explains the Nyquist
-  limit hands-on.
+| Magyar | English |
+|---|---|
+| Derivált | Derivative |
+| Integrál | Integral |
+| Fourier-transzformáció | Fourier Transform |
 
-FFT controls: any mathjs expression in `x` (presets included), FFT size N
-(64–1024), window length in periods, and how many of the strongest components
-survive the inverse transform.
+## Adding a lesson
+
+Topics live in [src/topics.ts](src/topics.ts). Write a page component, set it
+as the topic's `page`, and add its menu label under `topics.*` in both locale
+files. The sidebar, placeholder, and hash link update automatically.
+
+## Languages
+
+The UI ships in Hungarian and English with a HU/EN switcher in the header
+(persisted in localStorage, overridable with `?lang=en`). All copy lives in
+translation files under [src/i18n/locales/](src/i18n/locales/) — add a new
+language by dropping in another JSON file and registering it in
+[src/i18n/index.ts](src/i18n/index.ts).
 
 ## Run
 
@@ -62,12 +73,3 @@ Pushing to `main` builds and publishes the site to GitHub Pages via
 [.github/workflows/deploy.yml](.github/workflows/deploy.yml). The Vite `base`
 is set to `/mathvis/` to match the repo name. Live at
 <https://bancsdan.github.io/mathvis/>.
-
-## Implementation notes
-
-- Dependency-free iterative radix-2 Cooley–Tukey FFT in
-  [src/lib/fft.ts](src/lib/fft.ts); forward and inverse share one routine.
-- Expression parsing via the number-only mathjs entry point; formulas are
-  typeset with KaTeX.
-- Charts are hand-rolled SVG with hover tooltips; light and dark themes
-  follow the OS setting.

@@ -1,40 +1,60 @@
-import { useState } from 'react'
-import { DerivativePage } from './components/DerivativePage'
-import { FftPage } from './components/FftPage'
-import { IntegralPage } from './components/IntegralPage'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { ComingSoonPage } from './components/ComingSoonPage'
+import { Sidebar } from './components/Sidebar'
+import { DEFAULT_TOPIC_ID, findTopic } from './topics'
 
-type Tab = 'derivative' | 'integral' | 'fft'
+const LANGS = ['hu', 'en'] as const
 
-const TABS: Array<{ id: Tab; label: string }> = [
-  { id: 'derivative', label: 'Derivative' },
-  { id: 'integral', label: 'Integral' },
-  { id: 'fft', label: 'Fourier Transform' },
-]
+function topicFromHash(): string {
+  const id = window.location.hash.replace(/^#/, '')
+  return findTopic(id) ? id : DEFAULT_TOPIC_ID
+}
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('derivative')
+  const [topicId, setTopicId] = useState<string>(topicFromHash)
+  const { t, i18n } = useTranslation()
+
+  useEffect(() => {
+    const onHash = () => setTopicId(topicFromHash())
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  const select = (id: string) => {
+    setTopicId(id)
+    if (window.location.hash !== `#${id}`) window.location.hash = id
+  }
+
+  const hit = findTopic(topicId) ?? findTopic(DEFAULT_TOPIC_ID)!
+  const Page = hit.topic.page
 
   return (
-    <main className="page">
+    <div className="shell">
       <header className="header">
-        <h1>MathVis</h1>
-        <p className="subtitle">Interactive lessons that make the math visible.</p>
-        <nav className="tabs" aria-label="Topics">
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              className={tab === t.id ? 'tab-btn active' : 'tab-btn'}
-              onClick={() => setTab(t.id)}
-            >
-              {t.label}
-            </button>
-          ))}
-        </nav>
+        <div className="header-row">
+          <h1>MathVis</h1>
+          <div className="lang-switch" role="group" aria-label="Language">
+            {LANGS.map((l) => (
+              <button
+                key={l}
+                className={i18n.language === l ? 'lang-btn active' : 'lang-btn'}
+                onClick={() => i18n.changeLanguage(l)}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
+        <p className="subtitle">{t('app.subtitle')}</p>
       </header>
 
-      {tab === 'derivative' && <DerivativePage />}
-      {tab === 'integral' && <IntegralPage />}
-      {tab === 'fft' && <FftPage />}
-    </main>
+      <div className="body">
+        <Sidebar activeId={hit.topic.id} activeSection={hit.section.id} onSelect={select} />
+        <main className="page" key={hit.topic.id}>
+          {Page ? <Page /> : <ComingSoonPage titleKey={hit.topic.labelKey} />}
+        </main>
+      </div>
+    </div>
   )
 }

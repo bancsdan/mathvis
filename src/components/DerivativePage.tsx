@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { fmt } from '../lib/analysis'
 import { PRESETS, useCompiled } from './presets'
 import { Tex } from './Tex'
@@ -22,6 +23,7 @@ interface ChartProps {
 
 /** Curve, secant through (x0, x0+h), and tangent at x0. */
 function SecantChart({ fn, x0, h, slope, tangentSlope, height = 300 }: ChartProps) {
+  const { t } = useTranslation()
   const [ref, width] = useWidth<HTMLDivElement>()
   const plotW = Math.max(width - M.left - M.right, 10)
   const plotH = height - M.top - M.bottom
@@ -61,7 +63,7 @@ function SecantChart({ fn, x0, h, slope, tangentSlope, height = 300 }: ChartProp
   return (
     <div ref={ref} className="chart-box">
       {width > 0 && (
-        <svg width={width} height={height} role="img" aria-label="Function with secant and tangent lines">
+        <svg width={width} height={height} role="img" aria-label={t('deriv.chartAria')}>
           <defs>
             <clipPath id={clipId}>
               <rect x={M.left} y={M.top} width={plotW} height={plotH} />
@@ -121,6 +123,7 @@ function SecantChart({ fn, x0, h, slope, tangentSlope, height = 300 }: ChartProp
 
 /** The derivative as a limit: drag h toward 0 and watch the secant become the tangent. */
 export function DerivativePage() {
+  const { t } = useTranslation()
   const [expr, setExpr] = useState(PRESETS[0].expr)
   const [x0, setX0] = useState(0.6)
   const [hExp, setHExp] = useState(0.3) // h = 10^hExp
@@ -155,45 +158,38 @@ export function DerivativePage() {
     <>
       <section className="card">
         <div className="card-head">
-          <h2>The derivative: a secant becoming a tangent</h2>
+          <h2>{t('deriv.title')}</h2>
           <div className="legend">
             <span className="legend-item">
               <span className="chip chip-dashed" style={{ background: 'var(--series-1)', height: 3 }} /> f(x)
             </span>
             <span className="legend-item">
-              <span className="chip chip-dashed" style={{ background: 'var(--series-2)', height: 3 }} /> secant through x₀ and x₀+h
+              <span className="chip chip-dashed" style={{ background: 'var(--series-2)', height: 3 }} /> {t('deriv.legendSecant')}
             </span>
             <span className="legend-item">
-              <span className="chip chip-dashed" style={{ background: 'var(--series-3)' }} /> tangent at x₀ (the limit)
+              <span className="chip chip-dashed" style={{ background: 'var(--series-3)' }} /> {t('deriv.legendTangent')}
             </span>
           </div>
         </div>
         <div className="lesson-text">
           <p className="card-note">
-            The derivative answers one question: <strong>how steep is the curve at a single
-            point x₀?</strong> Think of the curve as a hill you are walking on — the derivative
-            is the slope of the ground exactly under your feet.
+            <Trans i18nKey="deriv.intro1" components={{ b: <strong />, i: <em /> }} />
           </p>
           <p className="card-note">
-            There's a problem, though. Slope means "rise over run", and that needs
-            <em> two</em> points. One point has no rise and no run. So we cheat in three steps:
+            <Trans i18nKey="deriv.intro2" components={{ b: <strong />, i: <em /> }} />
           </p>
           <p className="card-note">
-            <strong>1.</strong> Pick a second point a small distance h away, at x₀+h.{' '}
-            <strong>2.</strong> Draw the straight line through both points — the orange{' '}
-            <em>secant</em> — and measure its slope, which is just rise over run:
+            <Trans i18nKey="deriv.steps12" components={{ b: <strong />, i: <em /> }} />
           </p>
-          <Tex block tex={'\\text{secant slope} = \\frac{\\text{rise}}{\\text{run}} = \\frac{f(x_0+h)-f(x_0)}{h}'} />
+          <Tex
+            block
+            tex={`\\text{${t('deriv.texSlope')}} = \\frac{\\text{${t('deriv.texRise')}}}{\\text{${t('deriv.texRun')}}} = \\frac{f(x_0+h)-f(x_0)}{h}`}
+          />
           <p className="card-note">
-            <strong>3.</strong> Shrink h. As the second point slides toward the first, the
-            secant tips over into the dashed <em>tangent</em> — the line that just grazes the
-            curve. The derivative is defined as the value this slope settles on:
+            <Trans i18nKey="deriv.step3" components={{ b: <strong />, i: <em /> }} />
           </p>
           <Tex block tex={"f'(x_0) = \\lim_{h \\to 0}\\; \\frac{f(x_0+h)-f(x_0)}{h}"} />
-          <p className="card-note">
-            Drag the h slider toward 0 and watch it happen. The numbers under the chart update
-            live with your slider.
-          </p>
+          <p className="card-note">{t('deriv.dragNote')}</p>
         </div>
         <div className="controls-inline">
           <label className="field">
@@ -206,7 +202,9 @@ export function DerivativePage() {
               }}
             >
               {PRESETS.map((p) => (
-                <option key={p.name}>{p.name}</option>
+                <option key={p.name} value={p.name}>
+                  {p.labelKey ? t(p.labelKey) : p.name}
+                </option>
               ))}
             </select>
           </label>
@@ -218,18 +216,19 @@ export function DerivativePage() {
           </label>
           <label className="field">
             <span className="field-label">
-              h = <strong>{h.toFixed(Math.max(0, Math.min(4, 1 - Math.floor(hExp))))}</strong> (drag toward 0)
+              h = <strong>{h.toFixed(Math.max(0, Math.min(4, 1 - Math.floor(hExp))))}</strong>{' '}
+              {t('deriv.hHint')}
             </span>
             <input type="range" min={-3.5} max={0.3} step={0.01} value={hExp} onChange={(e) => setHExp(Number(e.target.value))} />
           </label>
           <label className="field checkbox-field">
-            <span className="field-label">approach from the left</span>
+            <span className="field-label">{t('deriv.fromLeft')}</span>
             <input type="checkbox" checked={fromLeft} onChange={(e) => setFromLeft(e.target.checked)} />
           </label>
         </div>
         {error && (
           <p className="error" role="alert">
-            Could not evaluate f: {error}
+            {t('deriv.errorEval', { msg: error })}
           </p>
         )}
         {fn && (
@@ -237,19 +236,20 @@ export function DerivativePage() {
             <SecantChart fn={fn} x0={x0} h={h} slope={slope} tangentSlope={tangentSlope} />
             <Tex
               block
-              tex={`\\text{secant slope} = \\frac{f(${fmt(x0 + h, 4)})-f(${fmt(x0, 3)})}{${fmt(h, 3)}} = \\frac{${fmt(fn(x0 + h), 4)}-${fmt(fn(x0), 4)}}{${fmt(h, 3)}} = \\mathbf{${fmt(slope, 5)}}`}
+              tex={`\\text{${t('deriv.texSlope')}} = \\frac{f(${fmt(x0 + h, 4)})-f(${fmt(x0, 3)})}{${fmt(h, 3)}} = \\frac{${fmt(fn(x0 + h), 4)}-${fmt(fn(x0), 4)}}{${fmt(h, 3)}} = \\mathbf{${fmt(slope, 5)}}`}
             />
             {tangentSlope !== null ? (
               <Tex
                 block
-                tex={`\\text{the limit it is heading for:}\\quad f'(${fmt(x0, 3)}) = \\mathbf{${fmt(tangentSlope, 5)}} \\qquad \\text{gap still to close: } ${fmt(Math.abs(slope - tangentSlope), 2)}`}
+                tex={`\\text{${t('deriv.texLimitHeading')}}\\quad f'(${fmt(x0, 3)}) = \\mathbf{${fmt(tangentSlope, 5)}} \\qquad \\text{${t('deriv.texGap')}} ${fmt(Math.abs(slope - tangentSlope), 2)}`}
               />
             ) : (
               <p className="card-note lesson-text">
-                <strong>No tangent here!</strong> Coming from the right the slopes settle on{' '}
-                {fmt(dRight, 3)}, but coming from the left they settle on {fmt(dLeft, 3)}. The
-                two sides disagree, so there is no single answer and f′({fmt(x0, 3)}) does not
-                exist. The curve has a corner at this point.
+                <Trans
+                  i18nKey="deriv.noTangent"
+                  components={{ b: <strong /> }}
+                  values={{ right: fmt(dRight, 3), left: fmt(dLeft, 3), x0: fmt(x0, 3) }}
+                />
               </p>
             )}
           </>
@@ -259,14 +259,10 @@ export function DerivativePage() {
       {fn && (
         <section className="card">
           <div className="card-head">
-            <h2>The limit, computed like a math student</h2>
+            <h2>{t('deriv.tableTitle')}</h2>
           </div>
           <p className="card-note lesson-text">
-            "Limit as h approaches 0" sounds abstract, but you can't actually set h = 0 — that
-            would divide by zero. A limit is a promise instead: <em>the closer h gets to 0, the
-            closer the slope gets to one particular number.</em> On paper that promise is just a
-            table. Halve h again and again and watch the right-hand column stop changing. The
-            number it settles on <em>is</em> the derivative.
+            <Trans i18nKey="deriv.tableIntro" components={{ b: <strong />, i: <em /> }} />
           </p>
           <div className="table-wrap">
             <table className="paper-table">
@@ -276,7 +272,7 @@ export function DerivativePage() {
                   <th>x₀ + h</th>
                   <th>f(x₀+h)</th>
                   <th>(f(x₀+h) − f(x₀)) / h</th>
-                  <th>{tangentSlope !== null ? 'distance from f′(x₀)' : 'distance from f′'}</th>
+                  <th>{tangentSlope !== null ? t('deriv.thDistanceKnown') : t('deriv.thDistanceUnknown')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -293,15 +289,10 @@ export function DerivativePage() {
             </table>
           </div>
           <p className="card-note lesson-text">
-            <strong>Try it:</strong> pick |x| and slide x₀ to 0. The table refuses to settle,
-            because approaching from the right gives +1 and from the left gives −1 (tick the
-            checkbox to compare the two directions). A corner has no single steepness — that is
-            exactly what "the limit does not exist" means. Then try sin(x) at x₀ = 0 and watch
-            the quotients march to exactly 1: the sine curve leaves the origin at 45°.
+            <Trans i18nKey="deriv.tryIt" components={{ b: <strong /> }} />
           </p>
         </section>
       )}
-
     </>
   )
 }

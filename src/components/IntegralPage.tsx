@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { fmt } from '../lib/analysis'
 import { niceTicks, tickLabel } from '../lib/ticks'
 import { PRESETS, useCompiled } from './presets'
@@ -40,6 +41,7 @@ interface ChartProps {
 
 /** Curve with the true area shaded and n Riemann rectangles overlaid. */
 function RiemannChart({ fn, a, b, n, rule, height = 300 }: ChartProps) {
+  const { t } = useTranslation()
   const [ref, width] = useWidth<HTMLDivElement>()
   const plotW = Math.max(width - M.left - M.right, 10)
   const plotH = height - M.top - M.bottom
@@ -89,7 +91,7 @@ function RiemannChart({ fn, a, b, n, rule, height = 300 }: ChartProps) {
   return (
     <div ref={ref} className="chart-box">
       {width > 0 && (
-        <svg width={width} height={height} role="img" aria-label="Function with true area shaded and Riemann rectangles">
+        <svg width={width} height={height} role="img" aria-label={t('integ.chartAria')}>
           {yTicks.map((t) => (
             <g key={`y${t}`}>
               <line x1={M.left} x2={M.left + plotW} y1={sy(t)} y2={sy(t)} stroke={t === 0 ? 'var(--axis)' : 'var(--grid)'} strokeWidth={1} />
@@ -136,6 +138,7 @@ function RiemannChart({ fn, a, b, n, rule, height = 300 }: ChartProps) {
 
 /** The integral as a limit of Riemann sums: add rectangles and watch them fill the area. */
 export function IntegralPage() {
+  const { t } = useTranslation()
   const [expr, setExpr] = useState(PRESETS[0].expr)
   const [aRaw, setARaw] = useState(0)
   const [bRaw, setBRaw] = useState(2.4)
@@ -161,49 +164,36 @@ export function IntegralPage() {
     <>
       <section className="card">
         <div className="card-head">
-          <h2>The integral: rectangles becoming area</h2>
+          <h2>{t('integ.title')}</h2>
           <div className="legend">
             <span className="legend-item">
               <span className="chip chip-dashed" style={{ background: 'var(--series-1)', height: 3 }} /> f(x)
             </span>
             <span className="legend-item">
-              <span className="chip" style={{ background: 'var(--series-2)', opacity: 0.5 }} /> the n rectangles
+              <span className="chip" style={{ background: 'var(--series-2)', opacity: 0.5 }} /> {t('integ.legendRects')}
             </span>
             <span className="legend-item">
-              <span className="chip" style={{ background: 'var(--series-1)', opacity: 0.25 }} /> true area ∫f
+              <span className="chip" style={{ background: 'var(--series-1)', opacity: 0.25 }} /> {t('integ.legendArea')}
             </span>
           </div>
         </div>
         <div className="lesson-text">
           <p className="card-note">
-            The integral answers: <strong>how much area sits between the curve and the x-axis,
-            from a to b?</strong> For a rectangle that's easy — width times height. But a curved
-            roof has no ready-made area formula. So, just like with the derivative, we cheat
-            with straight edges, in three steps:
+            <Trans i18nKey="integ.intro1" components={{ b: <strong />, i: <em /> }} />
           </p>
           <p className="card-note">
-            <strong>1.</strong> Cut the stretch from a to b into n equal strips. Each strip has
-            width
+            <Trans i18nKey="integ.step1" components={{ b: <strong />, i: <em /> }} />
           </p>
           <Tex block tex={'\\Delta x = \\frac{b-a}{n}'} />
           <p className="card-note">
-            <strong>2.</strong> On each strip, stand a rectangle. Its height is the curve's
-            value at one chosen spot in the strip (the left edge, the middle, or the right edge
-            — your choice above). Rectangles we <em>can</em> measure: each one contributes
-            height × width, and adding all n of them gives the <em>Riemann sum</em>:
+            <Trans i18nKey="integ.step2" components={{ b: <strong />, i: <em /> }} />
           </p>
-          <Tex block tex={'\\text{total} = \\sum_{i=1}^{n} f(x_i)\\,\\Delta x'} />
+          <Tex block tex={`\\text{${t('integ.texTotal')}} = \\sum_{i=1}^{n} f(x_i)\\,\\Delta x`} />
           <p className="card-note">
-            <strong>3.</strong> Use more, thinner strips. The error lives in the little slivers
-            between the flat rectangle tops and the curve, and thinner strips leave smaller
-            slivers. The integral is the value the total settles on — and the ∫ symbol is
-            literally a stretched-out S, for "sum":
+            <Trans i18nKey="integ.step3" components={{ b: <strong />, i: <em /> }} />
           </p>
           <Tex block tex={'\\int_a^b f(x)\\,dx = \\lim_{n \\to \\infty} \\sum_{i=1}^{n} f(x_i)\\,\\Delta x'} />
-          <p className="card-note">
-            Drag n up and watch the orange rectangles melt into the blue area. The numbers
-            under the chart track your sliders.
-          </p>
+          <p className="card-note">{t('integ.dragNote')}</p>
         </div>
         <div className="controls-inline">
           <label className="field">
@@ -216,7 +206,9 @@ export function IntegralPage() {
               }}
             >
               {PRESETS.map((p) => (
-                <option key={p.name}>{p.name}</option>
+                <option key={p.name} value={p.name}>
+                  {p.labelKey ? t(p.labelKey) : p.name}
+                </option>
               ))}
             </select>
           </label>
@@ -233,26 +225,26 @@ export function IntegralPage() {
             <input type="range" min={-3} max={3} step={0.1} value={bRaw} onChange={(e) => setBRaw(Number(e.target.value))} />
           </label>
           <label className="field">
-            <span className="field-label">sample height at</span>
+            <span className="field-label">{t('integ.sampleAt')}</span>
             <select value={rule} onChange={(e) => setRule(e.target.value as Rule)}>
-              <option value="left">left edge</option>
-              <option value="midpoint">midpoint</option>
-              <option value="right">right edge</option>
+              <option value="left">{t('integ.ruleLeft')}</option>
+              <option value="midpoint">{t('integ.ruleMid')}</option>
+              <option value="right">{t('integ.ruleRight')}</option>
             </select>
           </label>
           <label className="field field-wide">
             <span className="field-label">
-              n = <strong>{n}</strong> rectangle{n === 1 ? '' : 's'} (drag up)
+              <Trans i18nKey="integ.nLabel" components={{ b: <strong /> }} values={{ n }} />
             </span>
             <input type="range" min={1} max={128} value={n} onChange={(e) => setN(Number(e.target.value))} />
           </label>
         </div>
         {error && (
           <p className="error" role="alert">
-            Could not evaluate f: {error}
+            {t('integ.errorEval', { msg: error })}
           </p>
         )}
-        {fn && degenerate && <p className="card-note">a and b coincide — the area of a zero-width region is 0. Drag them apart.</p>}
+        {fn && degenerate && <p className="card-note">{t('integ.degenerate')}</p>}
         {fn && !degenerate && (
           <>
             <RiemannChart fn={fn} a={a} b={b} n={n} rule={rule} />
@@ -262,7 +254,7 @@ export function IntegralPage() {
             />
             <Tex
               block
-              tex={`\\text{the limit it is heading for:}\\quad \\int_{${fmt(a, 3)}}^{${fmt(b, 3)}} f(x)\\,dx = \\mathbf{${fmt(truth, 6)}} \\qquad \\text{gap still to close: } ${fmt(Math.abs(sum - truth), 2)}`}
+              tex={`\\text{${t('integ.texLimitHeading')}}\\quad \\int_{${fmt(a, 3)}}^{${fmt(b, 3)}} f(x)\\,dx = \\mathbf{${fmt(truth, 6)}} \\qquad \\text{${t('integ.texGap')}} ${fmt(Math.abs(sum - truth), 2)}`}
             />
           </>
         )}
@@ -271,22 +263,26 @@ export function IntegralPage() {
       {fn && !degenerate && (
         <section className="card">
           <div className="card-head">
-            <h2>The limit again, as a table</h2>
+            <h2>{t('integ.tableTitle')}</h2>
           </div>
-          <p className="card-note lesson-text">
-            Same move as on the Derivative tab: a limit is a promise that the numbers settle,
-            and a table makes the promise visible. Each row doubles the number of rectangles.
-            Read down the third column and watch it stop changing — the value it locks onto is
-            the integral.
-          </p>
+          <p className="card-note lesson-text">{t('integ.tableIntro')}</p>
           <div className="table-wrap">
             <table className="paper-table">
               <thead>
                 <tr>
                   <th>n</th>
                   <th>Δx</th>
-                  <th>Riemann sum ({rule})</th>
-                  <th>distance from ∫</th>
+                  <th>
+                    {t('integ.thSum', {
+                      rule:
+                        rule === 'left'
+                          ? t('integ.ruleLeft')
+                          : rule === 'midpoint'
+                            ? t('integ.ruleMid')
+                            : t('integ.ruleRight'),
+                    })}
+                  </th>
+                  <th>{t('integ.thDistance')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -302,15 +298,7 @@ export function IntegralPage() {
             </table>
           </div>
           <p className="card-note lesson-text">
-            <strong>Try it:</strong> switch "left edge" to "midpoint" and watch the table
-            settle dramatically faster. Sampling in the middle of each strip lets the
-            rectangle's overshoot on one side cancel its undershoot on the other. Integrate
-            sin(x) from −2 to 2 and get 0: area below the axis counts as <em>negative</em>, and
-            the two halves cancel exactly. And try |x| — the corner that broke the derivative
-            gives the integral no trouble at all, because adding areas doesn't care about a
-            kink the way slopes do. That one-sidedness is why the fundamental theorem of
-            calculus — the statement that derivative and integral undo each other — is a real
-            theorem someone had to prove, not an obvious fact.
+            <Trans i18nKey="integ.tryIt" components={{ b: <strong />, i: <em /> }} />
           </p>
         </section>
       )}

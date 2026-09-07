@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import { compile } from 'mathjs/number'
 
-export const PRESETS: Array<{ name: string; expr: string }> = [
+export const PRESETS: Array<{ name: string; expr: string; labelKey?: string }> = [
   { name: 'sin(x)', expr: 'sin(x)' },
   { name: 'x² / 2', expr: 'x^2 / 2' },
   { name: 'x³ − 2x', expr: 'x^3 - 2*x' },
   { name: 'e^(x/2)', expr: 'exp(x/2)' },
-  { name: '|x| (has a corner!)', expr: 'abs(x)' },
+  { name: 'absx', expr: 'abs(x)', labelKey: 'presets.absx' },
 ]
 
 export function useCompiled(expr: string): { fn: ((x: number) => number) | null; error: string | null } {

@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { Tex } from './Tex'
 import { useWidth } from './useWidth'
 
@@ -32,6 +33,7 @@ interface PanelProps {
 
 /** One wave panel: continuous true wave, continuous alias wave, the shared samples. */
 function WavePanel({ x0, x1, kTrue, height, trueLabel, aliasLabel }: PanelProps) {
+  const { t } = useTranslation()
   const [ref, width] = useWidth<HTMLDivElement>()
   const [hover, setHover] = useState<number | null>(null)
 
@@ -77,7 +79,7 @@ function WavePanel({ x0, x1, kTrue, height, trueLabel, aliasLabel }: PanelProps)
   return (
     <div ref={ref} className="chart-box">
       {width > 0 && (
-        <svg width={width} height={height} role="img" aria-label="True wave, alias wave and shared samples" onMouseLeave={() => setHover(null)}>
+        <svg width={width} height={height} role="img" aria-label={t('alias.panelAria')} onMouseLeave={() => setHover(null)}>
           {[-1, 0, 1].map((t) => (
             <g key={t}>
               <line x1={M.left} x2={M.left + plotW} y1={sy(t)} y2={sy(t)} stroke={t === 0 ? 'var(--axis)' : 'var(--grid)'} strokeWidth={1} />
@@ -114,7 +116,7 @@ function WavePanel({ x0, x1, kTrue, height, trueLabel, aliasLabel }: PanelProps)
       {hn !== null && width > 0 && (
         <div className="tooltip" style={{ left: Math.min(sx(hn / DEMO_N) + 12, width - 200), top: M.top + 4 }}>
           <div className="tooltip-title">
-            sample n = {hn} · x = {(hn / DEMO_N).toFixed(4)}
+            {t('alias.tooltipSample', { n: hn, x: (hn / DEMO_N).toFixed(4) })}
           </div>
           <div className="tooltip-row">
             <span className="chip" style={{ background: 'var(--series-1)' }} />
@@ -134,6 +136,7 @@ function WavePanel({ x0, x1, kTrue, height, trueLabel, aliasLabel }: PanelProps)
 
 /** Zigzag map: true cycles per window -> the bin the energy lands in. */
 function FoldingMap({ kTrue }: { kTrue: number }) {
+  const { t } = useTranslation()
   const [ref, width] = useWidth<HTMLDivElement>()
   const height = 150
   const FM = { top: 14, right: 56, bottom: 30, left: 52 }
@@ -147,7 +150,7 @@ function FoldingMap({ kTrue }: { kTrue: number }) {
   return (
     <div ref={ref} className="chart-box">
       {width > 0 && (
-        <svg width={width} height={height} role="img" aria-label="Folding map from true frequency to observed bin">
+        <svg width={width} height={height} role="img" aria-label={t('alias.foldAria')}>
           {[0, NYQ].map((b) => (
             <g key={b}>
               <line x1={FM.left} x2={FM.left + plotW} y1={sy(b)} y2={sy(b)} stroke={b === 0 ? 'var(--axis)' : 'var(--grid)'} strokeWidth={1} />
@@ -165,7 +168,7 @@ function FoldingMap({ kTrue }: { kTrue: number }) {
             </text>
           ))}
           <text x={FM.left} y={FM.top - 3} textAnchor="start" className="axis-label">
-            measured bin
+            {t('alias.measuredBin')}
           </text>
           <text x={sx(NYQ)} y={FM.top - 3} textAnchor="middle" className="axis-label">
             N/2 (Nyquist)
@@ -174,7 +177,7 @@ function FoldingMap({ kTrue }: { kTrue: number }) {
             N
           </text>
           <text x={FM.left + plotW + 22} y={FM.top + plotH + 16} textAnchor="start" className="axis-label">
-            true cycles
+            {t('alias.trueCycles')}
           </text>
           <polyline
             points={`${sx(0)},${sy(0)} ${sx(NYQ)},${sy(NYQ)} ${sx(DEMO_N)},${sy(0)} ${sx(kMax)},${sy(NYQ)}`}
@@ -192,46 +195,35 @@ function FoldingMap({ kTrue }: { kTrue: number }) {
 
 /** Interactive aliasing lesson: fixed N = 64, adjustable true frequency. */
 export function AliasingDemo() {
+  const { t } = useTranslation()
   const [kTrue, setKTrue] = useState(60)
   const a = aliasOf(kTrue)
   const turns = Math.round((kTrue - a.r) / DEMO_N)
   const trueLabel = `sin(2π·${kTrue}·x)`
   const aliasLabel =
-    a.r === NYQ ? '0 (a flat line)' : `${a.flipped ? '−' : ''}sin(2π·${a.k}·x)`
+    a.r === NYQ ? t('alias.flatLine') : `${a.flipped ? '−' : ''}sin(2π·${a.k}·x)`
   const coincide = kTrue === a.k
 
   let verdict: ReactNode
   if (a.r === NYQ) {
-    verdict = (
-      <>
-        {kTrue} cycles is exactly N/2. A sine at this frequency crosses zero at every single
-        sample point — all 64 measurements read 0, and the wave vanishes without a trace.
-      </>
-    )
+    verdict = <>{t('alias.verdictNyquist', { k: kTrue })}</>
   } else if (kTrue === a.k) {
-    verdict = (
-      <>
-        {kTrue} cycles stays at or below N/2 = 32, so every cycle gets at least 2 samples. The
-        measurements describe the wave truthfully, and the energy lands in bin {a.k}. The two
-        curves are one and the same.
-      </>
-    )
+    verdict = <>{t('alias.verdictFaithful', { k: kTrue, bin: a.k })}</>
   } else if (a.flipped) {
     verdict = (
       <>
-        <Tex tex={`${kTrue} \\equiv -${a.k} \\pmod{64}`} /> — {turns > 0 ? `${turns} whole turn${turns === 1 ? '' : 's'} between consecutive samples ${turns === 1 ? 'is' : 'are'} invisible, and ` : ''}
-        what's left over looks like {a.k} cycles running <em>backwards</em>. The measurements
-        are identical to <Tex tex={`-\\sin(2\\pi\\cdot ${a.k}\\,x)`} />, so the energy lands
-        in bin {a.k}.
+        <Tex tex={`${kTrue} \\equiv -${a.k} \\pmod{64}`} /> —{' '}
+        {turns > 0 ? t('alias.turnsClause', { count: turns }) : ''}
+        <Trans i18nKey="alias.verdictFlippedA" components={{ i: <em /> }} values={{ bin: a.k }} />{' '}
+        <Tex tex={`-\\sin(2\\pi\\cdot ${a.k}\\,x)`} />
+        {t('alias.verdictFlippedB', { bin: a.k })}
       </>
     )
   } else {
     verdict = (
       <>
-        <Tex tex={`${kTrue} \\equiv ${a.k} \\pmod{64}`} /> — the {turns} whole turn
-        {turns === 1 ? '' : 's'} between consecutive samples {turns === 1 ? 'is' : 'are'}{' '}
-        invisible, so the measurements are identical to a {a.k}-cycle wave. The energy lands in
-        bin {a.k}.
+        <Tex tex={`${kTrue} \\equiv ${a.k} \\pmod{64}`} /> —{' '}
+        {t('alias.verdictWrapped', { count: turns, bin: a.k })}
       </>
     )
   }
@@ -239,78 +231,49 @@ export function AliasingDemo() {
   return (
     <section className="card">
       <div className="card-head">
-        <h2>Aliasing: when sampling lies</h2>
+        <h2>{t('alias.title')}</h2>
         <div className="legend">
           <span className="legend-item">
-            <span className="chip chip-dashed" style={{ background: 'var(--series-1)', height: 3 }} /> true: {trueLabel}
+            <span className="chip chip-dashed" style={{ background: 'var(--series-1)', height: 3 }} /> {t('alias.legendTrue', { formula: trueLabel })}
           </span>
           <span className="legend-item">
-            <span className="chip chip-dashed" style={{ background: 'var(--series-2)' }} /> samples claim:{' '}
-            {coincide ? 'the same wave' : aliasLabel}
+            <span className="chip chip-dashed" style={{ background: 'var(--series-2)' }} />{' '}
+            {t('alias.legendClaim', { formula: coincide ? t('alias.sameWave') : aliasLabel })}
           </span>
           <span className="legend-item">
-            <span className="chip" style={{ background: 'var(--series-3)', borderRadius: '50%' }} /> the N = 64 samples
+            <span className="chip" style={{ background: 'var(--series-3)', borderRadius: '50%' }} /> {t('alias.legendSamples')}
           </span>
         </div>
       </div>
 
-      <p className="card-note lesson-text">
-        Everything above rests on one quiet assumption: that N samples are enough to know which
-        wave produced them. This demo is where the assumption breaks. A computer cannot store a
-        smooth curve, only samples of it — here a sine with a frequency you control, sampled at
-        the same 64 evenly spaced points (green dots) no matter how fast it oscillates. To
-        capture a wiggle you need at least 2 samples per cycle: one near a crest, one near a
-        trough. With 64 samples that caps honest measurement at 32 cycles per window. Push
-        beyond it and the samples do not go blank — they lie.
-      </p>
+      <p className="card-note lesson-text">{t('alias.intro')}</p>
 
       <label className="field field-wide">
         <span className="field-label">
-          True frequency: <strong>{kTrue}</strong> cycle{kTrue === 1 ? '' : 's'} per window
-          (Nyquist limit is 32)
+          <Trans i18nKey="alias.sliderLabel" components={{ b: <strong /> }} values={{ k: kTrue }} />
         </span>
         <input type="range" min={0} max={96} value={kTrue} onChange={(e) => setKTrue(Number(e.target.value))} />
       </label>
       <p className="alias-verdict">{verdict}</p>
 
-      <p className="mini-title">
-        The whole window — every green dot is an overlap point where the two curves cross, and
-        the dots are all the computer ever sees
-      </p>
+      <p className="mini-title">{t('alias.wholeTitle')}</p>
       <WavePanel x0={0} x1={1} kTrue={kTrue} height={200} trueLabel={trueLabel} aliasLabel={aliasLabel} />
 
       <p className="mini-title">
-        Zoomed to x = 0 … ⅛ — watch {trueLabel} thread through the same overlap points that{' '}
-        {coincide ? 'it' : aliasLabel} passes through
+        {t('alias.zoomTitle', { trueF: trueLabel, other: coincide ? t('alias.zoomIt') : aliasLabel })}
       </p>
       <WavePanel x0={0} x1={1 / 8} kTrue={kTrue} height={180} trueLabel={trueLabel} aliasLabel={aliasLabel} />
 
-      <p className="mini-title">The folding map — where every true frequency ends up</p>
-      <p className="card-note">
-        Frequencies fold back and forth like an accordion: up to Nyquist they map to
-        themselves, from 32 to 64 they come back mirrored, past 64 the pattern repeats. The
-        marker is the slider's current position.
-      </p>
+      <p className="mini-title">{t('alias.foldTitle')}</p>
+      <p className="card-note">{t('alias.foldNote')}</p>
       <FoldingMap kTrue={kTrue} />
 
       <div className="lesson-text">
         <p className="card-note">
-          <strong>Why this matters.</strong> Between the dots the two curves disagree
-          completely, but sampling never looks between the dots, so no algorithm can recover
-          which wave was real: the evidence is destroyed at the moment of sampling, not by the
-          FFT. That has a physical picture — film a wheel spinning 60 times a second with a
-          64-frames-per-second camera and it appears to roll slowly backwards, which is why
-          helicopter rotors do impossible things on video. It also has an engineering
-          consequence: since no computation can undo aliasing, real systems prevent it before
-          sampling, with an analog filter that deletes everything above Nyquist. That is why
-          44.1 kHz audio can only represent tones up to about 22 kHz, and why every
-          analog-to-digital converter ships with an anti-aliasing filter in front of it.
+          <Trans i18nKey="alias.whyNote" components={{ b: <strong /> }} />
         </p>
         <p className="card-note">
-          <strong>Try it:</strong> drag to 4 (faithful — the curves coincide), 31 (barely
-          legal, 2 samples per cycle), 32 (a Nyquist sine vanishes), 60 (the classic: reads as
-          4 backwards), 64 (one full turn per step — looks like standing still, bin 0), and 92
-          (wraps past N and reads as 28 backwards).
+          <Trans i18nKey="alias.tryIt" components={{ b: <strong /> }} />
         </p>
       </div>
     </section>

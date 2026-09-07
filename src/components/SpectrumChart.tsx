@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Bin } from '../lib/analysis'
 import { niceTicks, tickLabel } from '../lib/ticks'
 import { useWidth } from './useWidth'
@@ -16,6 +17,7 @@ const M = { top: 12, right: 30, bottom: 30, left: 52 }
 
 /** One-sided magnitude spectrum as a bar chart. Kept bins are colored, discarded bins muted. */
 export function SpectrumChart({ bins, kept, height = 220, selected, onSelect }: Props) {
+  const { t } = useTranslation()
   const [ref, width] = useWidth<HTMLDivElement>()
   const [hover, setHover] = useState<number | null>(null)
 
@@ -45,7 +47,7 @@ export function SpectrumChart({ bins, kept, height = 220, selected, onSelect }: 
           width={width}
           height={height}
           role="img"
-          aria-label="Magnitude spectrum versus frequency"
+          aria-label={t('chart.spectrumAria')}
           onMouseLeave={() => setHover(null)}
         >
           {yTicks.map((t) => (
@@ -134,18 +136,18 @@ export function SpectrumChart({ bins, kept, height = 220, selected, onSelect }: 
           </div>
           <div className="tooltip-row">
             <span className="chip" style={{ background: kept.has(b.k) ? 'var(--series-1)' : 'var(--mark-muted)' }} />
-            <span className="tooltip-name">amplitude</span>
+            <span className="tooltip-name">{t('chart.amplitude')}</span>
             <span className="tooltip-value">{b.amplitude.toPrecision(4)}</span>
           </div>
           <div className="tooltip-row">
             <span className="chip" style={{ visibility: 'hidden' }} />
-            <span className="tooltip-name">phase</span>
+            <span className="tooltip-name">{t('chart.phase')}</span>
             <span className="tooltip-value">{((b.phase * 180) / Math.PI).toFixed(1)}°</span>
           </div>
           <div className="tooltip-row">
             <span className="chip" style={{ visibility: 'hidden' }} />
-            <span className="tooltip-name">status</span>
-            <span className="tooltip-value">{kept.has(b.k) ? 'kept' : 'discarded'}</span>
+            <span className="tooltip-name">{t('chart.status')}</span>
+            <span className="tooltip-value">{kept.has(b.k) ? t('chart.kept') : t('chart.discarded')}</span>
           </div>
         </div>
       )}

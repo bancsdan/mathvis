@@ -47,10 +47,23 @@ body {
   font: 14px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
-.page {
-  max-width: 960px;
+.shell {
+  max-width: 1240px;
   margin: 0 auto;
   padding: 32px 20px 64px;
+}
+
+.body {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  margin-top: 20px;
+}
+
+.page {
+  flex: 1;
+  min-width: 0;
+  max-width: 960px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -439,27 +452,6 @@ p.card-note.lesson-text {
   max-width: 78ch;
 }
 
-.tabs {
-  display: flex;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.tab-btn {
-  font: inherit;
-  padding: 7px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-secondary);
-  cursor: pointer;
-}
-
-.tab-btn.active {
-  color: var(--text-primary);
-  border-color: var(--series-1);
-  box-shadow: inset 0 0 0 1px var(--series-1);
-}
 
 .controls-inline {
   display: grid;
@@ -512,4 +504,136 @@ p.card-note.lesson-text {
 
 .tex-inline .katex {
   font-size: 1em;
+}
+
+.header-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lang-switch {
+  display: flex;
+  gap: 4px;
+}
+
+.lang-btn {
+  font: inherit;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.lang-btn.active {
+  color: var(--text-primary);
+  border-color: var(--series-1);
+}
+
+.sidebar {
+  flex: none;
+  width: 240px;
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-group-btn {
+  font: inherit;
+  font-weight: 600;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.nav-group-btn:hover {
+  background: var(--hover-wash);
+}
+
+.nav-chevron {
+  display: inline-block;
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+
+.nav-group-btn.open .nav-chevron {
+  transform: rotate(90deg);
+}
+
+.nav-list[hidden] {
+  display: none;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 4px 0 8px;
+  padding: 0 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-item {
+  font: inherit;
+  font-size: 13px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.35;
+}
+
+.nav-item:hover {
+  background: var(--hover-wash);
+  color: var(--text-primary);
+}
+
+.nav-item.active {
+  color: var(--text-primary);
+  background: var(--surface);
+  border-color: var(--series-1);
+}
+
+.nav-soon {
+  flex: none;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+
+@media (max-width: 860px) {
+  .body {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .sidebar {
+    width: 100%;
+    position: static;
+  }
 }
