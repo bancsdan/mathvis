@@ -13,8 +13,8 @@ with a "soon" badge and show a placeholder page.
 ### High school
 
 Follows the topic overview table of the Hungarian framework curriculum.
-**Halmazok** is the first written lesson and is where the site opens. The rest
-carry a "soon" badge and show a placeholder.
+**Halmazok** and **Matematikai logika** have lessons; the site opens on
+Halmazok. The rest carry a "soon" badge and show a placeholder.
 
 | Magyar | English |
 |---|---|
@@ -65,6 +65,13 @@ knowing about:
   buttons. The section owns the answer and decides correctness.
 - [src/lib/sets.ts](src/lib/sets.ts) and [src/lib/venn.ts](src/lib/venn.ts) hold
   the pure logic and geometry, and are covered by unit tests.
+
+[LogicPage.tsx](src/components/LogicPage.tsx) follows the same shape and
+reuses the kit: its connectives, implication and biconditional sections put the
+same twelve elements on a `VennDiagram`, so "and" is visibly the intersection
+and "if…, then…" visibly a subset. [src/lib/logic.ts](src/lib/logic.ts) holds
+the truth tables, quantifier and implication checks, the knights-and-knaves
+solver and the NIM strategy, all unit tested.
 
 Diagrams carry `role="img"`, which hides their contents from assistive
 technology, so every interactive diagram is paired with a row of ordinary

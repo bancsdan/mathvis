@@ -47,8 +47,8 @@ React 19 + TypeScript + Vite. KaTeX for math, react-i18next for all copy, mathjs
 | `src/topics.ts` | The only registry of sections and topics, plus `DEFAULT_TOPIC_ID`. |
 | `src/App.tsx` | Shell. **Picks the topic from the URL hash**, falling back to the default. |
 | `src/components/Sidebar.tsx` | Left menu. `ComingSoonPage.tsx` is the placeholder for topics with no `page`. |
-| `src/components/<Name>Page.tsx` | One per lesson. `SetsPage.tsx` is the worked example of a long one. |
-| `src/lib/` | Pure logic, no React, unit tested. `sets.ts` and `venn.ts` are the pattern. |
+| `src/components/<Name>Page.tsx` | One per lesson. `SetsPage.tsx` is the worked example of a long one; `LogicPage.tsx` is the second lesson and reuses the sets kit (same 12-element universe, `VennDiagram` with `elements`). |
+| `src/lib/` | Pure logic, no React, unit tested. `sets.ts` and `venn.ts` are the pattern; `logic.ts` builds on `sets.ts` (`Predicate`, `UNIVERSE`). |
 | `src/i18n/locales/{hu,en}.json` | All copy. Namespaces are flat and exactly two levels: `ns.key`. |
 | `src/index.css` | One global stylesheet, no modules. Append new rules at the bottom. |
 
@@ -74,6 +74,7 @@ These each cost real time to discover.
 - In i18next, `count` is the pluralization trigger. Passing it means you must supply `_one` and `_other`; name the variable something else if you do not want plurals.
 - Inside an SVG `<mask>`, `#fff` and `#000` are luminance channels, not theme colors. They stay literal in both schemes.
 - Several diagrams on one page need unique mask and clip-path ids: use `useId()` and strip non-identifier characters from it.
+- Section ids of a lesson share a prefix (`sets-`, `logic-`) and that prefix must be added to the `.card[id^='…']` scroll-margin rule in `index.css`, or the sticky section nav covers the heading you jump to.
 
 # Workflow
 - When adding text, make sure you add relevant translations in the `src/i18n/locales` folder, and only use keys for text on the UI. Both locale files must carry exactly the same keys.
@@ -81,3 +82,4 @@ These each cost real time to discover.
 - Give every diagram a `role="img"` and a translated aria-label. That hides its contents from assistive technology, so pair any click-driven diagram with ordinary buttons to keep it keyboard-operable.
 - Use conventional commits when writing commits.
 - If relevant changes happen for `README.md`, update it.
+- Update `CLAUDE.md` after each task if any important changes happened that other sessions should know about. Be mindful about what you put there, don't litter/grow the context with unnecessary things, only put things in there that most sessions will need on startup.
