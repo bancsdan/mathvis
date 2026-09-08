@@ -13,8 +13,9 @@ with a "soon" badge and show a placeholder page.
 ### High school
 
 Follows the topic overview table of the Hungarian framework curriculum.
-**Halmazok** and **Matematikai logika** have lessons; the site opens on
-Halmazok. The rest carry a "soon" badge and show a placeholder.
+**Halmazok**, **Matematikai logika** and **Kombinatorika, gráfok** have
+lessons; the site opens on Halmazok. The rest carry a "soon" badge and show a
+placeholder.
 
 | Magyar | English |
 |---|---|
@@ -72,6 +73,20 @@ same twelve elements on a `VennDiagram`, so "and" is visibly the intersection
 and "if…, then…" visibly a subset. [src/lib/logic.ts](src/lib/logic.ts) holds
 the truth tables, quantifier and implication checks, the knights-and-knaves
 solver and the NIM strategy, all unit tested.
+
+[CombiPage.tsx](src/components/CombiPage.tsx) is the third lesson and adds two
+more reusable diagrams: [ChoiceTree.tsx](src/components/ChoiceTree.tsx) draws a
+multi-step choice as one column per step and one row per possibility (dead
+branches dashed, so a pruned search is visible), and
+[GraphDiagram.tsx](src/components/GraphDiagram.tsx) spreads vertices on a circle
+with optional degree badges and click-to-toggle edges.
+[src/lib/combinatorics.ts](src/lib/combinatorics.ts) holds the counting, the
+choice trees, the timetable constraint solver, the graph helpers and the
+number sieve, all unit tested.
+
+Both locale files are checked against each other by
+[src/i18n/locales.test.ts](src/i18n/locales.test.ts): the same keys, no empty
+strings and the same interpolation variables in every language.
 
 Diagrams carry `role="img"`, which hides their contents from assistive
 technology, so every interactive diagram is paired with a row of ordinary
