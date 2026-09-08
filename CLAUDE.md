@@ -42,9 +42,13 @@ Follows the topic overview table of the Hungarian framework curriculum.
 
 - `src/topics.ts` is the single registry of sections and topics. Adding a lesson = writing a page component and setting it as `page` on the topic there; the menu, placeholder, and `#topic-id` deep link follow automatically.
 - `src/components/Sidebar.tsx` renders the menu; `src/components/ComingSoonPage.tsx` is the placeholder.
+- `src/components/SetsPage.tsx` is the worked example of a full lesson: one card per section behind a sticky in-page menu, each pairing a diagram with a checkable exercise. Reuse `VennDiagram.tsx`, `Exercise.tsx` and `SetsElementGrid.tsx` rather than rebuilding them.
+- Pure logic belongs in `src/lib/` with unit tests next to it. `src/lib/sets.ts` and `src/lib/venn.ts` are the pattern.
 
 # Workflow
-- When adding text, make sure you add relevant translations in the `src/i18n/locales` folder, and only use keys for text on the UI.
+- When adding text, make sure you add relevant translations in the `src/i18n/locales` folder, and only use keys for text on the UI. Both locale files must carry exactly the same keys.
+- Run `npm test`, `npm run lint` and `npm run build` before finishing. CI runs all three and a failure blocks the deploy.
+- Give every diagram a `role="img"` and a translated aria-label, and pair any click-driven diagram with ordinary buttons so it works from a keyboard.
 - Use conventional commits when writing commits.
 - For math formulas use KaTeX.
 - If relevant changes happen for `README.md`, update it.
