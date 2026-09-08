@@ -139,7 +139,7 @@ export function LogicGamesCard({ id }: { id: string }) {
         {WORKED.statements.map((s) => (
           <li key={s.labelKey} className="sentence-row">
             <span className="sentence-text">
-              <strong>{s.speaker}:</strong> {t(s.labelKey)}
+              <strong>{t(`logic.name_${s.speaker}`)}:</strong> {t(s.labelKey)}
             </span>
           </li>
         ))}
@@ -148,10 +148,10 @@ export function LogicGamesCard({ id }: { id: string }) {
         <table className="paper-table">
           <thead>
             <tr>
-              <th>A</th>
-              <th>B</th>
-              <th>{t('logic.islandColClaim')}</th>
-              <th>{t('logic.islandColShould')}</th>
+              <th>{t('logic.islandColGuess', { name: t('logic.name_A') })}</th>
+              <th>{t('logic.islandColGuess', { name: t('logic.name_B') })}</th>
+              <th>{t('logic.islandColClaim', { name: t(`logic.name_${WORKED.statements[0].speaker}`) })}</th>
+              <th>{t('logic.islandColShould', { name: t(`logic.name_${WORKED.statements[0].speaker}`) })}</th>
               <th>{t('logic.islandColFits')}</th>
             </tr>
           </thead>
@@ -207,7 +207,7 @@ export function LogicGamesCard({ id }: { id: string }) {
           {puzzle.statements.map((s) => (
             <li key={s.labelKey} className="sentence-row">
               <span className="sentence-text">
-                <strong>{s.speaker}:</strong> {t(s.labelKey)}
+                <strong>{t(`logic.name_${s.speaker}`)}:</strong> {t(s.labelKey)}
               </span>
               {guessed && (
                 <span className={`sentence-badge ${statementFits(s, guessed) ? 'kind-true' : 'kind-false'}`}>
@@ -218,8 +218,8 @@ export function LogicGamesCard({ id }: { id: string }) {
           ))}
         </ul>
         {ISLANDERS.map((who) => (
-          <div key={who} className="pill-row" role="group" aria-label={t('logic.islandWhoAria', { who })}>
-            <span className="field-label">{who}:</span>
+          <div key={who} className="pill-row" role="group" aria-label={t('logic.islandWhoAria', { who: t(`logic.name_${who}`) })}>
+            <span className="field-label">{t(`logic.name_${who}`)}:</span>
             {KINDS.map((k) => (
               <button
                 key={k}
