@@ -83,7 +83,7 @@ export function VennDiagram({
             {regions.map((sig) => (
               <mask key={sig} id={maskId(sig)} maskUnits="userSpaceOnUse" x={0} y={0} width={width} height={height}>
                 {/* White and black here are mask luminance, not visible paint,
-                    so they stay literal in both colour schemes. */}
+                    so they stay literal in both color schemes. */}
                 <rect x={0} y={0} width={width} height={height} fill="#fff" />
                 {cfg.circles.map((c, i) =>
                   (sig >> i) & 1 ? (
