@@ -14,6 +14,7 @@
   --mark-muted: #c3c2b7;
   --hover-wash: rgba(11, 11, 11, 0.05);
   --critical: #d03b3b;
+  --accent-select: #7a5cd6;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -33,6 +34,7 @@
     --mark-muted: #52514e;
     --hover-wash: rgba(255, 255, 255, 0.06);
     --critical: #e66767;
+    --accent-select: #9b82e8;
   }
 }
 
@@ -635,5 +637,273 @@ p.card-note.lesson-text {
   .sidebar {
     width: 100%;
     position: static;
+  }
+}
+
+/* --- in-page section navigation --------------------------------------- */
+
+.section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 8px 0;
+  background: var(--page);
+  border-bottom: 1px solid var(--border);
+}
+
+.section-nav-item {
+  font: inherit;
+  font-size: 12px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.section-nav-item:hover {
+  background: var(--hover-wash);
+  color: var(--text-primary);
+}
+
+.section-nav-item.active {
+  color: var(--text-primary);
+  border-color: var(--accent-select);
+}
+
+.section-nav-num {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+/* Keep the sticky bar from covering a heading we just jumped to. */
+.card[id^='sets-'] {
+  scroll-margin-top: 64px;
+}
+
+/* --- exercises --------------------------------------------------------- */
+
+.exercise {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--page);
+}
+
+.exercise-prompt {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 78ch;
+}
+
+.exercise-tag {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 6px;
+  margin-right: 6px;
+}
+
+.exercise-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.btn {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--axis);
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--hover-wash);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.btn-primary {
+  border-color: var(--accent-select);
+}
+
+.verdict-ok {
+  border-left: 3px solid var(--series-3);
+}
+
+.verdict-bad {
+  border-left: 3px solid var(--critical);
+}
+
+.verdict-revealed {
+  border-left: 3px solid var(--accent-select);
+}
+
+/* --- pills: region picker, predicate chips, multiple choice ------------- */
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.pill {
+  font: inherit;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.pill:hover {
+  background: var(--hover-wash);
+}
+
+.pill.active {
+  color: var(--text-primary);
+  border-color: var(--accent-select);
+  background: var(--hover-wash);
+}
+
+/* --- element universe -------------------------------------------------- */
+
+.elem-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.elem-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  width: 50px;
+  padding: 6px 0 4px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.elem-btn:hover {
+  background: var(--hover-wash);
+}
+
+.elem-btn.selected {
+  border-color: var(--accent-select);
+  background: var(--hover-wash);
+  color: var(--text-primary);
+}
+
+.elem-btn.missing {
+  border-color: var(--critical);
+  border-style: dashed;
+}
+
+.elem-btn.extra {
+  border-color: var(--critical);
+}
+
+.elem-universe {
+  border: 1px solid var(--axis);
+  border-radius: 10px;
+  padding: 6px 10px 10px;
+  margin: 10px 0;
+}
+
+.elem-universe-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* --- shared lesson bits ------------------------------------------------ */
+
+.venn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.count-input,
+.answer-input {
+  width: 74px;
+  font: inherit;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--axis);
+  background: var(--page);
+  color: var(--text-primary);
+}
+
+.roster {
+  font-size: 13px;
+  margin: 6px 0;
+}
+
+.bin-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.bin {
+  flex: 1 1 150px;
+  min-height: 84px;
+  border: 1px dashed var(--axis);
+  border-radius: 8px;
+  padding: 8px;
+  background: var(--page);
+}
+
+.bin.active {
+  border-color: var(--accent-select);
+  border-style: solid;
+}
+
+.bin-title {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+@media (max-width: 760px) {
+  .venn-row {
+    grid-template-columns: 1fr;
   }
 }
