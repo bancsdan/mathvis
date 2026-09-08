@@ -2,6 +2,7 @@ import type { ComponentType } from 'react'
 import { DerivativePage } from './components/DerivativePage'
 import { FftPage } from './components/FftPage'
 import { IntegralPage } from './components/IntegralPage'
+import { SetsPage } from './components/SetsPage'
 
 export type SectionId = 'highschool' | 'university'
 
@@ -30,7 +31,7 @@ export const SECTIONS: Section[] = [
     id: 'highschool',
     labelKey: 'nav.highschool',
     topics: [
-      { id: 'sets', labelKey: 'topics.sets' },
+      { id: 'sets', labelKey: 'topics.sets', page: SetsPage },
       { id: 'logic', labelKey: 'topics.logic' },
       { id: 'combinatorics', labelKey: 'topics.combinatorics' },
       { id: 'number-sets', labelKey: 'topics.numberSets' },
@@ -60,7 +61,9 @@ export const SECTIONS: Section[] = [
   },
 ]
 
-export const DEFAULT_TOPIC_ID = 'derivative'
+// The site opens on the first high school lesson: high school students are the
+// main audience.
+export const DEFAULT_TOPIC_ID = 'sets'
 
 export function findTopic(id: string): { section: Section; topic: Topic } | null {
   for (const section of SECTIONS) {
