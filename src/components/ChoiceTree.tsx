@@ -59,8 +59,12 @@ export function ChoiceTree({ nodes, maxDepth, ariaLabel, dead, maxRows = 36, too
 
   const padX = 10
   const padY = 12
+  // Labels hang to the right of their node, so the last column needs room for
+  // the widest label or the leaves run off the edge of the drawing.
+  const longest = nodes.reduce((max, node) => Math.max(max, node.label.length), 0)
+  const labelRoom = 7 + Math.ceil(longest * 6.5)
   const height = layout.terminals * rowHeight + padY * 2
-  const col = (Math.max(width, 1) - padX * 2) / Math.max(maxDepth, 1)
+  const col = (Math.max(width, 1) - padX * 2 - labelRoom) / Math.max(maxDepth, 1)
   const x = (depth: number) => padX + depth * col
   const y = (row: number) => padY + row * rowHeight + rowHeight / 2
 
