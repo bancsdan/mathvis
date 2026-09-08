@@ -29,7 +29,7 @@ site opens on Halmazok.
 | Halmazok | Sets | [✅ open](https://bancsdan.github.io/mathvis/#sets) |
 | Matematikai logika | Mathematical logic | [✅ open](https://bancsdan.github.io/mathvis/#logic) |
 | Kombinatorika, gráfok | Combinatorics, graphs | [✅ open](https://bancsdan.github.io/mathvis/#combinatorics) |
-| Számhalmazok, műveletek | Number sets, operations | soon |
+| Számhalmazok, műveletek | Number sets, operations | [✅ open](https://bancsdan.github.io/mathvis/#number-sets) |
 | Hatvány, gyök | Powers, roots | soon |
 | Betűs kifejezések egyenletmegoldásban, függvényábrázolásban | Algebraic expressions in equations and graphs | soon |
 | Arányosság, százalékszámítás | Proportionality, percentages | soon |
@@ -94,16 +94,28 @@ knowing about:
   a pruned search stays visible.
 - [GraphDiagram.tsx](src/components/GraphDiagram.tsx) spreads vertices on a
   circle with optional degree badges and click-to-toggle edges.
+- [NumberLine.tsx](src/components/NumberLine.tsx) puts ticks, dots, intervals
+  and measuring bars on one scale, with crowded labels stepping up a row rather
+  than being dropped. Its labels are plain text, since KaTeX cannot live inside
+  an SVG.
 - [src/lib/](src/lib/) holds the pure logic, all unit tested: `sets.ts` and
   `venn.ts` (set operations and Venn geometry), `logic.ts` (truth tables,
   quantifier and implication checks, the knights-and-knaves solver and the NIM
-  strategy) and `combinatorics.ts` (counting, choice trees, the timetable
-  constraint solver, graph helpers and the number sieve).
+  strategy), `combinatorics.ts` (counting, choice trees, the timetable
+  constraint solver, graph helpers and the number sieve) and `numbers.ts` (set
+  membership, long division, decimal to fraction, nested intervals, interval
+  notation, estimation and string-based rounding).
 
-[LogicPage.tsx](src/components/LogicPage.tsx) and
-[CombiPage.tsx](src/components/CombiPage.tsx) follow the same shape. The logic
+[LogicPage.tsx](src/components/LogicPage.tsx),
+[CombiPage.tsx](src/components/CombiPage.tsx) and
+[NumPage.tsx](src/components/NumPage.tsx) follow the same shape. The logic
 lesson puts the same twelve elements on a `VennDiagram`, so "and" is visibly
 the intersection and "if…, then…" visibly a subset.
+
+Decimals are written with a comma in Hungarian and a point in English, so no
+number is ever spelled out in a source file: the separator comes from the
+`num.decimalSep` translation key and `formatDecimal` / `texSeparator` in
+`numbers.ts` apply it, in prose and in KaTeX alike.
 
 ### Checks that guard a lesson
 
