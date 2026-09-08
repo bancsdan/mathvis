@@ -686,7 +686,8 @@ p.card-note.lesson-text {
 }
 
 /* Keep the sticky bar from covering a heading we just jumped to. */
-.card[id^='sets-'] {
+.card[id^='sets-'],
+.card[id^='logic-'] {
   scroll-margin-top: 64px;
 }
 
@@ -906,4 +907,120 @@ p.card-note.lesson-text {
   .venn-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* --- logic lesson ------------------------------------------------------ */
+
+.sentence-list {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sentence-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 13px;
+}
+
+.sentence-row .pill-row {
+  margin: 0;
+}
+
+.sentence-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.sentence-badge.kind-true {
+  border-color: var(--series-3);
+}
+
+.sentence-badge.kind-false {
+  border-color: var(--critical);
+}
+
+.sentence-badge.kind-none {
+  border-color: var(--accent-select);
+}
+
+/* Truth-table cells: the verdict column gets a coloured left edge. */
+.paper-table td.cell-ok {
+  box-shadow: inset 3px 0 0 var(--series-3);
+}
+
+.paper-table td.cell-bad {
+  box-shadow: inset 3px 0 0 var(--critical);
+}
+
+.paper-table tr.row-ok td {
+  background: var(--hover-wash);
+}
+
+.step-list {
+  list-style: none;
+  margin: 6px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.step-btn,
+.step-row {
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.step-btn {
+  cursor: pointer;
+}
+
+.step-btn:hover {
+  background: var(--hover-wash);
+}
+
+.step-row {
+  border-color: var(--accent-select);
+}
+
+.nim-log {
+  margin: 6px 0;
+  padding-left: 20px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.checkbox-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.checkbox-inline input {
+  accent-color: var(--series-1);
 }

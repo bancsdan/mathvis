@@ -2,6 +2,7 @@ import type { ComponentType } from 'react'
 import { DerivativePage } from './components/DerivativePage'
 import { FftPage } from './components/FftPage'
 import { IntegralPage } from './components/IntegralPage'
+import { LogicPage } from './components/LogicPage'
 import { SetsPage } from './components/SetsPage'
 
 export type SectionId = 'highschool' | 'university'
@@ -32,7 +33,7 @@ export const SECTIONS: Section[] = [
     labelKey: 'nav.highschool',
     topics: [
       { id: 'sets', labelKey: 'topics.sets', page: SetsPage },
-      { id: 'logic', labelKey: 'topics.logic' },
+      { id: 'logic', labelKey: 'topics.logic', page: LogicPage },
       { id: 'combinatorics', labelKey: 'topics.combinatorics' },
       { id: 'number-sets', labelKey: 'topics.numberSets' },
       { id: 'powers-roots', labelKey: 'topics.powersRoots' },
