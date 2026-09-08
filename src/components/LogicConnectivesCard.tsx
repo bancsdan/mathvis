@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { applyConnective, connectiveRegions, idsWhere, logicPredicateById, type Connective } from '../lib/logic'
 import { bucketByRegion, inR, setsEqual } from '../lib/sets'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { LogicPredicateSelect } from './LogicPredicateSelect'
 import { SetsElementGrid } from './SetsElementGrid'
@@ -62,6 +63,7 @@ export function LogicConnectivesCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="logic.connIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey={['logic.connDef1', 'logic.connDef2', 'logic.connDef3']} />
         <p className="card-note">
           <Trans i18nKey="logic.connIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>

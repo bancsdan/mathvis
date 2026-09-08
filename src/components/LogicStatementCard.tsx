@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { SENTENCES, type SentenceKind } from '../lib/logic'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 
 const KINDS: readonly SentenceKind[] = ['true', 'false', 'none']
@@ -38,6 +39,7 @@ export function LogicStatementCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="logic.stmtIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey="logic.stmtDef" />
       </div>
 
       <ul className="sentence-list">
@@ -52,6 +54,7 @@ export function LogicStatementCard({ id }: { id: string }) {
       <p className="card-note lesson-text">
         <Trans i18nKey="logic.stmtOpen" components={{ b: <strong />, i: <em /> }} />
       </p>
+      <Definition i18nKey="logic.stmtOpenDef" />
 
       <Exercise
         promptKey="logic.stmtTask"

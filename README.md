@@ -89,6 +89,9 @@ knowing about:
   pointer rather than by hit-testing shapes.
 - [Exercise.tsx](src/components/Exercise.tsx) wraps a task with check and reveal
   buttons. The section owns the answer and decides correctness.
+- [Definition.tsx](src/components/Definition.tsx) is the tinted, labelled box
+  every introduced term lives in, so a reader can skim a lesson for "what does
+  X mean" by colour alone.
 - [ChoiceTree.tsx](src/components/ChoiceTree.tsx) draws a multi-step choice as
   one column per step and one row per possibility, with dead branches dashed so
   a pruned search stays visible.

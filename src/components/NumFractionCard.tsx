@@ -10,6 +10,7 @@ import {
   repeatingToFraction,
   type DecimalPreset,
 } from '../lib/numbers'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 
@@ -79,6 +80,7 @@ export function NumFractionCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="num.fracIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey="num.fracDef" />
         <p className="card-note">
           <Trans i18nKey="num.fracIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>

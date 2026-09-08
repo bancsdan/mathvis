@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { implicationReport, logicPredicateById } from '../lib/logic'
 import { bucketByRegion } from '../lib/sets'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { LogicPredicateSelect } from './LogicPredicateSelect'
 import { Tex } from './Tex'
@@ -39,6 +40,7 @@ export function LogicIffCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="logic.iffIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey="logic.iffDef" />
         <p className="card-note">
           <Trans i18nKey="logic.iffIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>

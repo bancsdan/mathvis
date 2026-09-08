@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { PREDICATES, selectBy, setsEqual, UNIVERSE, predicateById } from '../lib/sets'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { SetsElementGrid } from './SetsElementGrid'
 import { Tex } from './Tex'
@@ -47,6 +48,7 @@ export function SetsDefineCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="sets.defineIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey={['sets.defineDef1', 'sets.defineDef2', 'sets.defineDef3']} />
       </div>
 
       <div className="controls-inline">

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { EXPRESSIONS, inR, nameRegionSet, regionTex, type RegionSet } from '../lib/sets'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 import { VennDiagram } from './VennDiagram'
@@ -74,6 +75,7 @@ export function SetsOperationsCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="sets.opsIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey={['sets.opsDef1', 'sets.opsDef2', 'sets.opsDef3', 'sets.opsDef4']} />
         <p className="card-note">
           <Trans i18nKey="sets.opsIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>

@@ -10,6 +10,7 @@ import {
   reciprocal,
   reduce,
 } from '../lib/numbers'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { NumberLine } from './NumberLine'
 import { Tex } from './Tex'
@@ -64,6 +65,7 @@ export function NumAbsCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="num.absIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey={['num.absDef1', 'num.absDef2', 'num.absDef3']} />
         <p className="card-note">
           <Trans i18nKey="num.absIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { allPermutations, combinations, factorial, PEOPLE, subsets, variations } from '../lib/combinatorics'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 
@@ -155,6 +156,7 @@ export function CombiSelectCard({ id }: { id: string }) {
         </>
       )}
 
+      <Definition i18nKey="combi.selDef" />
       <p className="card-note lesson-text">
         <Trans i18nKey="combi.selNames" components={{ b: <strong />, i: <em /> }} />
       </p>

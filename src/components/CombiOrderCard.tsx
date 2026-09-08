@@ -9,6 +9,7 @@ import {
   PEOPLE,
 } from '../lib/combinatorics'
 import { ChoiceTree } from './ChoiceTree'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 
@@ -93,6 +94,7 @@ export function CombiOrderCard({ id }: { id: string }) {
         </table>
       </div>
 
+      <Definition i18nKey="combi.orderDef" />
       <p className="card-note lesson-text">
         <Trans i18nKey="combi.orderRule" components={{ b: <strong />, i: <em /> }} />
       </p>

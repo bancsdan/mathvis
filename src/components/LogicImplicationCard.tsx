@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { connectiveRegions, implicationReport, logicPredicateById } from '../lib/logic'
 import { bucketByRegion, inR } from '../lib/sets'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { LogicPredicateSelect } from './LogicPredicateSelect'
 import { Tex } from './Tex'
@@ -45,6 +46,7 @@ export function LogicImplicationCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="logic.impIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey="logic.impDef" />
         <p className="card-note">
           <Trans i18nKey="logic.impIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>
@@ -112,6 +114,7 @@ export function LogicImplicationCard({ id }: { id: string }) {
       <p className="card-note lesson-text">
         <Trans i18nKey="logic.impConverseIntro" components={{ b: <strong />, i: <em /> }} />
       </p>
+      <Definition i18nKey="logic.impConverseDef" />
       <Tex block tex="Q \Rightarrow P" />
       <p className={`alias-verdict ${report.converse ? 'verdict-ok' : 'verdict-bad'}`}>
         {t('logic.impConverseSentence', values)} {verdict(report.converse)}

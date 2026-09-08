@@ -12,6 +12,7 @@ import {
   type Claim,
   type EstimatePreset,
 } from '../lib/numbers'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 
@@ -65,6 +66,7 @@ export function NumEstimateCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="num.estIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey={['num.estDef1', 'num.estDef2']} />
       </div>
 
       <div className="pill-row" role="group" aria-label={t('num.estPickAria')}>

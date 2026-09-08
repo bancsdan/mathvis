@@ -9,6 +9,7 @@ import {
   smallestFactor,
   type ProofStep,
 } from '../lib/logic'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 import { useWidth } from './useWidth'
@@ -80,6 +81,7 @@ export function LogicProofCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="logic.proofIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey="logic.proofDef" />
         <p className="card-note">
           <Trans i18nKey="logic.proofIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { idsWhere, logicPredicateById, negate } from '../lib/logic'
 import { UNIVERSE, type Elem } from '../lib/sets'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { LogicPredicateSelect } from './LogicPredicateSelect'
 import { SetsElementGrid } from './SetsElementGrid'
@@ -43,6 +44,7 @@ export function LogicNegationCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="logic.negIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey="logic.negDef" />
         <p className="card-note">
           <Trans i18nKey="logic.negIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>

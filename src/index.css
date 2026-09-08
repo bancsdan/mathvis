@@ -15,6 +15,9 @@
   --hover-wash: rgba(11, 11, 11, 0.05);
   --critical: #d03b3b;
   --accent-select: #7a5cd6;
+  --define-wash: #fff6dc;
+  --define-edge: #d9a21c;
+  --define-label: #8a5a00;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -35,6 +38,9 @@
     --hover-wash: rgba(255, 255, 255, 0.06);
     --critical: #e66767;
     --accent-select: #9b82e8;
+    --define-wash: #2a2310;
+    --define-edge: #c9932a;
+    --define-label: #f0c060;
   }
 }
 
@@ -1167,4 +1173,34 @@ p.card-note.lesson-text {
 .digit-sep {
   padding: 0 3px;
   font-weight: 600;
+}
+
+/* Definition block: the one boxed, tinted thing in a lesson, so a reader
+   skimming for "what does X mean" can find it by colour alone. */
+.definition {
+  margin: 8px 0 12px;
+  padding: 10px 14px;
+  background: var(--define-wash);
+  border: 1px solid var(--define-edge);
+  border-left-width: 4px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.definition p {
+  margin: 0;
+}
+
+.definition p + p {
+  margin-top: 6px;
+}
+
+.definition-label {
+  color: var(--define-label);
+}
+
+.definition .tex-block {
+  margin: 8px 0 2px;
 }

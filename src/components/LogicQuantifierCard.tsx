@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { domainOf, evalQuantified, logicPredicateById, type Quantifier } from '../lib/logic'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { LogicPredicateSelect } from './LogicPredicateSelect'
 import { SetsElementGrid } from './SetsElementGrid'
@@ -42,6 +43,7 @@ export function LogicQuantifierCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="logic.quantIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey={['logic.quantDef1', 'logic.quantDef2']} />
         <p className="card-note">
           <Trans i18nKey="logic.quantIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>

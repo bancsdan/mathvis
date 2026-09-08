@@ -11,6 +11,7 @@ import {
   type NumberClass,
   type SampleNumber,
 } from '../lib/numbers'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 
@@ -88,6 +89,7 @@ export function NumTowerCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="num.towerIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey={['num.towerDef1', 'num.towerDef2', 'num.towerDef3', 'num.towerDef4', 'num.towerDef5']} />
       </div>
 
       <div className="num-tower">
@@ -135,9 +137,6 @@ export function NumTowerCard({ id }: { id: string }) {
         </table>
       </div>
 
-      <p className="card-note lesson-text">
-        <Trans i18nKey="num.towerIrrNote" components={{ b: <strong />, i: <em /> }} />
-      </p>
       <p className="card-note lesson-text">
         {/* The one link that may be an anchor: changing the topic is exactly
             what the URL hash is for. */}

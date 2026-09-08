@@ -52,7 +52,7 @@ React 19 + TypeScript + Vite. KaTeX for math, react-i18next for all copy, mathjs
 | `src/i18n/locales/{hu,en}.json` | All copy. Namespaces are flat and exactly two levels: `ns.key`. |
 | `src/index.css` | One global stylesheet, no modules. Append new rules at the bottom. |
 
-Shared helpers: `Tex.tsx` (`<Tex tex="A \cup B" block />`), `useWidth.ts` (ResizeObserver, returns `[ref, width]`), `LineChart.tsx` (function plotting only). Lesson kit, reuse rather than rebuild: `VennDiagram.tsx`, `Exercise.tsx`, `SetsElementGrid.tsx`, `ChoiceTree.tsx`, `GraphDiagram.tsx`, `NumberLine.tsx`, `useActiveSection.ts`.
+Shared helpers: `Tex.tsx` (`<Tex tex="A \cup B" block />`), `useWidth.ts` (ResizeObserver, returns `[ref, width]`), `LineChart.tsx` (function plotting only). Lesson kit, reuse rather than rebuild: `VennDiagram.tsx`, `Exercise.tsx`, `Definition.tsx`, `SetsElementGrid.tsx`, `ChoiceTree.tsx`, `GraphDiagram.tsx`, `NumberLine.tsx`, `useActiveSection.ts`.
 
 Adding a lesson is: write the page component, set it as `page` on the topic in `src/topics.ts`, add its copy to both locale files. Menu entry, placeholder removal and the `#topic-id` link all follow.
 
@@ -63,6 +63,7 @@ Adding a lesson is: write the page component, set it as `page` on the topic in `
 - Plain strings use `t('ns.key')`. Strings containing `<b>`/`<i>` use `<Trans i18nKey components={{ b: <strong />, i: <em /> }} />`.
 - Math symbols in prose are literal Unicode (∈ ⊆ ∪ ∩ ∅ −). Anything needing real typesetting goes through KaTeX, with translated words injected as `\text{${t('…')}}` — never hardcode Hungarian inside a tex string.
 - Colors only ever come from CSS variables. There are exactly three series colors (`--series-1/2/3`) plus `--accent-select` for a highlighted result.
+- Definitions: every term a lesson introduces (a named set, an operation, a notation, a property) gets a `<Definition i18nKey="ns.xDef" />` block, placed right after the intro paragraph that motivates it. It is the one tinted box on the page (`--define-*` colors, label from `app.definition`), so a reader can skim for it. Keys are `<section>Def`, or `<section>Def1…n` for several terms passed as an array, one paragraph each, each opening with the term in `<b>`. Rules and theorems (szorzási elv, De Morgan, the rounding rule) are not definitions; they stay bold-led notes. The intro must not repeat the definition word for word.
 - Decimals: never write a comma into a source file. The separator is the `num.decimalSep` key; `formatDecimal(str, sep, tex)` and `texSeparator(tex, sep)` in `numbers.ts` apply it (Tex needs `3{,}14`, prose gets `3,14`).
 
 # Gotchas

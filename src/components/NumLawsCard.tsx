@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { formatDecimal, LAWS_ANSWER } from '../lib/numbers'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 import { useWidth } from './useWidth'
@@ -128,6 +129,7 @@ export function NumLawsCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="num.lawsIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey={['num.lawsDef1', 'num.lawsDef2', 'num.lawsDef3']} />
       </div>
 
       <div className="pill-row" role="group" aria-label={t('num.lawsModeAria')}>

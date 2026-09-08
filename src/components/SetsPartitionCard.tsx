@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { checkAssignment, checkScheme, SCHEMES, UNIVERSE } from '../lib/sets'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { SetsElementGrid } from './SetsElementGrid'
 
@@ -39,6 +40,7 @@ export function SetsPartitionCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="sets.partIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey="sets.partDef" />
         <p className="card-note">
           <Trans i18nKey="sets.partIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>

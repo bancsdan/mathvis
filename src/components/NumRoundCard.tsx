@@ -12,6 +12,7 @@ import {
   roundAt,
   roundingError,
 } from '../lib/numbers'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 
@@ -74,6 +75,7 @@ export function NumRoundCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="num.roundIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey="num.roundDef" />
         <p className="card-note">
           <Trans i18nKey="num.roundIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>
@@ -142,6 +144,7 @@ export function NumRoundCard({ id }: { id: string }) {
           components={{ b: <strong />, i: <em /> }}
         />
       </p>
+      <Definition i18nKey="num.measureDef" />
       <div className="pill-row" role="group" aria-label={t('num.measurePickErr')}>
         {ROOM_ERRORS.map((e) => (
           <button

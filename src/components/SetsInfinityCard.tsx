@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { MAPPINGS } from '../lib/sets'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 import { useWidth } from './useWidth'
@@ -105,6 +106,7 @@ export function SetsInfinityCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="sets.infIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey="sets.infDef" />
         <p className="card-note">
           <Trans i18nKey="sets.infIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>

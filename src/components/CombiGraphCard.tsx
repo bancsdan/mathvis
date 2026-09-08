@@ -8,6 +8,7 @@ import {
   toggleEdge,
   type Edge,
 } from '../lib/combinatorics'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { GraphDiagram } from './GraphDiagram'
 import { Tex } from './Tex'
@@ -66,6 +67,7 @@ export function CombiGraphCard({ id, selectSectionId }: { id: string; selectSect
         <p className="card-note">
           <Trans i18nKey="combi.graphIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey="combi.graphDef" />
         <p className="card-note">
           <Trans i18nKey="combi.graphIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>
@@ -163,6 +165,7 @@ export function CombiGraphCard({ id, selectSectionId }: { id: string; selectSect
       </p>
 
       <p className="mini-title">{t('combi.graphCompleteTitle')}</p>
+      <Definition i18nKey="combi.graphCompleteDef" />
       <Tex block tex={`\\frac{${n} \\cdot ${n - 1}}{2} = \\binom{${n}}{2} = ${completeEdgeCount(n)}`} />
       <p className="card-note lesson-text">
         <Trans i18nKey="combi.graphCompleteNote" components={{ b: <strong />, i: <em /> }} />

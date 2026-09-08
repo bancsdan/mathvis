@@ -9,6 +9,7 @@ import {
   intervalNotation,
   intervalSetBuilder,
 } from '../lib/numbers'
+import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { NumberLine } from './NumberLine'
 import { Tex } from './Tex'
@@ -64,6 +65,7 @@ export function NumIntervalCard({ id }: { id: string }) {
         <p className="card-note">
           <Trans i18nKey="num.intervalIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
+        <Definition i18nKey={['num.intervalDef1', 'num.intervalDef2']} />
         <p className="card-note">
           <Trans i18nKey="num.intervalIntro2" components={{ b: <strong />, i: <em /> }} />
         </p>
