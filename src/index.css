@@ -687,7 +687,8 @@ p.card-note.lesson-text {
 
 /* Keep the sticky bar from covering a heading we just jumped to. */
 .card[id^='sets-'],
-.card[id^='logic-'] {
+.card[id^='logic-'],
+.card[id^='combi-'] {
   scroll-margin-top: 64px;
 }
 
@@ -1023,4 +1024,28 @@ p.card-note.lesson-text {
 
 .checkbox-inline input {
   accent-color: var(--series-1);
+}
+
+/* --- combinatorics lesson ---------------------------------------------- */
+
+/* Names do not fit the fixed-width element buttons of the sets lesson. */
+.elem-btn.elem-wide {
+  width: auto;
+  min-width: 64px;
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+/* One lesson of a timetable row: kept apart so the slots stay readable. */
+.tt-slot {
+  display: inline-block;
+  margin-right: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Anagrams are shown, not chosen, so they are pills without the hover. */
+.word-pill {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
 }
