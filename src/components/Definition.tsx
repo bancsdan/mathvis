@@ -12,8 +12,8 @@ interface Props {
  * A boxed definition. Every term a lesson introduces gets one of these, so a
  * reader skimming for "what does X mean" finds it by colour alone.
  *
- * The label ("Definíció:") opens the first paragraph rather than sitting on
- * its own line, so a one-sentence definition stays one line tall.
+ * The label ("Definíció:") sits on its own line above the text, so every
+ * box starts the same way and the term itself opens the first line.
  */
 export function Definition({ i18nKey, children }: Props) {
   const { t } = useTranslation()
@@ -21,9 +21,9 @@ export function Definition({ i18nKey, children }: Props) {
 
   return (
     <aside className="definition lesson-text">
-      {keys.map((key, i) => (
+      <strong className="definition-label">{t('app.definition')}:</strong>
+      {keys.map((key) => (
         <p key={key}>
-          {i === 0 && <strong className="definition-label">{t('app.definition')}:</strong>}{' '}
           <Trans i18nKey={key} components={{ b: <strong />, i: <em /> }} />
         </p>
       ))}

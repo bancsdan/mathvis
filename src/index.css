@@ -1198,6 +1198,8 @@ p.card-note.lesson-text {
 }
 
 .definition-label {
+  display: block;
+  margin-bottom: 4px;
   color: var(--define-label);
 }
 
