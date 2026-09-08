@@ -688,7 +688,8 @@ p.card-note.lesson-text {
 /* Keep the sticky bar from covering a heading we just jumped to. */
 .card[id^='sets-'],
 .card[id^='logic-'],
-.card[id^='combi-'] {
+.card[id^='combi-'],
+.card[id^='num-'] {
   scroll-margin-top: 64px;
 }
 
@@ -1048,4 +1049,122 @@ p.card-note.lesson-text {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.08em;
   color: var(--text-primary);
+}
+
+/* --- number sets lesson ------------------------------------------------ */
+
+/* ℕ inside ℤ inside ℚ inside ℝ, drawn as boxes rather than an SVG so the
+   numbers can stay real buttons carrying real KaTeX. */
+.num-tower {
+  border: 1px solid var(--axis);
+  border-radius: 12px;
+  padding: 8px 10px 10px;
+  margin: 10px 0;
+}
+
+.num-box {
+  border: 1px solid var(--axis);
+  border-radius: 10px;
+  padding: 6px 8px 8px;
+  margin-top: 4px;
+}
+
+.num-box.active {
+  border-color: var(--accent-select);
+  background: var(--hover-wash);
+}
+
+/* The part of ℝ left over once ℚ is taken out: where the irrationals live. */
+.num-band {
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--axis);
+}
+
+.num-box-label {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.num-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.num-chip {
+  font: inherit;
+  padding: 3px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+.num-chip:hover {
+  background: var(--hover-wash);
+}
+
+.num-chip.selected {
+  border-color: var(--accent-select);
+  background: var(--hover-wash);
+}
+
+.num-badge {
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-select);
+  color: var(--text-secondary);
+}
+
+/* Point labels sit above the axis of a number line. */
+.line-label {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* One digit of a number being rounded, so the deciding one can be pointed at. */
+.digit-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.digit-cell {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.digit-box {
+  display: inline-block;
+  min-width: 22px;
+  padding: 4px 0;
+  margin-right: 2px;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  font-variant-numeric: tabular-nums;
+}
+
+.digit-box.deciding {
+  border-color: var(--accent-select);
+  background: var(--hover-wash);
+  font-weight: 600;
+}
+
+.digit-box.dropped {
+  color: var(--text-muted);
+  border-style: dashed;
+}
+
+.digit-sep {
+  padding: 0 3px;
+  font-weight: 600;
 }

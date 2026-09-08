@@ -4,6 +4,7 @@ import { DerivativePage } from './components/DerivativePage'
 import { FftPage } from './components/FftPage'
 import { IntegralPage } from './components/IntegralPage'
 import { LogicPage } from './components/LogicPage'
+import { NumPage } from './components/NumPage'
 import { SetsPage } from './components/SetsPage'
 
 export type SectionId = 'highschool' | 'university'
@@ -36,7 +37,7 @@ export const SECTIONS: Section[] = [
       { id: 'sets', labelKey: 'topics.sets', page: SetsPage },
       { id: 'logic', labelKey: 'topics.logic', page: LogicPage },
       { id: 'combinatorics', labelKey: 'topics.combinatorics', page: CombiPage },
-      { id: 'number-sets', labelKey: 'topics.numberSets' },
+      { id: 'number-sets', labelKey: 'topics.numberSets', page: NumPage },
       { id: 'powers-roots', labelKey: 'topics.powersRoots' },
       { id: 'algebraic-expressions', labelKey: 'topics.algebraicExpressions' },
       { id: 'proportionality', labelKey: 'topics.proportionality' },
