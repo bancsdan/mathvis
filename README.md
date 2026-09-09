@@ -34,7 +34,7 @@ site opens on Halmazok.
 | Betűs kifejezések egyenletmegoldásban, függvényábrázolásban | Algebraic expressions in equations and graphs | [✅ open](https://bancsdan.github.io/mathvis/#algebraic-expressions) |
 | Arányosság, százalékszámítás | Proportionality, percentages | [✅ open](https://bancsdan.github.io/mathvis/#proportionality) |
 | Elsőfokú egyenletek, egyenlőtlenségek, egyenletrendszerek | Linear equations, inequalities, systems | [✅ open](https://bancsdan.github.io/mathvis/#linear-equations) |
-| Másodfokú egyenletek, egyenlőtlenségek | Quadratic equations, inequalities | soon |
+| Másodfokú egyenletek, egyenlőtlenségek | Quadratic equations, inequalities | [✅ open](https://bancsdan.github.io/mathvis/#quadratic-equations) |
 | A függvény fogalma, függvénytulajdonságok | Functions and their properties | soon |
 | Geometriai alapismeretek | Geometry basics | soon |
 | Háromszögek | Triangles | soon |
@@ -122,7 +122,13 @@ knowing about:
   balance moves that only exist when both pans can afford them, solution sets
   over N, Z and Q, the inequality solver that records where the sign turns,
   substitution and equal coefficients for a two-by-two system, and the
-  word-problem models behind meeting cars, joint work, mixtures and two bills).
+  word-problem models behind meeting cars, joint work, mixtures and two bills)
+  and `quadratic.ts` (standard form and the step that loses a root, factoring
+  with the Viéta pair, completing the square as a run of steps that stops where
+  a square would have to be negative, the formula derived in letters and in
+  numbers at once, the four shapes a quadratic inequality's answer can take,
+  substitution with the u values no x can produce, and the two word-problem
+  models).
 
 [LogicPage.tsx](src/components/LogicPage.tsx),
 [CombiPage.tsx](src/components/CombiPage.tsx),
