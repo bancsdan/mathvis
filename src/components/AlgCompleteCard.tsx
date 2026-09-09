@@ -36,7 +36,9 @@ export function AlgCompleteCard({ id }: { id: string }) {
   const answerKey = `${ansH}|${ansK}`
   const [solH, solK] = COMPLETE_ANSWER.split('|')
 
-  const xs = useMemo(() => Array.from({ length: 41 }, (_, i) => -10 + i * 0.5), [])
+  // A window six units either side of the lowest point, so the parabola's
+  // bottom stays in the middle of the chart wherever the sliders put it.
+  const xs = useMemo(() => Array.from({ length: 25 }, (_, i) => -h - 6 + i * 0.5), [h])
   const curve = useMemo(() => xs.map((x) => quadValue(p, q, x)), [xs, p, q])
   const floor = useMemo(() => xs.map(() => k), [xs, k])
 
