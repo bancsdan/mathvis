@@ -1984,7 +1984,7 @@
     "defineRuleAria": "Függvény",
     "rule_line": "f(x) = 2x − 3",
     "rule_square": "f(x) = x² − 4",
-    "rule_taxi": "taxi",
+    "rule_taxi": "taxi: f(x) = 300x + 700",
     "rule_half": "f(x) = 12/x",
     "defineDomainTitle": "Az értelmezési tartomány elemei",
     "defineChipAria": "x értékek",
