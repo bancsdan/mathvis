@@ -46,14 +46,14 @@ describe('numbers on screen', () => {
     expect(round(216320.4, 0)).toBe(216320)
   })
 
-  it('groups thousands with a thin space', () => {
-    expect(groupThousands(1234567)).toBe('1 234 567')
+  it('groups thousands with a no-break space', () => {
+    expect(groupThousands(1234567)).toBe('1 234 567')
     expect(groupThousands(999)).toBe('999')
-    expect(groupThousands(15000)).toBe('15 000')
+    expect(groupThousands(15000)).toBe('15 000')
   })
 
   it('writes a negative amount with a typographic minus', () => {
-    expect(groupThousands(-12000)).toBe('−12 000')
+    expect(groupThousands(-12000)).toBe('−12 000')
   })
 
   it('writes prose numbers with the reader’s separator', () => {

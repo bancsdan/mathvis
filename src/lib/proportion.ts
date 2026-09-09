@@ -22,9 +22,9 @@ export function round(x: number, digits: number): number {
   return Number(x.toFixed(digits))
 }
 
-/** `1234567` → `1 234 567`, grouped with a thin space, minus sign typographic. */
+/** `1234567` → `1 234 567`, grouped with a narrow no-break space so a number never wraps mid-way, minus sign typographic. */
 export function groupThousands(n: number): string {
-  const body = String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  const body = String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
   return n < 0 ? `−${body}` : body
 }
 

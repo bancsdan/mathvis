@@ -52,7 +52,7 @@ React 19 + TypeScript + Vite. KaTeX for math, react-i18next for all copy, mathjs
 | `src/i18n/locales/{hu,en}.json` | All copy. Namespaces are flat and exactly two levels: `ns.key`. |
 | `src/index.css` | One global stylesheet, no modules. Append new rules at the bottom. |
 
-Shared helpers: `Tex.tsx` (`<Tex tex="A \cup B" block />`), `useWidth.ts` (ResizeObserver, returns `[ref, width]`), `LineChart.tsx` (function plotting only; pass `format` when the y values are money, or the axis reads `1.0e+5`). Lesson kit, reuse rather than rebuild: `VennDiagram.tsx`, `Exercise.tsx`, `Definition.tsx`, `SetsElementGrid.tsx`, `ChoiceTree.tsx`, `GraphDiagram.tsx`, `NumberLine.tsx`, `useActiveSection.ts`.
+Shared helpers: `Tex.tsx` (`<Tex tex="A \cup B" block />`), `useWidth.ts` (ResizeObserver, returns `[ref, width]`), `LineChart.tsx` (function plotting only; pass `format` when the y values are money, or the axis reads `1.0e+5`, and `xStep` when x counts whole things, or years get half-year ticks). Lesson kit, reuse rather than rebuild: `VennDiagram.tsx`, `Exercise.tsx`, `Definition.tsx`, `SetsElementGrid.tsx`, `ChoiceTree.tsx`, `GraphDiagram.tsx`, `NumberLine.tsx`, `useActiveSection.ts`.
 
 Adding a lesson is: write the page component, set it as `page` on the topic in `src/topics.ts`, add its copy to both locale files. Menu entry, placeholder removal and the `#topic-id` link all follow.
 

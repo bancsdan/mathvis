@@ -24,6 +24,8 @@ interface Props {
   /** How a y value is written, for series the default notation reads badly on
       (money, say, where `1.0e+5` helps nobody). */
   format?: (v: number) => string
+  /** Fixed spacing of the x ticks, for axes that count whole things (years). */
+  xStep?: number
 }
 
 export function LineChart({
@@ -35,6 +37,7 @@ export function LineChart({
   yDomain,
   compact = false,
   format,
+  xStep,
 }: Props) {
   const [ref, width] = useWidth<HTMLDivElement>()
   const [hover, setHover] = useState<number | null>(null)
@@ -68,7 +71,11 @@ export function LineChart({
   const sy = (y: number) => M.top + (1 - (y - yMin) / (yMax - yMin || 1)) * plotH
 
   const yTicks = niceTicks(yMin, yMax, compact ? 2 : 4)
-  const xTicks = compact ? [] : niceTicks(xMin, xMax, 6)
+  const xTicks = compact
+    ? []
+    : xStep
+      ? Array.from({ length: Math.floor((xMax - xMin) / xStep + 1e-9) + 1 }, (_, i) => xMin + i * xStep)
+      : niceTicks(xMin, xMax, 6)
 
   const paths = useMemo(
     () =>

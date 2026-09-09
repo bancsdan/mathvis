@@ -119,6 +119,7 @@ export function PropInterestCard({ id }: { id: string }) {
         xLabel={t('prop.interestChartX')}
         yLabel={t('prop.interestChartY')}
         format={(v) => groupThousands(v)}
+        xStep={1}
         series={[
           { name: t('prop.interestCompound'), color: 'var(--series-1)', values: withInterest },
           { name: t('prop.interestSimple'), color: 'var(--series-2)', values: without, dashed: true },
