@@ -96,7 +96,8 @@ export function FnDefineCard({ id }: { id: string }) {
   const { t } = useTranslation()
   const sep = t('num.decimalSep')
   const [ruleId, setRuleId] = useState(RULES[0].id)
-  const [chosen, setChosen] = useState<number[]>([])
+  // One point to begin with, so the plot is never an empty frame.
+  const [chosen, setChosen] = useState<number[]>([RULES[0].domain[3]])
   const [back, setBack] = useState('')
   const [answer, setAnswer] = useState('')
 
@@ -107,7 +108,7 @@ export function FnDefineCard({ id }: { id: string }) {
 
   const pickRule = (next: Rule) => {
     setRuleId(next.id)
-    setChosen([])
+    setChosen([next.domain[Math.min(3, next.domain.length - 1)]])
     setBack('')
   }
 

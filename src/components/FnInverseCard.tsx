@@ -26,8 +26,8 @@ const VIEW: Record<
   string,
   { xs: number[]; yDomain: [number, number]; xStep: number; min: number; max: number; step: number }
 > = {
-  fahrenheit: { xs: grid(-10, 50, 1), yDomain: [-10, 130], xStep: 10, min: -10, max: 40, step: 1 },
-  double: { xs: grid(-10, 10, 0.5), yDomain: [-10, 10], xStep: 2, min: -5, max: 5, step: 1 },
+  fahrenheit: { xs: grid(0, 50, 1), yDomain: [-20, 130], xStep: 10, min: 0, max: 40, step: 1 },
+  double: { xs: grid(-10, 10, 0.5), yDomain: [-15, 27], xStep: 2, min: -5, max: 5, step: 1 },
   vat: { xs: grid(0, 100, 2), yDomain: [0, 130], xStep: 20, min: 0, max: 100, step: 5 },
 }
 

@@ -11,8 +11,10 @@ import { Tex } from './Tex'
 const XS = Array.from({ length: 25 }, (_, i) => -6 + i * 0.5)
 const Y_DOMAIN: [number, number] = [-10, 10]
 /** The exercise graph keeps both named points comfortably inside it. */
-const TASK_XS = Array.from({ length: 17 }, (_, i) => -4 + i * 0.5)
-const TASK_Y: [number, number] = [-6, 6]
+// A window the whole line fits in: y runs from −7 to 5 here, so nothing is
+// drawn over the axis labels.
+const TASK_XS = Array.from({ length: 13 }, (_, i) => -3 + i * 0.5)
+const TASK_Y: [number, number] = [-8, 8]
 
 /**
  * A lineáris függvény.
