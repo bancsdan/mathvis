@@ -31,7 +31,7 @@ site opens on Halmazok.
 | Kombinatorika, gráfok | Combinatorics, graphs | [✅ open](https://bancsdan.github.io/mathvis/#combinatorics) |
 | Számhalmazok, műveletek | Number sets, operations | [✅ open](https://bancsdan.github.io/mathvis/#number-sets) |
 | Hatvány, gyök | Powers, roots | [✅ open](https://bancsdan.github.io/mathvis/#powers-roots) |
-| Betűs kifejezések egyenletmegoldásban, függvényábrázolásban | Algebraic expressions in equations and graphs | soon |
+| Betűs kifejezések egyenletmegoldásban, függvényábrázolásban | Algebraic expressions in equations and graphs | [✅ open](https://bancsdan.github.io/mathvis/#algebraic-expressions) |
 | Arányosság, százalékszámítás | Proportionality, percentages | soon |
 | Elsőfokú egyenletek, egyenlőtlenségek, egyenletrendszerek | Linear equations, inequalities, systems | soon |
 | Másodfokú egyenletek, egyenlőtlenségek | Quadratic equations, inequalities | soon |
@@ -110,12 +110,17 @@ knowing about:
   notation, estimation and string-based rounding) and `powers.ts` (integer,
   zero and negative exponents, the laws of powers as factor groups,
   string-based normal form and arithmetic in it, square roots and their
-  neighbouring squares, and n-th roots with rational exponents).
+  neighbouring squares, and n-th roots with rational exponents) and
+  `algebra.ts` (terms and polynomials with one tex writer, collecting like
+  terms, the linear tracker behind the number tricks, monomial arithmetic, the
+  named identities with their mental-arithmetic forms, and completing the
+  square).
 
 [LogicPage.tsx](src/components/LogicPage.tsx),
 [CombiPage.tsx](src/components/CombiPage.tsx),
-[NumPage.tsx](src/components/NumPage.tsx) and
-[PowPage.tsx](src/components/PowPage.tsx) follow the same shape. The logic
+[NumPage.tsx](src/components/NumPage.tsx),
+[PowPage.tsx](src/components/PowPage.tsx) and
+[AlgPage.tsx](src/components/AlgPage.tsx) follow the same shape. The logic
 lesson puts the same twelve elements on a `VennDiagram`, so "and" is visibly
 the intersection and "if…, then…" visibly a subset.
 
