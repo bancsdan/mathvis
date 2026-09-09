@@ -695,7 +695,8 @@ p.card-note.lesson-text {
 .card[id^='sets-'],
 .card[id^='logic-'],
 .card[id^='combi-'],
-.card[id^='num-'] {
+.card[id^='num-'],
+.card[id^='pow-'] {
   scroll-margin-top: 64px;
 }
 
@@ -1205,4 +1206,85 @@ p.card-note.lesson-text {
 
 .definition .tex-block {
   margin: 8px 0 2px;
+}
+
+/* --- powers and roots lesson ------------------------------------------- */
+
+/* One factor of a power, so a student can count them rather than trust a
+   rule. The two washes separate the groups an identity brings together. */
+.pow-picture {
+  margin: 10px 0;
+}
+
+.pow-factor-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 3px 0;
+}
+
+.pow-factor {
+  display: inline-block;
+  min-width: 26px;
+  padding: 3px 6px;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid var(--series-1);
+  background: color-mix(in srgb, var(--series-1) 18%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.pow-factor.g2 {
+  border-color: var(--series-2);
+  background: color-mix(in srgb, var(--series-2) 18%, transparent);
+}
+
+.pow-factor.cancel {
+  border-color: var(--mark-muted);
+  background: transparent;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.pow-op {
+  padding: 0 4px;
+  color: var(--text-secondary);
+}
+
+.pow-gap {
+  width: 10px;
+}
+
+/* A quotient of powers: the factors above the bar, the ones that cancel
+   below it. */
+.pow-frac-bar {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--axis);
+}
+
+/* The decimal point of section 4, which the reader walks along the digits. */
+.pow-point {
+  display: inline-block;
+  width: 12px;
+  text-align: center;
+  color: var(--accent-select);
+  font-weight: 700;
+}
+
+.pow-badge {
+  display: inline-block;
+  margin: 6px 0;
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px dashed var(--mark-muted);
+  color: var(--text-muted);
+}
+
+.pow-badge.ok {
+  border-style: solid;
+  border-color: var(--series-3);
+  color: var(--series-3);
 }
