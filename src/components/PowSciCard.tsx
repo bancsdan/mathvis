@@ -93,7 +93,7 @@ export function PowSciCard({ id }: { id: string }) {
             <span className={i === first ? 'digit-box deciding' : 'digit-box'}>{d}</span>
           </span>
         ))}
-        {point >= all.length && <span className="pow-point">{sep}</span>}
+        {/* A point after the last digit means a whole number: nothing to show. */}
       </div>
 
       <div className="controls-inline">

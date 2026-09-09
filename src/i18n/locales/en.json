@@ -883,7 +883,7 @@
     "defTitle": "1. Powers: base and exponent",
     "defIntro1": "2 · 2 · 2 · 2 · 2 — that is long to write and easy to get wrong. Shorter: 2⁵. This shorthand is a <b>power</b>, and mathematics is full of them: areas, volumes, interest and data sizes are all written most simply with powers.",
     "defIntro2": "Pick a base and drag the slider. Below it you can see how many factors are multiplied and what the result comes to.",
-    "defDef1": "<b>Power:</b> the notation aⁿ means the number <i>a</i> multiplied by itself <i>n</i> times. <i>a</i> is the <b>base</b> and <i>n</i> is the <b>exponent</b>. For example 2⁵ = 2 · 2 · 2 · 2 · 2 = 32.",
+    "defDef1": "<b>Power:</b> the notation aⁿ stands for the product of <i>n</i> factors, each equal to <i>a</i>. <i>a</i> is the <b>base</b> and <i>n</i> is the <b>exponent</b>. For example 2⁵ = 2 · 2 · 2 · 2 · 2 = 32: a product of five 2s.",
     "defDef2": "<b>First power:</b> a¹ = a. The \"product\" of a single factor is the number itself, which is why the exponent 1 is usually not written out.",
     "defPickBase": "Base",
     "defPickExp": "Exponent",
