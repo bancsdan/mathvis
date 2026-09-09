@@ -32,7 +32,7 @@ site opens on Halmazok.
 | Számhalmazok, műveletek | Number sets, operations | [✅ open](https://bancsdan.github.io/mathvis/#number-sets) |
 | Hatvány, gyök | Powers, roots | [✅ open](https://bancsdan.github.io/mathvis/#powers-roots) |
 | Betűs kifejezések egyenletmegoldásban, függvényábrázolásban | Algebraic expressions in equations and graphs | [✅ open](https://bancsdan.github.io/mathvis/#algebraic-expressions) |
-| Arányosság, százalékszámítás | Proportionality, percentages | soon |
+| Arányosság, százalékszámítás | Proportionality, percentages | [✅ open](https://bancsdan.github.io/mathvis/#proportionality) |
 | Elsőfokú egyenletek, egyenlőtlenségek, egyenletrendszerek | Linear equations, inequalities, systems | soon |
 | Másodfokú egyenletek, egyenlőtlenségek | Quadratic equations, inequalities | soon |
 | A függvény fogalma, függvénytulajdonságok | Functions and their properties | soon |
@@ -114,13 +114,18 @@ knowing about:
   `algebra.ts` (terms and polynomials with one tex writer, collecting like
   terms, the linear tracker behind the number tricks, monomial arithmetic, the
   named identities with their mental-arithmetic forms, and completing the
-  square).
+  square) and `proportion.ts` (direct and inverse proportion with the table
+  checks that tell them apart, the graph shapes, the unit ladders and the walk
+  between two rungs, the three percent questions, chained percentage changes,
+  the lines of a household bill, and compound interest against simple interest
+  and inflation).
 
 [LogicPage.tsx](src/components/LogicPage.tsx),
 [CombiPage.tsx](src/components/CombiPage.tsx),
 [NumPage.tsx](src/components/NumPage.tsx),
-[PowPage.tsx](src/components/PowPage.tsx) and
-[AlgPage.tsx](src/components/AlgPage.tsx) follow the same shape. The logic
+[PowPage.tsx](src/components/PowPage.tsx),
+[AlgPage.tsx](src/components/AlgPage.tsx) and
+[PropPage.tsx](src/components/PropPage.tsx) follow the same shape. The logic
 lesson puts the same twelve elements on a `VennDiagram`, so "and" is visibly
 the intersection and "if…, then…" visibly a subset.
 
