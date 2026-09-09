@@ -696,7 +696,8 @@ p.card-note.lesson-text {
 .card[id^='logic-'],
 .card[id^='combi-'],
 .card[id^='num-'],
-.card[id^='pow-'] {
+.card[id^='pow-'],
+.card[id^='alg-'] {
   scroll-margin-top: 64px;
 }
 
@@ -1287,4 +1288,122 @@ p.card-note.lesson-text {
   border-style: solid;
   border-color: var(--series-3);
   color: var(--series-3);
+}
+
+/* --- algebraic expressions lesson -------------------------------------- */
+
+/* One term of an expression. The chip is a button as well as a picture, so
+   the same click that lights the like terms is reachable from a keyboard. */
+.alg-term-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.alg-term {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--mark-muted);
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.alg-term.fam-0 {
+  border-color: var(--series-1);
+  background: color-mix(in srgb, var(--series-1) 18%, transparent);
+}
+
+.alg-term.fam-1 {
+  border-color: var(--series-2);
+  background: color-mix(in srgb, var(--series-2) 18%, transparent);
+}
+
+.alg-term.fam-2 {
+  border-color: var(--series-3);
+  background: color-mix(in srgb, var(--series-3) 18%, transparent);
+}
+
+.alg-term.lit {
+  outline: 2px solid var(--accent-select);
+  outline-offset: 1px;
+}
+
+/* The row a number trick ends on: the one that answers "why does it work". */
+.alg-final td {
+  font-weight: 700;
+  background: color-mix(in srgb, var(--accent-select) 12%, transparent);
+}
+
+/* Factor chips of a monomial, tinted by which letter they are. */
+.pow-factor.alg-x {
+  border-color: var(--series-2);
+  background: color-mix(in srgb, var(--series-2) 18%, transparent);
+}
+
+.pow-factor.alg-y {
+  border-color: var(--series-3);
+  background: color-mix(in srgb, var(--series-3) 18%, transparent);
+}
+
+/* Area pictures: a product drawn as the rectangle it measures. */
+.alg-area {
+  display: block;
+  max-width: 100%;
+}
+
+.alg-region {
+  fill-opacity: 0.25;
+  stroke: var(--mark-muted);
+  stroke-width: 1;
+}
+
+.alg-region.lit {
+  fill-opacity: 0.55;
+}
+
+/* The piece that is not there: cut away, or still to be added. */
+.alg-missing {
+  fill: none;
+  stroke: var(--mark-muted);
+  stroke-width: 1;
+  stroke-dasharray: 5 4;
+}
+
+.alg-label {
+  font-size: 11px;
+  fill: var(--text-secondary);
+}
+
+/* One line of a solved equation, with the move that produced it. */
+.alg-steps {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alg-step {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.alg-step .tex-block {
+  margin: 2px 0;
+}
+
+.alg-step-note {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
 }

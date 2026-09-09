@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import { AlgPage } from './components/AlgPage'
 import { CombiPage } from './components/CombiPage'
 import { DerivativePage } from './components/DerivativePage'
 import { FftPage } from './components/FftPage'
@@ -40,7 +41,7 @@ export const SECTIONS: Section[] = [
       { id: 'combinatorics', labelKey: 'topics.combinatorics', page: CombiPage },
       { id: 'number-sets', labelKey: 'topics.numberSets', page: NumPage },
       { id: 'powers-roots', labelKey: 'topics.powersRoots', page: PowPage },
-      { id: 'algebraic-expressions', labelKey: 'topics.algebraicExpressions' },
+      { id: 'algebraic-expressions', labelKey: 'topics.algebraicExpressions', page: AlgPage },
       { id: 'proportionality', labelKey: 'topics.proportionality' },
       { id: 'linear-equations', labelKey: 'topics.linearEquations' },
       { id: 'quadratic-equations', labelKey: 'topics.quadraticEquations' },
