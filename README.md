@@ -30,7 +30,7 @@ site opens on Halmazok.
 | Matematikai logika | Mathematical logic | [✅ open](https://bancsdan.github.io/mathvis/#logic) |
 | Kombinatorika, gráfok | Combinatorics, graphs | [✅ open](https://bancsdan.github.io/mathvis/#combinatorics) |
 | Számhalmazok, műveletek | Number sets, operations | [✅ open](https://bancsdan.github.io/mathvis/#number-sets) |
-| Hatvány, gyök | Powers, roots | soon |
+| Hatvány, gyök | Powers, roots | [✅ open](https://bancsdan.github.io/mathvis/#powers-roots) |
 | Betűs kifejezések egyenletmegoldásban, függvényábrázolásban | Algebraic expressions in equations and graphs | soon |
 | Arányosság, százalékszámítás | Proportionality, percentages | soon |
 | Elsőfokú egyenletek, egyenlőtlenségek, egyenletrendszerek | Linear equations, inequalities, systems | soon |
@@ -107,11 +107,15 @@ knowing about:
   strategy), `combinatorics.ts` (counting, choice trees, the timetable
   constraint solver, graph helpers and the number sieve) and `numbers.ts` (set
   membership, long division, decimal to fraction, nested intervals, interval
-  notation, estimation and string-based rounding).
+  notation, estimation and string-based rounding) and `powers.ts` (integer,
+  zero and negative exponents, the laws of powers as factor groups,
+  string-based normal form and arithmetic in it, square roots and their
+  neighbouring squares, and n-th roots with rational exponents).
 
 [LogicPage.tsx](src/components/LogicPage.tsx),
-[CombiPage.tsx](src/components/CombiPage.tsx) and
-[NumPage.tsx](src/components/NumPage.tsx) follow the same shape. The logic
+[CombiPage.tsx](src/components/CombiPage.tsx),
+[NumPage.tsx](src/components/NumPage.tsx) and
+[PowPage.tsx](src/components/PowPage.tsx) follow the same shape. The logic
 lesson puts the same twelve elements on a `VennDiagram`, so "and" is visibly
 the intersection and "if…, then…" visibly a subset.
 
