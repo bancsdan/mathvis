@@ -33,7 +33,7 @@ site opens on Halmazok.
 | Hatvány, gyök | Powers, roots | [✅ open](https://bancsdan.github.io/mathvis/#powers-roots) |
 | Betűs kifejezések egyenletmegoldásban, függvényábrázolásban | Algebraic expressions in equations and graphs | [✅ open](https://bancsdan.github.io/mathvis/#algebraic-expressions) |
 | Arányosság, százalékszámítás | Proportionality, percentages | [✅ open](https://bancsdan.github.io/mathvis/#proportionality) |
-| Elsőfokú egyenletek, egyenlőtlenségek, egyenletrendszerek | Linear equations, inequalities, systems | soon |
+| Elsőfokú egyenletek, egyenlőtlenségek, egyenletrendszerek | Linear equations, inequalities, systems | [✅ open](https://bancsdan.github.io/mathvis/#linear-equations) |
 | Másodfokú egyenletek, egyenlőtlenségek | Quadratic equations, inequalities | soon |
 | A függvény fogalma, függvénytulajdonságok | Functions and their properties | soon |
 | Geometriai alapismeretek | Geometry basics | soon |
@@ -118,14 +118,19 @@ knowing about:
   checks that tell them apart, the graph shapes, the unit ladders and the walk
   between two rungs, the three percent questions, chained percentage changes,
   the lines of a household bill, and compound interest against simple interest
-  and inflation).
+  and inflation) and `linear.ts` (sides and fractions so a root stays 3/2, the
+  balance moves that only exist when both pans can afford them, solution sets
+  over N, Z and Q, the inequality solver that records where the sign turns,
+  substitution and equal coefficients for a two-by-two system, and the
+  word-problem models behind meeting cars, joint work, mixtures and two bills).
 
 [LogicPage.tsx](src/components/LogicPage.tsx),
 [CombiPage.tsx](src/components/CombiPage.tsx),
 [NumPage.tsx](src/components/NumPage.tsx),
 [PowPage.tsx](src/components/PowPage.tsx),
-[AlgPage.tsx](src/components/AlgPage.tsx) and
-[PropPage.tsx](src/components/PropPage.tsx) follow the same shape. The logic
+[AlgPage.tsx](src/components/AlgPage.tsx),
+[PropPage.tsx](src/components/PropPage.tsx) and
+[LinPage.tsx](src/components/LinPage.tsx) follow the same shape. The logic
 lesson puts the same twelve elements on a `VennDiagram`, so "and" is visibly
 the intersection and "if…, then…" visibly a subset.
 
