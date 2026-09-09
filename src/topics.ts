@@ -3,6 +3,7 @@ import { AlgPage } from './components/AlgPage'
 import { CombiPage } from './components/CombiPage'
 import { DerivativePage } from './components/DerivativePage'
 import { FftPage } from './components/FftPage'
+import { FnPage } from './components/FnPage'
 import { IntegralPage } from './components/IntegralPage'
 import { LinPage } from './components/LinPage'
 import { LogicPage } from './components/LogicPage'
@@ -48,7 +49,7 @@ export const SECTIONS: Section[] = [
       { id: 'proportionality', labelKey: 'topics.proportionality', page: PropPage },
       { id: 'linear-equations', labelKey: 'topics.linearEquations', page: LinPage },
       { id: 'quadratic-equations', labelKey: 'topics.quadraticEquations', page: QuadPage },
-      { id: 'functions', labelKey: 'topics.functions' },
+      { id: 'functions', labelKey: 'topics.functions', page: FnPage },
       { id: 'geometry-basics', labelKey: 'topics.geometryBasics' },
       { id: 'triangles', labelKey: 'topics.triangles' },
       { id: 'polygons', labelKey: 'topics.polygons' },

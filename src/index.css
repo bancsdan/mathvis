@@ -700,7 +700,8 @@ p.card-note.lesson-text {
 .card[id^='alg-'],
 .card[id^='prop-'],
 .card[id^='lin-'],
-.card[id^='quad-'] {
+.card[id^='quad-'],
+.card[id^='fn-'] {
   scroll-margin-top: 64px;
 }
 
@@ -1640,4 +1641,78 @@ p.card-note.lesson-text {
   white-space: normal;
   font-size: 11px;
   color: var(--text-secondary);
+}
+
+/* --- a függvény fogalma, függvénytulajdonságok -------------------------- */
+
+/* Two columns of nodes with arrows between them: the left set is the one the
+   arrows start from, so it wears the first series colour and the image set the
+   second. A tinted node is the one that spoils the property being tested. */
+.fn-node {
+  stroke-width: 1;
+}
+
+.fn-node-left {
+  fill: color-mix(in srgb, var(--series-1) 18%, transparent);
+  stroke: var(--series-1);
+}
+
+.fn-node-right {
+  fill: color-mix(in srgb, var(--series-2) 18%, transparent);
+  stroke: var(--series-2);
+}
+
+.fn-node.lit {
+  stroke: var(--accent-select);
+  stroke-width: 2;
+}
+
+.fn-node-label {
+  font-size: 12px;
+  fill: var(--text-primary);
+}
+
+.fn-arrow {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.fn-arrow-head {
+  fill: var(--text-muted);
+}
+
+/* Separate pairs, not a curve: a stem down to the axis places each dot, and
+   nothing is drawn between two x-es the function has no value between. */
+.fn-dot {
+  fill: var(--series-1);
+}
+
+.fn-stem {
+  stroke: var(--series-1);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.fn-dot-label {
+  font-size: 10px;
+  fill: var(--text-secondary);
+}
+
+.fn-axis {
+  stroke: var(--axis);
+  stroke-width: 1;
+}
+
+/* The row of arrow pickers that edits the diagram from the keyboard. */
+.fn-selects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.fn-select {
+  width: auto;
+  min-width: 96px;
 }
