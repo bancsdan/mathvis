@@ -9,6 +9,7 @@ import { LogicPage } from './components/LogicPage'
 import { NumPage } from './components/NumPage'
 import { PowPage } from './components/PowPage'
 import { PropPage } from './components/PropPage'
+import { QuadPage } from './components/QuadPage'
 import { SetsPage } from './components/SetsPage'
 
 export type SectionId = 'highschool' | 'university'
@@ -46,7 +47,7 @@ export const SECTIONS: Section[] = [
       { id: 'algebraic-expressions', labelKey: 'topics.algebraicExpressions', page: AlgPage },
       { id: 'proportionality', labelKey: 'topics.proportionality', page: PropPage },
       { id: 'linear-equations', labelKey: 'topics.linearEquations', page: LinPage },
-      { id: 'quadratic-equations', labelKey: 'topics.quadraticEquations' },
+      { id: 'quadratic-equations', labelKey: 'topics.quadraticEquations', page: QuadPage },
       { id: 'functions', labelKey: 'topics.functions' },
       { id: 'geometry-basics', labelKey: 'topics.geometryBasics' },
       { id: 'triangles', labelKey: 'topics.triangles' },

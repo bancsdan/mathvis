@@ -699,7 +699,8 @@ p.card-note.lesson-text {
 .card[id^='pow-'],
 .card[id^='alg-'],
 .card[id^='prop-'],
-.card[id^='lin-'] {
+.card[id^='lin-'],
+.card[id^='quad-'] {
   scroll-margin-top: 64px;
 }
 
@@ -1618,4 +1619,25 @@ p.card-note.lesson-text {
 .lin-bar-part {
   flex: 0 0 auto;
   height: 100%;
+}
+
+/* --- másodfokú egyenletek, egyenlőtlenségek ---------------------------- */
+
+/* The derivation in letters and in numbers, with the move behind each row.
+   The two maths columns stay on one line where the width allows; the table
+   sits in a `.table-wrap`, so a narrow screen scrolls it instead of wrapping
+   a formula mid-fraction. */
+.quad-parallel td {
+  vertical-align: top;
+}
+
+.quad-parallel td:first-child,
+.quad-parallel td:nth-child(2) {
+  white-space: nowrap;
+}
+
+.quad-parallel .quad-note {
+  white-space: normal;
+  font-size: 11px;
+  color: var(--text-secondary);
 }
