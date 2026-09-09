@@ -4,6 +4,7 @@ import { CombiPage } from './components/CombiPage'
 import { DerivativePage } from './components/DerivativePage'
 import { FftPage } from './components/FftPage'
 import { IntegralPage } from './components/IntegralPage'
+import { LinPage } from './components/LinPage'
 import { LogicPage } from './components/LogicPage'
 import { NumPage } from './components/NumPage'
 import { PowPage } from './components/PowPage'
@@ -44,7 +45,7 @@ export const SECTIONS: Section[] = [
       { id: 'powers-roots', labelKey: 'topics.powersRoots', page: PowPage },
       { id: 'algebraic-expressions', labelKey: 'topics.algebraicExpressions', page: AlgPage },
       { id: 'proportionality', labelKey: 'topics.proportionality', page: PropPage },
-      { id: 'linear-equations', labelKey: 'topics.linearEquations' },
+      { id: 'linear-equations', labelKey: 'topics.linearEquations', page: LinPage },
       { id: 'quadratic-equations', labelKey: 'topics.quadraticEquations' },
       { id: 'functions', labelKey: 'topics.functions' },
       { id: 'geometry-basics', labelKey: 'topics.geometryBasics' },

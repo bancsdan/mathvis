@@ -698,7 +698,8 @@ p.card-note.lesson-text {
 .card[id^='num-'],
 .card[id^='pow-'],
 .card[id^='alg-'],
-.card[id^='prop-'] {
+.card[id^='prop-'],
+.card[id^='lin-'] {
   scroll-margin-top: 64px;
 }
 
@@ -1538,4 +1539,83 @@ p.card-note.lesson-text {
 
 .prop-bill .prop-total td {
   border-top: 2px solid var(--border);
+}
+
+/* --- elsőfokú egyenletek, egyenlőtlenségek ----------------------------- */
+
+/* One line of a solved equation or inequality, with the move behind it. */
+.lin-steps {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lin-step {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.lin-step .tex-block {
+  margin: 2px 0;
+}
+
+.lin-step-note {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* The one step where the relation sign turns, marked so it cannot be skimmed. */
+.lin-step.lin-flip {
+  border-color: var(--series-2);
+  border-left: 3px solid var(--series-2);
+  background: color-mix(in srgb, var(--series-2) 12%, transparent);
+}
+
+/* The sentence a section is built around: work the control, read this line. */
+.lin-result {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--accent-select);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent-select) 12%, transparent);
+}
+
+/* The boxes and kilo weights on the pans of the balance. */
+.lin-box {
+  fill: var(--series-1);
+  stroke: var(--surface);
+  stroke-width: 1;
+}
+
+.lin-box-label {
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--surface);
+}
+
+.lin-unit {
+  fill: var(--series-3);
+  stroke: var(--surface);
+  stroke-width: 1;
+}
+
+/* The whole job, the whole mixture, the whole sum: one box, filled in parts. */
+.lin-bar {
+  display: flex;
+  height: 22px;
+  margin: 8px 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.lin-bar-part {
+  flex: 0 0 auto;
+  height: 100%;
 }
