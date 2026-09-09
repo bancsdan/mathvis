@@ -35,7 +35,7 @@ site opens on Halmazok.
 | Arányosság, százalékszámítás | Proportionality, percentages | [✅ open](https://bancsdan.github.io/mathvis/#proportionality) |
 | Elsőfokú egyenletek, egyenlőtlenségek, egyenletrendszerek | Linear equations, inequalities, systems | [✅ open](https://bancsdan.github.io/mathvis/#linear-equations) |
 | Másodfokú egyenletek, egyenlőtlenségek | Quadratic equations, inequalities | [✅ open](https://bancsdan.github.io/mathvis/#quadratic-equations) |
-| A függvény fogalma, függvénytulajdonságok | Functions and their properties | soon |
+| A függvény fogalma, függvénytulajdonságok | Functions and their properties | [✅ open](https://bancsdan.github.io/mathvis/#functions) |
 | Geometriai alapismeretek | Geometry basics | soon |
 | Háromszögek | Triangles | soon |
 | Négyszögek, sokszögek | Quadrilaterals, polygons | soon |
@@ -101,6 +101,10 @@ knowing about:
   and measuring bars on one scale, with crowded labels stepping up a row rather
   than being dropped. Its labels are plain text, since KaTeX cannot live inside
   an SVG.
+- [ArrowDiagram.tsx](src/components/ArrowDiagram.tsx) draws an assignment as two
+  columns of labelled nodes with arrows between them, and tints the one node
+  that spoils the property being tested. It only draws: the arrows are edited in
+  ordinary form controls, so the picture stays keyboard-operable.
 - [src/lib/](src/lib/) holds the pure logic, all unit tested: `sets.ts` and
   `venn.ts` (set operations and Venn geometry), `logic.ts` (truth tables,
   quantifier and implication checks, the knights-and-knaves solver and the NIM
@@ -128,15 +132,23 @@ knowing about:
   a square would have to be negative, the formula derived in letters and in
   numbers at once, the four shapes a quadratic inequality's answer can take,
   substitution with the u values no x can produce, and the two word-problem
-  models).
+  models) and `functions.ts` (assignments between two finite sets and the first
+  node that stops them being a function or one-to-one, rules on a finite domain
+  with their table, range and preimages, the zeros, extremes and monotone runs
+  of a polyline graph, the linear function, the three elementary graphs with the
+  solution counts of f(x) = c, the transformation steps in the order they
+  happen, the inverse of a linear assignment, and the distance–time and fenced
+  rectangle models).
 
 [LogicPage.tsx](src/components/LogicPage.tsx),
 [CombiPage.tsx](src/components/CombiPage.tsx),
 [NumPage.tsx](src/components/NumPage.tsx),
 [PowPage.tsx](src/components/PowPage.tsx),
 [AlgPage.tsx](src/components/AlgPage.tsx),
-[PropPage.tsx](src/components/PropPage.tsx) and
-[LinPage.tsx](src/components/LinPage.tsx) follow the same shape. The logic
+[PropPage.tsx](src/components/PropPage.tsx),
+[LinPage.tsx](src/components/LinPage.tsx),
+[QuadPage.tsx](src/components/QuadPage.tsx) and
+[FnPage.tsx](src/components/FnPage.tsx) follow the same shape. The logic
 lesson puts the same twelve elements on a `VennDiagram`, so "and" is visibly
 the intersection and "if…, then…" visibly a subset.
 
