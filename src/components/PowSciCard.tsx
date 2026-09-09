@@ -62,7 +62,7 @@ export function PowSciCard({ id }: { id: string }) {
           <Trans i18nKey="pow.sciIntro1" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="pow.sciDef">
-          <Tex block tex="a \cdot 10^{k}, \qquad 1 \le a < 10" />
+          <Tex block tex="a \cdot 10^{k}, \qquad 1 \le a < 10, \quad k \in \mathbb{Z}" />
         </Definition>
         <p className="card-note">
           <Trans i18nKey="pow.sciIntro2" components={{ b: <strong />, i: <em /> }} />

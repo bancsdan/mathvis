@@ -957,7 +957,7 @@
     "sciTitle": "4. Normal form",
     "sciIntro1": "The Earth is 149 600 000 km from the Sun and a hydrogen atom is 0.0000000001 m across. Numbers like these are awkward to write down and even more awkward to compare: you end up counting zeros one by one.",
     "sciIntro2": "Astronomers and biologists therefore write them differently. Move the point until a single digit is left in front of it, and note how many places you moved it. Try it with the slider.",
-    "sciDef": "<b>Normal form:</b> a number written as a · 10ᵏ, where 1 ≤ a < 10 and k is a whole number. <i>a</i> carries the significant digits of the number and <i>k</i> carries its size.",
+    "sciDef": "<b>Normal form:</b> a number written as a · 10ᵏ, where <i>a</i> falls between 1 and 10 (1 ≤ a < 10) and <i>k</i> is a whole number. <i>a</i> does not have to be whole: it is usually a decimal such as 1.496 or 5.2, with exactly one non-zero digit before the point. <i>a</i> carries the significant digits of the number and <i>k</i> carries its size.",
     "sciPickAria": "Pick a number",
     "sciPreset_earthSun": "Distance from the Earth to the Sun",
     "sciPreset_lightSpeed": "The speed of light",

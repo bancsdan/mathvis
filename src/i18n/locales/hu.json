@@ -957,7 +957,7 @@
     "sciTitle": "4. Normálalak",
     "sciIntro1": "A Föld és a Nap távolsága 149 600 000 km, egy hidrogénatom átmérője 0,0000000001 m. Ezeket a számokat kényelmetlen leírni, és még kényelmetlenebb összehasonlítani: a nullákat egyesével kell számolgatni.",
     "sciIntro2": "A csillagászok és a biológusok ezért másképp írják őket. Told a vesszőt addig, amíg egyetlen jegy marad előtte, és jegyezd fel, hány hellyel toltad. Próbáld ki a csúszkával.",
-    "sciDef": "<b>Normálalak:</b> egy szám a · 10ᵏ alakban, ahol 1 ≤ a < 10 és k egész szám. Az <i>a</i> hordozza a szám értékes jegyeit, a <i>k</i> pedig a nagyságrendet.",
+    "sciDef": "<b>Normálalak:</b> egy szám a · 10ᵏ alakban felírva, ahol az <i>a</i> 1 és 10 közé esik (1 ≤ a < 10), a <i>k</i> pedig egész szám. Az <i>a</i> nem kell, hogy egész legyen: legtöbbször tizedes tört, például 1,496 vagy 5,2 — a vessző előtt pontosan egy nullától különböző jegy áll. Az <i>a</i> hordozza a szám értékes jegyeit, a <i>k</i> pedig a nagyságrendet.",
     "sciPickAria": "Szám választása",
     "sciPreset_earthSun": "A Föld és a Nap távolsága",
     "sciPreset_lightSpeed": "A fény sebessége",
