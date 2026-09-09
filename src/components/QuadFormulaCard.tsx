@@ -97,9 +97,10 @@ export function QuadFormulaCard({ id }: { id: string }) {
           <tbody>
             {steps.map((step) => (
               <tr key={step.noteKey}>
-                <td>{step.general !== '' && <Tex tex={step.general} />}</td>
+                {/* Display style, so the fractions are legible inside a table cell. */}
+                <td>{step.general !== '' && <Tex tex={`\\displaystyle ${step.general}`} />}</td>
                 <td>
-                  <Tex tex={step.concrete} />
+                  <Tex tex={`\\displaystyle ${step.concrete}`} />
                 </td>
                 <td className="quad-note">{t(step.noteKey)}</td>
               </tr>

@@ -79,14 +79,19 @@ export function QuadReduceCard({ id }: { id: string }) {
         </button>
       </div>
 
-      <p className="lin-result lesson-text">
-        <Trans
-          i18nKey="quad.reduceResult"
-          values={{ n: preset.xRoots.length }}
-          components={{ b: <strong />, i: <em /> }}
-        />
-      </p>
-      {preset.rejectedU.length > 0 && <p className="card-note lesson-text">{t('quad.reduceRejectNote')}</p>}
+      {/* The verdict is the last step's reward, not a spoiler above the first. */}
+      {shown >= steps.length && (
+        <>
+          <p className="lin-result lesson-text">
+            <Trans
+              i18nKey="quad.reduceResult"
+              values={{ n: preset.xRoots.length }}
+              components={{ b: <strong />, i: <em /> }}
+            />
+          </p>
+          {preset.rejectedU.length > 0 && <p className="card-note lesson-text">{t('quad.reduceRejectNote')}</p>}
+        </>
+      )}
 
       <Exercise
         promptKey="quad.reduceTask"
