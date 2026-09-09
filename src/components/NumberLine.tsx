@@ -147,30 +147,36 @@ export function NumberLine({
           {segments.map((seg, i) => (
             <g key={`seg-${i}`}>
               <line
-                x1={x(seg.from)}
+                x1={x(Math.max(min, seg.from))}
                 y1={axisY}
-                x2={x(seg.to)}
+                x2={x(Math.min(max, seg.to))}
                 y2={axisY}
                 stroke={seg.color}
                 strokeWidth={5}
                 strokeLinecap="butt"
               />
-              <circle
-                cx={x(seg.from)}
-                cy={axisY}
-                r={5}
-                fill={seg.leftClosed ? seg.color : 'var(--surface)'}
-                stroke={seg.color}
-                strokeWidth={2}
-              />
-              <circle
-                cx={x(seg.to)}
-                cy={axisY}
-                r={5}
-                fill={seg.rightClosed ? seg.color : 'var(--surface)'}
-                stroke={seg.color}
-                strokeWidth={2}
-              />
+              {/* An end beyond the axis (a half-line, given as ±Infinity) is
+                  clipped and gets no marker, so it cannot be read as a bound. */}
+              {seg.from >= min && (
+                <circle
+                  cx={x(seg.from)}
+                  cy={axisY}
+                  r={5}
+                  fill={seg.leftClosed ? seg.color : 'var(--surface)'}
+                  stroke={seg.color}
+                  strokeWidth={2}
+                />
+              )}
+              {seg.to <= max && (
+                <circle
+                  cx={x(seg.to)}
+                  cy={axisY}
+                  r={5}
+                  fill={seg.rightClosed ? seg.color : 'var(--surface)'}
+                  stroke={seg.color}
+                  strokeWidth={2}
+                />
+              )}
             </g>
           ))}
 

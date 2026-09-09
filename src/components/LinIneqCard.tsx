@@ -23,12 +23,16 @@ import { Tex } from './Tex'
 const MIN = -6
 const MAX = 6
 
-/** The stretch of the line an `x rel bound` answer covers. */
+/**
+ * The stretch of the line an `x rel bound` answer covers. The far end is a
+ * half-line running off the axis, so it is given as infinite and gets no
+ * marker that could be mistaken for a second bound.
+ */
 function segment(rel: Rel, bound: number, color: string) {
   const closed = rel === 'le' || rel === 'ge'
   return rel === 'lt' || rel === 'le'
-    ? { from: MIN, to: bound, leftClosed: true, rightClosed: closed, color }
-    : { from: bound, to: MAX, leftClosed: closed, rightClosed: true, color }
+    ? { from: -Infinity, to: bound, leftClosed: true, rightClosed: closed, color }
+    : { from: bound, to: Infinity, leftClosed: closed, rightClosed: true, color }
 }
 
 /**
