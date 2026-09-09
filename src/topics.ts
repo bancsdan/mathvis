@@ -7,6 +7,7 @@ import { IntegralPage } from './components/IntegralPage'
 import { LogicPage } from './components/LogicPage'
 import { NumPage } from './components/NumPage'
 import { PowPage } from './components/PowPage'
+import { PropPage } from './components/PropPage'
 import { SetsPage } from './components/SetsPage'
 
 export type SectionId = 'highschool' | 'university'
@@ -42,7 +43,7 @@ export const SECTIONS: Section[] = [
       { id: 'number-sets', labelKey: 'topics.numberSets', page: NumPage },
       { id: 'powers-roots', labelKey: 'topics.powersRoots', page: PowPage },
       { id: 'algebraic-expressions', labelKey: 'topics.algebraicExpressions', page: AlgPage },
-      { id: 'proportionality', labelKey: 'topics.proportionality' },
+      { id: 'proportionality', labelKey: 'topics.proportionality', page: PropPage },
       { id: 'linear-equations', labelKey: 'topics.linearEquations' },
       { id: 'quadratic-equations', labelKey: 'topics.quadraticEquations' },
       { id: 'functions', labelKey: 'topics.functions' },

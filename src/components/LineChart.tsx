@@ -21,11 +21,24 @@ interface Props {
   yDomain?: [number, number]
   /** Small-multiple mode: fewer ticks, no x-axis labels. */
   compact?: boolean
+  /** How a y value is written, for series the default notation reads badly on
+      (money, say, where `1.0e+5` helps nobody). */
+  format?: (v: number) => string
 }
 
-export function LineChart({ xs, series, height = 260, xLabel, yLabel, yDomain, compact = false }: Props) {
+export function LineChart({
+  xs,
+  series,
+  height = 260,
+  xLabel,
+  yLabel,
+  yDomain,
+  compact = false,
+  format,
+}: Props) {
   const [ref, width] = useWidth<HTMLDivElement>()
   const [hover, setHover] = useState<number | null>(null)
+  const writeY = format ?? tickLabel
 
   const M = { top: compact ? 6 : 12, right: 30, bottom: compact ? 8 : 30, left: 52 }
   const plotW = Math.max(width - M.left - M.right, 10)
@@ -97,7 +110,7 @@ export function LineChart({ xs, series, height = 260, xLabel, yLabel, yDomain, c
                 strokeWidth={1}
               />
               <text x={M.left - 8} y={sy(t) + 4} textAnchor="end" className="tick-text">
-                {tickLabel(t)}
+                {writeY(t)}
               </text>
             </g>
           ))}
@@ -187,7 +200,9 @@ export function LineChart({ xs, series, height = 260, xLabel, yLabel, yDomain, c
             <div key={s.name} className="tooltip-row">
               <span className="chip" style={{ background: s.color }} />
               <span className="tooltip-name">{s.name}</span>
-              <span className="tooltip-value">{s.values[hover].toPrecision(4)}</span>
+              <span className="tooltip-value">
+                {format ? format(s.values[hover]) : s.values[hover].toPrecision(4)}
+              </span>
             </div>
           ))}
         </div>

@@ -697,7 +697,8 @@ p.card-note.lesson-text {
 .card[id^='combi-'],
 .card[id^='num-'],
 .card[id^='pow-'],
-.card[id^='alg-'] {
+.card[id^='alg-'],
+.card[id^='prop-'] {
   scroll-margin-top: 64px;
 }
 
@@ -1406,4 +1407,135 @@ p.card-note.lesson-text {
   display: block;
   font-size: 12px;
   color: var(--text-secondary);
+}
+
+/* --- arányosság, százalékszámítás -------------------------------------- */
+
+/* The row the reader put there: the one the sliders are pointing at. */
+.prop-current td {
+  font-weight: 600;
+  background: color-mix(in srgb, var(--accent-select) 12%, transparent);
+}
+
+/* The number that does not move while everything else does. */
+.prop-constant .stat-value {
+  color: var(--accent-select);
+}
+
+.prop-multiples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.prop-multiple {
+  padding: 6px;
+  border: 1px solid var(--mark-muted);
+  border-radius: 8px;
+}
+
+.prop-multiple.lit {
+  border: 2px solid var(--accent-select);
+  padding: 5px;
+}
+
+.prop-multiple-caption {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* The three quiz tables of section 1, side by side to be compared. */
+.prop-quiz {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.prop-quiz-table {
+  padding: 6px;
+  border: 1px solid var(--mark-muted);
+  border-radius: 8px;
+}
+
+.prop-quiz-table.lit {
+  border-color: var(--accent-select);
+}
+
+/* The ladder of units: rungs with the factor between them. */
+.prop-ladder {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.prop-rung-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.prop-rung {
+  display: inline-block;
+  min-width: 34px;
+  padding: 3px 8px;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid var(--series-1);
+  background: color-mix(in srgb, var(--series-1) 18%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.prop-rung.lit {
+  border: 2px solid var(--accent-select);
+  padding: 2px 7px;
+  font-weight: 600;
+}
+
+.prop-hop {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.prop-hop.lit {
+  color: var(--accent-select);
+  font-weight: 600;
+}
+
+/* The percentage bar: the whole is the base, the shaded part is the value. */
+.prop-bar {
+  display: block;
+  max-width: 100%;
+}
+
+.prop-bar-base {
+  fill: color-mix(in srgb, var(--series-1) 18%, transparent);
+  stroke: var(--series-1);
+  stroke-width: 1;
+}
+
+.prop-bar-value {
+  fill: color-mix(in srgb, var(--accent-select) 45%, transparent);
+  stroke: var(--accent-select);
+  stroke-width: 1;
+}
+
+.prop-bar-label {
+  font-size: 11px;
+  fill: var(--text-secondary);
+}
+
+/* The bill: amounts right aligned, the payable line ruled off. */
+.prop-bill td:last-child,
+.prop-bill th:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.prop-bill .prop-total td {
+  border-top: 2px solid var(--border);
 }
