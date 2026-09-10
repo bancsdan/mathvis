@@ -3,16 +3,19 @@ import { useTranslation } from 'react-i18next'
 import { hasLesson, SECTIONS, type SectionId } from '../topics'
 
 interface Props {
-  activeId: string
-  activeSection: SectionId
+  /** null on the home page. */
+  activeId: string | null
+  activeSection: SectionId | null
   onSelect: (id: string) => void
+  onHome: () => void
 }
 
 /** Left-hand topic menu: one collapsible group per level (high school / university). */
-export function Sidebar({ activeId, activeSection, onSelect }: Props) {
+export function Sidebar({ activeId, activeSection, onSelect, onHome }: Props) {
   const { t } = useTranslation()
   const [open, setOpen] = useState<Record<SectionId, boolean>>({
-    highschool: activeSection === 'highschool',
+    // The home page opens the group the reader most likely wants next.
+    highschool: activeSection !== 'university',
     university: activeSection === 'university',
   })
 
@@ -20,6 +23,13 @@ export function Sidebar({ activeId, activeSection, onSelect }: Props) {
 
   return (
     <nav className="sidebar" aria-label={t('app.topics')}>
+      <button
+        className={activeId === null ? 'nav-group-btn nav-home active' : 'nav-group-btn nav-home'}
+        aria-current={activeId === null ? 'page' : undefined}
+        onClick={onHome}
+      >
+        {t('nav.home')}
+      </button>
       {SECTIONS.map((section) => {
         const expanded = open[section.id]
         const listId = `nav-${section.id}`

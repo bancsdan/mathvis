@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ComingSoonPage } from './components/ComingSoonPage'
+import { HomePage } from './components/HomePage'
 import { LessonPage } from './components/LessonPage'
 import { Sidebar } from './components/Sidebar'
-import { DEFAULT_TOPIC_ID, findTopic, parseHash } from './topics'
+import { parseHash } from './topics'
 
 const LANGS = ['hu', 'en'] as const
 
@@ -14,7 +15,13 @@ export default function App() {
   useEffect(() => {
     const onHash = () => setRoute(parseHash(window.location.hash))
     window.addEventListener('hashchange', onHash)
-    return () => window.removeEventListener('hashchange', onHash)
+    // The home page drops the hash entirely, so going back to a lesson from it
+    // is a popstate rather than a hashchange.
+    window.addEventListener('popstate', onHash)
+    return () => {
+      window.removeEventListener('hashchange', onHash)
+      window.removeEventListener('popstate', onHash)
+    }
   }, [])
 
   const select = (id: string) => {
@@ -22,15 +29,19 @@ export default function App() {
     else window.location.hash = id
   }
 
-  const hit = route.topic ? route : parseHash(`#${DEFAULT_TOPIC_ID}`)
-  const topic = hit.topic ?? findTopic(DEFAULT_TOPIC_ID)!.topic
-  const section = hit.section ?? findTopic(DEFAULT_TOPIC_ID)!.section
-  const slug = route.explorer?.id
+  const goHome = () => {
+    window.history.pushState(null, '', window.location.pathname + window.location.search)
+    setRoute(parseHash(''))
+  }
+
+  const { topic, section, explorer } = route
+  const prefix = topic?.prefix
+  const slug = explorer?.id
 
   // The card only exists once the lesson has rendered, so the jump waits a
-  // frame. Landing on a lesson without a slug starts at the top of it.
+  // frame. Arriving anywhere without a slug starts at the top of the page.
   useEffect(() => {
-    const target = slug && topic.prefix ? `${topic.prefix}-${slug}` : null
+    const target = prefix && slug ? `${prefix}-${slug}` : null
     const frame = requestAnimationFrame(() => {
       const el = target ? document.getElementById(target) : null
       if (!el) {
@@ -41,13 +52,17 @@ export default function App() {
       el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
     })
     return () => cancelAnimationFrame(frame)
-  }, [topic, slug])
+  }, [prefix, slug])
 
   return (
     <div className="shell">
       <header className="header">
         <div className="header-row">
-          <h1>MathVis</h1>
+          <h1>
+            <button type="button" className="title-home" onClick={goHome}>
+              MathVis
+            </button>
+          </h1>
           <div className="lang-switch" role="group" aria-label="Language">
             {LANGS.map((l) => (
               <button
@@ -64,9 +79,16 @@ export default function App() {
       </header>
 
       <div className="body">
-        <Sidebar activeId={topic.id} activeSection={section.id} onSelect={select} />
-        <main className="page" key={topic.id}>
-          {topic.explorers ? (
+        <Sidebar
+          activeId={topic?.id ?? null}
+          activeSection={section?.id ?? null}
+          onSelect={select}
+          onHome={goHome}
+        />
+        <main className="page" key={topic?.id ?? 'home'}>
+          {!topic ? (
+            <HomePage />
+          ) : topic.explorers ? (
             <LessonPage topic={topic} />
           ) : topic.page ? (
             <topic.page />

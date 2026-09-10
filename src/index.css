@@ -1579,7 +1579,8 @@ p.card-note.lesson-text {
   background: color-mix(in srgb, var(--series-2) 12%, transparent);
 }
 
-/* The sentence a section is built around: work the control, read this line. */
+/* The site-wide result line: every explorer has exactly one of these, the
+   sentence that says what working the control was supposed to show. */
 .lin-result {
   margin: 8px 0;
   padding: 8px 12px;
@@ -1715,4 +1716,107 @@ p.card-note.lesson-text {
 .fn-select {
   width: auto;
   min-width: 96px;
+}
+
+/* --- home page --------------------------------------------------------- */
+
+/* The front door: one card per explorer, so a reader arrives at a question
+   rather than at a curriculum. */
+.home-title {
+  margin: 0;
+}
+
+.home-lead {
+  margin: 0;
+  max-width: 70ch;
+  color: var(--text-secondary);
+}
+
+.home-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.home-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.home-group h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.home-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--mark-muted);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-primary);
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.home-card:hover {
+  border-color: var(--accent-select);
+  background: var(--hover-wash);
+}
+
+.home-card:focus-visible {
+  outline: 2px solid var(--accent-select);
+  outline-offset: 2px;
+}
+
+/* Which part of the topic the card opens. */
+.home-tag {
+  margin-top: auto;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* The topics still to be written: named, not linked. */
+.home-soon {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.home-soon li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The header title and the first menu entry both lead back to the home page. */
+.title-home {
+  font: inherit;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.title-home:hover {
+  color: var(--accent-select);
+}
+
+.nav-home.active {
+  border-color: var(--series-1);
 }

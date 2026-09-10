@@ -5,6 +5,7 @@
     "definition": "Definíció"
   },
   "nav": {
+    "home": "Kezdőlap",
     "highschool": "Középiskola",
     "university": "Egyetem",
     "soonBadge": "hamarosan",
@@ -32,6 +33,11 @@
     "derivative": "Derivált",
     "integral": "Integrál",
     "fft": "Fourier-transzformáció"
+  },
+  "home": {
+    "title": "Mit szeretnél megérteni?",
+    "lead": "Minden kártya egy kérdés, és mögötte egy ábra, amit te mozgatsz — válassz egyet, és nézd meg, mi történik.",
+    "soon": "Ezek a témák még készülnek"
   },
   "sets": {
     "tocAria": "A lecke szakaszai",

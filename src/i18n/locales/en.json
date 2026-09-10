@@ -5,6 +5,7 @@
     "definition": "Definition"
   },
   "nav": {
+    "home": "Home",
     "highschool": "High school",
     "university": "University",
     "soonBadge": "soon",
@@ -32,6 +33,11 @@
     "derivative": "Derivative",
     "integral": "Integral",
     "fft": "Fourier Transform"
+  },
+  "home": {
+    "title": "What do you want to understand?",
+    "lead": "Every card is a question with a picture behind it that you move yourself — pick one and watch what happens.",
+    "soon": "These topics are still being written"
   },
   "sets": {
     "tocAria": "Sections of this lesson",
