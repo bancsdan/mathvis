@@ -66,7 +66,7 @@ export function LogicQuantifierCard({ id }: { id: string }) {
 
       <Tex block tex={`${quant === 'all' ? '\\forall' : '\\exists'} x\\; P(x)`} />
       <p className="lin-result">
-        {t(`logic.quantSentence_${quant}`, values)} {verdict(report.value)}
+        {t(`logic.quantSentence_${quant}`, values)} {verdict(report.value)}.
         {quant === 'all' && !report.value && ` ${t('logic.quantCounter', { list: report.counterexamples.join(', ') })}`}
         {quant === 'all' && report.value && ` ${t('logic.quantNoCounter')}`}
         {quant === 'some' && report.value && ` ${t('logic.quantWitness', { list: report.examples.join(', ') })}`}

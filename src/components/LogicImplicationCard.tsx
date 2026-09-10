@@ -105,7 +105,7 @@ export function LogicImplicationCard({ id }: { id: string }) {
 
       <Tex block tex={TEX[mode]} />
       <p className="lin-result">
-        {t(SENTENCE_KEY[mode], values)} {t(holds ? 'logic.true' : 'logic.false')}
+        {t(SENTENCE_KEY[mode], values)} {t(holds ? 'logic.true' : 'logic.false')}.
         {holds ? ` ${t('logic.impHolds')}` : ` ${t('logic.impCounter', { list: counters.join(', ') })}`}
       </p>
 
