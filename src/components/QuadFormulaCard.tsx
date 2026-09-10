@@ -58,17 +58,14 @@ export function QuadFormulaCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('quad.formulaTitle')}</h2>
+        <h2>{t('quad.q3')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="quad.formulaIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="quad.formulaIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey={['quad.formulaDef1', 'quad.formulaDef2']} />
-        <p className="card-note">
-          <Trans i18nKey="quad.formulaIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="pill-row" role="group" aria-label={t('quad.formulaEqAria')}>
@@ -109,7 +106,6 @@ export function QuadFormulaCard({ id }: { id: string }) {
         </table>
       </div>
 
-      <p className="mini-title">{t('quad.formulaSubTitle')}</p>
       <Tex block tex={formulaSubstitutedTex(q)} />
 
       <p className="lin-result lesson-text">
@@ -129,9 +125,6 @@ export function QuadFormulaCard({ id }: { id: string }) {
           })}
         </p>
       )}
-
-      <p className="mini-title">{t('quad.formulaHistoryTitle')}</p>
-      <p className="card-note lesson-text">{t('quad.formulaHistory')}</p>
 
       <Exercise
         promptKey="quad.formulaTask"

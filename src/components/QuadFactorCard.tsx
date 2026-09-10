@@ -1,14 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import {
-  FACTOR_ANSWER,
-  FACTOR_PRESETS,
-  factorTex,
-  fromRoots,
-  quadTex,
-  quadValue,
-  vietaPair,
-} from '../lib/quadratic'
+import { FACTOR_ANSWER, factorTex, fromRoots, quadTex, quadValue } from '../lib/quadratic'
 import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { LineChart } from './LineChart'
@@ -31,7 +23,8 @@ const pair = (r1: number, r2: number, op: string): string =>
  * The two sliders are the roots, and everything else on screen follows them:
  * the factored form, the coefficients, and the two places where the curve
  * crosses the axis. Coefficients and roots turn out to be the same two numbers
- * seen from different sides — b is minus their sum, c is their product.
+ * seen from different sides — b is minus their sum, c is their product, which
+ * is what makes an equation factorable by looking for two numbers.
  */
 export function QuadFactorCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -48,25 +41,17 @@ export function QuadFactorCard({ id }: { id: string }) {
   const answered = ansA.trim() !== '' && ansB.trim() !== '' && typed.every(Number.isFinite)
   const answerKey = answered ? [...typed].sort((a, b) => a - b).join('|') : `${ansA}|${ansB}`
 
-  const isPreset = (p: { a: number; b: number; c: number }) => p.b === q.b && p.c === q.c
-
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('quad.factorTitle')}</h2>
+        <h2>{t('quad.q2')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="quad.factorIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="quad.factorIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="quad.factorDef" />
-        <p className="card-note">
-          <Trans i18nKey="quad.factorRule" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="quad.factorIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="controls-inline">
@@ -86,6 +71,15 @@ export function QuadFactorCard({ id }: { id: string }) {
 
       <Tex block tex={`${factorTex(r1, r2)} = ${quadTex(q)}`} />
 
+      <LineChart
+        xs={XS}
+        height={240}
+        xLabel="x"
+        yLabel="y"
+        yDomain={Y_DOMAIN}
+        xStep={1}
+        series={[{ name: t('quad.factorCurve'), color: 'var(--series-1)', values }]}
+      />
       <p className="lin-result lesson-text">
         <Trans
           i18nKey="quad.factorResult"
@@ -101,44 +95,9 @@ export function QuadFactorCard({ id }: { id: string }) {
         />
       </p>
 
-      <LineChart
-        xs={XS}
-        height={240}
-        xLabel="x"
-        yLabel="y"
-        yDomain={Y_DOMAIN}
-        xStep={1}
-        series={[{ name: t('quad.factorCurve'), color: 'var(--series-1)', values }]}
-      />
-      <p className="card-note lesson-text">{t('quad.factorCrossNote')}</p>
-
-      <p className="mini-title">{t('quad.factorFindTitle')}</p>
-      <div className="pill-row" role="group" aria-label={t('quad.factorEqAria')}>
-        {FACTOR_PRESETS.map((p) => (
-          <button
-            key={quadTex(p)}
-            type="button"
-            className={isPreset(p) ? 'pill active' : 'pill'}
-            aria-pressed={isPreset(p)}
-            onClick={() => {
-              const found = vietaPair(p.b, p.c)
-              if (!found) return
-              setR1(found[0])
-              setR2(found[1])
-            }}
-          >
-            <Tex tex={quadTex(p)} />
-          </button>
-        ))}
-      </div>
-      <Tex block tex={`${quadTex(q)} = ${factorTex(r1, r2)}`} />
-      {q.c === 0 ? (
-        <p className="card-note lesson-text">{t('quad.factorZeroC')}</p>
-      ) : q.b === 0 ? (
-        <p className="card-note lesson-text">{t('quad.factorDiffSq')}</p>
-      ) : (
-        <p className="card-note lesson-text">{t('quad.factorFindNote')}</p>
-      )}
+      <p className="card-note lesson-text">
+        <Trans i18nKey="quad.factorRule" components={{ b: <strong />, i: <em /> }} />
+      </p>
 
       <Exercise
         promptKey="quad.factorTask"

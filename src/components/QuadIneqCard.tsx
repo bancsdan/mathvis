@@ -103,18 +103,12 @@ export function QuadIneqCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('quad.ineqTitle')}</h2>
+        <h2>{t('quad.q5')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="quad.ineqIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="quad.ineqRule" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="quad.ineqIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="quad.ineqIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -145,7 +139,6 @@ export function QuadIneqCard({ id }: { id: string }) {
         ]}
       />
 
-      <p className="mini-title">{t('quad.ineqLineTitle')}</p>
       <NumberLine
         min={MIN}
         max={MAX}
@@ -176,7 +169,7 @@ export function QuadIneqCard({ id }: { id: string }) {
         </label>
       </div>
 
-      <p className="lin-result lesson-text">
+      <p className="card-note lesson-text">
         <Trans
           i18nKey="quad.ineqTestLine"
           values={{
@@ -187,6 +180,10 @@ export function QuadIneqCard({ id }: { id: string }) {
           }}
           components={{ b: <strong />, i: <em /> }}
         />
+      </p>
+
+      <p className="card-note lesson-text">
+        <Trans i18nKey="quad.ineqRule" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <Exercise

@@ -124,18 +124,12 @@ export function QuadWordCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('quad.wordTitle')}</h2>
+        <h2>{t('quad.q7')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="quad.wordIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="quad.wordSteps" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="quad.wordIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="quad.wordIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 

@@ -39,18 +39,12 @@ export function QuadDiscCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('quad.discTitle')}</h2>
+        <h2>{t('quad.q4')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="quad.discIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="quad.discRule" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="quad.discIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="quad.discIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -105,8 +99,6 @@ export function QuadDiscCard({ id }: { id: string }) {
         xStep={1}
         series={[{ name: t('quad.discCurve'), color: 'var(--series-1)', values }]}
       />
-      <p className="card-note lesson-text">{t('quad.discReadNote')}</p>
-
       <p className="lin-result lesson-text">
         <Trans
           i18nKey="quad.discResult"
@@ -120,6 +112,10 @@ export function QuadDiscCard({ id }: { id: string }) {
       ) : (
         <Tex block tex={rootTex(q)} />
       )}
+
+      <p className="card-note lesson-text">
+        <Trans i18nKey="quad.discRule" components={{ b: <strong />, i: <em /> }} />
+      </p>
 
       <Exercise
         promptKey="quad.discTask"
