@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SECTIONS, type SectionId } from '../topics'
+import { hasLesson, SECTIONS, type SectionId } from '../topics'
 
 interface Props {
   activeId: string
@@ -45,7 +45,7 @@ export function Sidebar({ activeId, activeSection, onSelect }: Props) {
                     onClick={() => onSelect(topic.id)}
                   >
                     {t(topic.labelKey)}
-                    {!topic.page && (
+                    {!hasLesson(topic) && (
                       <span className="nav-soon" aria-label={t('nav.comingSoon')}>
                         {t('nav.soonBadge')}
                       </span>

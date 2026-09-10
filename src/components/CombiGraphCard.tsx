@@ -28,7 +28,18 @@ function scrollToSection(sectionId: string) {
   el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
 }
 
-export function CombiGraphCard({ id, selectSectionId }: { id: string; selectSectionId: string }) {
+/**
+ * `selectSectionId` defaults to the sibling explorer this card links back to,
+ * so the card fits the `ComponentType<{ id: string }>` shape the registry
+ * renders every explorer with.
+ */
+export function CombiGraphCard({
+  id,
+  selectSectionId = 'combi-select',
+}: {
+  id: string
+  selectSectionId?: string
+}) {
   const { t } = useTranslation()
   const [n, setN] = useState(5)
   const [edges, setEdges] = useState<Edge[]>(START)
