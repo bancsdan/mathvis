@@ -145,20 +145,14 @@ export function AlgExpandCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('alg.expandTitle')}</h2>
+        <h2>{t('alg.q2')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="alg.expandIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="alg.expandIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <Definition i18nKey={['alg.expandDef1', 'alg.expandDef2', 'alg.expandDef3']} />
-        <p className="card-note">
-          <Trans i18nKey="alg.expandIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="alg.expandRule" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey={['alg.expandDef1', 'alg.expandDef2']} />
       </div>
       <Tex block tex="a(b + c) = ab + ac" />
 
@@ -217,15 +211,22 @@ export function AlgExpandCard({ id }: { id: string }) {
 
       <Tex block tex={statement} />
 
-      {mode === 'two' && (
-        <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
+        {mode === 'two' ? (
           <Trans
-            i18nKey="alg.expandSumProduct"
+            i18nKey="alg.expandResultTwo"
             values={{ a, b, sum: a + b, product: a * b }}
             components={{ b: <strong />, i: <em /> }}
           />
-        </p>
-      )}
+        ) : (
+          <Trans i18nKey="alg.expandResultOne" components={{ b: <strong />, i: <em /> }} />
+        )}
+      </p>
+
+      {/* Folded in from the old terms section: the one trap of the topic. */}
+      <p className="card-note lesson-text">
+        <Trans i18nKey="alg.expandLikeNote" components={{ b: <strong />, i: <em /> }} />
+      </p>
 
       <p className="mini-title">{t('alg.expandFactorTitle')}</p>
       <div className="table-wrap">

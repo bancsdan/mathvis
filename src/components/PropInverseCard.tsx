@@ -36,17 +36,14 @@ export function PropInverseCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('prop.inverseTitle')}</h2>
+        <h2>{t('prop.q2')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="prop.inverseIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="prop.inverseIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="prop.inverseDef" />
-        <p className="card-note">
-          <Trans i18nKey="prop.inverseIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="pill-row" role="group" aria-label={t('prop.inverseScAria')}>
@@ -117,7 +114,7 @@ export function PropInverseCard({ id }: { id: string }) {
 
       <Tex block tex={`y = \\frac{${sc.k}}{x}`} />
 
-      <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
         <Trans
           i18nKey="prop.inverseConstant"
           values={{ x: plainNumber(clamped, sep), y: plainNumber(y, sep), k: sc.k }}

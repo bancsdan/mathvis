@@ -26,17 +26,14 @@ export function AlgTrickCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('alg.trickTitle')}</h2>
+        <h2>{t('alg.q1')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="alg.trickIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="alg.trickIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <Definition i18nKey={['alg.trickDef1', 'alg.trickDef2', 'alg.trickDef3']} />
-        <p className="card-note">
-          <Trans i18nKey="alg.trickIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey={['alg.trickDef1', 'alg.trickDef2']} />
       </div>
 
       <div className="pill-row" role="group" aria-label={t('alg.trickPickAria')}>
@@ -99,7 +96,7 @@ export function AlgTrickCard({ id }: { id: string }) {
         </table>
       </div>
 
-      <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
         {last.linear.a === 0 ? (
           <Trans
             i18nKey="alg.trickEndsConst"

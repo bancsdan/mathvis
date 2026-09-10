@@ -5,6 +5,7 @@ import {
   isPerfectSquare,
   neighbourSquares,
   PERFECT_SQUARES,
+  ROOT_SUM_TRAP,
   SQRT_ANSWER,
   sqrtText,
 } from '../lib/powers'
@@ -16,17 +17,21 @@ import { useWidth } from './useWidth'
 const MAX_AREA = 100
 const MARGIN = 16
 
+const trapWhole = Math.sqrt(ROOT_SUM_TRAP.a + ROOT_SUM_TRAP.b)
+const trapParts = Math.sqrt(ROOT_SUM_TRAP.a) + Math.sqrt(ROOT_SUM_TRAP.b)
+
 /**
- * A négyzetgyök. The root is the side of a square whose area you set, so a
- * root is a length before it is a button on a calculator.
+ * Mi a négyzetgyök: the root is the side of a square whose area you set, so a
+ * root is a length before it is a button on a calculator — and the sum of two
+ * roots is visibly not the root of the sum.
  */
 export function PowSqrtCard({ id }: { id: string }) {
   const { t } = useTranslation()
   const sep = t('num.decimalSep')
   const [ref, width] = useWidth<HTMLDivElement>()
-  const [area, setArea] = useState(49)
-  const [typed, setTyped] = useState('2')
-  const [answer, setAnswer] = useState('')
+  const [area, setArea] = useState(50)
+  const [whole, setWhole] = useState('')
+  const [parts, setParts] = useState('')
 
   const exact = isPerfectSquare(area)
   const around = neighbourSquares(area)
@@ -36,26 +41,21 @@ export function PowSqrtCard({ id }: { id: string }) {
   const side = (Math.sqrt(area) / Math.sqrt(MAX_AREA)) * box
   const sideLabel = exact ? String(Math.sqrt(area)) : formatDecimal(sqrtText(area, 3), sep, false)
 
-  const given = parseDecimal(typed)
-  const valid = given !== null && given >= 0
-  const calcAround = valid ? neighbourSquares(given) : null
+  const answerKey = `${whole}|${parts}`
 
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('pow.sqrtTitle')}</h2>
+        <h2>{t('pow.q5')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="pow.sqrtIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="pow.sqrtIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="pow.sqrtDef">
           <Tex block tex="\sqrt{a} = b \iff b^{2} = a \quad (a \ge 0,\ b \ge 0)" />
         </Definition>
-        <p className="card-note">
-          <Trans i18nKey="pow.sqrtIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="controls-inline">
@@ -111,7 +111,7 @@ export function PowSqrtCard({ id }: { id: string }) {
             : `\\sqrt{${area}} \\approx ${formatDecimal(sqrtText(area, 3), sep, true)}`
         }
       />
-      <p className="alias-verdict" role="status" aria-live="polite">
+      <p className="lin-result lesson-text" role="status" aria-live="polite">
         {exact
           ? t('pow.sqrtExactNote', { area, root: Math.sqrt(area) })
           : t('pow.sqrtBetweenNote', {
@@ -123,7 +123,6 @@ export function PowSqrtCard({ id }: { id: string }) {
             })}
       </p>
 
-      <p className="mini-title">{t('pow.sqrtTableTitle')}</p>
       <div className="table-wrap">
         <table className="paper-table">
           <tbody>
@@ -143,67 +142,54 @@ export function PowSqrtCard({ id }: { id: string }) {
         </table>
       </div>
 
-      <p className="mini-title">{t('pow.sqrtCalcTitle')}</p>
+      {/* Folded in from the old laws-of-roots section: the one trap of the topic. */}
+      <Tex
+        block
+        tex={`\\sqrt{${ROOT_SUM_TRAP.a} + ${ROOT_SUM_TRAP.b}} = ${trapWhole} \\ne ${trapParts} = \\sqrt{${ROOT_SUM_TRAP.a}} + \\sqrt{${ROOT_SUM_TRAP.b}}`}
+      />
       <p className="card-note lesson-text">
-        <Trans i18nKey="pow.sqrtCalcIntro" components={{ b: <strong />, i: <em /> }} />
-      </p>
-      <label className="field field-wide">
-        <span className="field-label">{t('pow.sqrtCalcLabel')}</span>
-        <input
-          type="text"
-          inputMode="decimal"
-          value={typed}
-          onChange={(e) => setTyped(e.target.value)}
+        <Trans
+          i18nKey="pow.sqrtSumTrap"
+          values={{ a: ROOT_SUM_TRAP.a, b: ROOT_SUM_TRAP.b, whole: trapWhole, parts: trapParts }}
+          components={{ b: <strong />, i: <em /> }}
         />
-      </label>
-      {valid && calcAround ? (
-        <>
-          <Tex block tex={`\\sqrt{${formatDecimal(String(given), sep, true)}} \\approx ${formatDecimal(sqrtText(given, 4), sep, true)}`} />
-          <p className="card-note lesson-text">
-            {isPerfectSquare(given)
-              ? t('pow.sqrtExactNote', { area: given, root: Math.sqrt(given) })
-              : t('pow.sqrtBetweenNote', {
-                  area: formatDecimal(String(given), sep, false),
-                  lo: calcAround.lo,
-                  hi: calcAround.hi,
-                  loSq: calcAround.lo * calcAround.lo,
-                  hiSq: calcAround.hi * calcAround.hi,
-                })}
-          </p>
-        </>
-      ) : (
-        <p className="card-note lesson-text">{t('pow.sqrtCalcBad')}</p>
-      )}
-      <p className="card-note lesson-text">
-        <Trans i18nKey="pow.sqrtCalcNote" components={{ b: <strong />, i: <em /> }} />
-      </p>
-
-      <p className="card-note lesson-text">
-        <Trans i18nKey="pow.sqrtTrap1" components={{ b: <strong />, i: <em /> }} />
-      </p>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="pow.sqrtTrap2" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <Exercise
         promptKey="pow.sqrtTask"
-        isCorrect={parseDecimal(answer) === SQRT_ANSWER}
-        canCheck={answer.trim() !== ''}
-        answerKey={answer}
-        solutionKey={String(SQRT_ANSWER)}
-        onReveal={() => setAnswer(String(SQRT_ANSWER))}
+        promptValues={{ a: ROOT_SUM_TRAP.a, b: ROOT_SUM_TRAP.b }}
+        isCorrect={parseDecimal(whole) === SQRT_ANSWER.whole && parseDecimal(parts) === SQRT_ANSWER.parts}
+        canCheck={whole.trim() !== '' && parts.trim() !== ''}
+        answerKey={answerKey}
+        solutionKey={`${SQRT_ANSWER.whole}|${SQRT_ANSWER.parts}`}
+        onReveal={() => {
+          setWhole(String(SQRT_ANSWER.whole))
+          setParts(String(SQRT_ANSWER.parts))
+        }}
         hintKey="pow.sqrtHint"
       >
-        <label className="field">
-          <span className="field-label">{t('pow.sqrtAnswerLabel')}</span>
-          <input
-            className="answer-input"
-            type="text"
-            inputMode="decimal"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-          />
-        </label>
+        <div className="controls-inline">
+          <label className="field">
+            <span className="field-label">{t('pow.sqrtAnswerWhole', { a: ROOT_SUM_TRAP.a, b: ROOT_SUM_TRAP.b })}</span>
+            <input
+              className="answer-input"
+              type="text"
+              inputMode="decimal"
+              value={whole}
+              onChange={(e) => setWhole(e.target.value)}
+            />
+          </label>
+          <label className="field">
+            <span className="field-label">{t('pow.sqrtAnswerParts', { a: ROOT_SUM_TRAP.a, b: ROOT_SUM_TRAP.b })}</span>
+            <input
+              className="answer-input"
+              type="text"
+              inputMode="decimal"
+              value={parts}
+              onChange={(e) => setParts(e.target.value)}
+            />
+          </label>
+        </div>
       </Exercise>
     </section>
   )

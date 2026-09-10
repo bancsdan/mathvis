@@ -1,13 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   applyChanges,
-  BILL_ANSWER,
-  BILL_DEFAULT,
-  billLines,
   CHANGE_ANSWER,
   compound,
-  conversionHops,
-  convert,
   curve,
   DIRECT_ANSWER,
   DIRECT_QUIZ,
@@ -22,7 +17,6 @@ import {
   inverseValue,
   isDirect,
   isInverse,
-  ladder,
   multiplier,
   PERCENT_ANSWER,
   percentBase,
@@ -30,13 +24,11 @@ import {
   percentValue,
   plainNumber,
   POINT_EXAMPLE,
-  purchasingPower,
   round,
   simpleInterest,
   SITUATIONS,
   SITUATIONS_ANSWER,
   totalChange,
-  UNITS_ANSWER,
 } from './proportion'
 
 describe('numbers on screen', () => {
@@ -145,49 +137,6 @@ describe('the shapes of a dependence', () => {
   })
 })
 
-describe('units', () => {
-  it('walks one rung down the ladder', () => {
-    expect(conversionHops('length', 'km', 'm')).toEqual([{ factor: 1000, multiply: true }])
-    expect(convert('length', '2.5', 'km', 'm')).toBe('2500')
-  })
-
-  it('walks two rungs up the ladder', () => {
-    expect(conversionHops('area', 'cm²', 'm²')).toEqual([
-      { factor: 100, multiply: false },
-      { factor: 100, multiply: false },
-    ])
-    expect(convert('area', '25000', 'cm²', 'm²')).toBe('2.5')
-  })
-
-  it('keeps a decimal exact where a float would not', () => {
-    expect(convert('area', '0.7', 'm²', 'cm²')).toBe('7000')
-    expect(convert('volume', '0.29', 'l', 'ml')).toBe('290')
-  })
-
-  it('leaves a value alone when the units match', () => {
-    expect(conversionHops('length', 'm', 'm')).toEqual([])
-    expect(convert('length', '2.5', 'm', 'm')).toBe('2.5')
-  })
-
-  it('converts time through the sixties and the twenty-four', () => {
-    expect(convert('time', '2.5', 'h', 'min')).toBe('150')
-    expect(convert('time', '1', 'h', 's')).toBe('3600')
-    expect(convert('time', '1', 'd', 'h')).toBe('24')
-    expect(convert('time', '90', 'min', 'h')).toBe('1.5')
-  })
-
-  it('converts a derived unit both ways', () => {
-    expect(convert('speed', '72', 'km/h', 'm/s')).toBe(UNITS_ANSWER)
-    expect(convert('speed', '1', 'm/s', 'km/h')).toBe('3.6')
-  })
-
-  it('has one factor fewer than it has units', () => {
-    for (const l of [ladder('length'), ladder('area'), ladder('volume'), ladder('time'), ladder('speed')]) {
-      expect(l.factors).toHaveLength(l.units.length - 1)
-    }
-  })
-})
-
 describe('percent', () => {
   it('finds the value, the rate and the base of the same statement', () => {
     expect(percentValue(15000, 20)).toBe(3000)
@@ -238,38 +187,7 @@ describe('percentage change', () => {
   })
 })
 
-describe('the household bill', () => {
-  it('builds the bill line by line', () => {
-    expect(billLines(BILL_DEFAULT)).toEqual({
-      energy: 7560,
-      net: 8760,
-      vatAmount: 2365,
-      gross: 11125,
-    })
-  })
-
-  it('scales the energy fee with the consumption but not the total', () => {
-    const one = billLines(BILL_DEFAULT)
-    const two = billLines({ ...BILL_DEFAULT, kwh: 2 * BILL_DEFAULT.kwh })
-    expect(two.energy).toBe(2 * one.energy)
-    expect(two.gross).toBeLessThan(2 * one.gross)
-  })
-
-  it('charges the fixed fee even at no consumption', () => {
-    expect(billLines({ ...BILL_DEFAULT, kwh: 0 })).toEqual({
-      energy: 0,
-      net: 1200,
-      vatAmount: 324,
-      gross: 1524,
-    })
-  })
-
-  it('answers the exercise bill', () => {
-    expect(billLines({ ...BILL_DEFAULT, kwh: 150 }).gross).toBe(BILL_ANSWER)
-  })
-})
-
-describe('interest and inflation', () => {
+describe('compound interest', () => {
   it('starts both kinds of interest at the principal', () => {
     expect(compound(200000, 5, 3)[0]).toBe(200000)
     expect(simpleInterest(200000, 5, 3)[0]).toBe(200000)
@@ -286,11 +204,6 @@ describe('interest and inflation', () => {
     for (let n = 2; n <= 10; n++) {
       expect(withInterest[n] - without[n]).toBeGreaterThan(withInterest[n - 1] - without[n - 1])
     }
-  })
-
-  it('shrinks what the same money buys', () => {
-    expect(purchasingPower(10000, 10, 1)).toEqual([10000, 9091])
-    expect(purchasingPower(10000, 0, 3)).toEqual([10000, 10000, 10000, 10000])
   })
 
   it('answers the two years of compound interest', () => {

@@ -21,9 +21,10 @@ import { Tex } from './Tex'
 const grouped = (n: number): string => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 
 /**
- * Hatvány: alap és kitevő. The shorthand is unpacked into its factors, so the
- * exponent is visibly a count of them rather than a rule to remember, and the
- * folding panel shows what that count does once it starts doubling.
+ * Hányszor lehet félbehajtani egy papírt: the shorthand is unpacked into its
+ * factors, so the exponent is visibly a count of them rather than a rule to
+ * remember, and the folding panel shows what that count does once it starts
+ * doubling.
  */
 export function PowDefCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -50,17 +51,14 @@ export function PowDefCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('pow.defTitle')}</h2>
+        <h2>{t('pow.q1')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="pow.defIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="pow.defIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <Definition i18nKey={['pow.defDef1', 'pow.defDef2']} />
-        <p className="card-note">
-          <Trans i18nKey="pow.defIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey="pow.defDef" />
       </div>
 
       <div className="pill-row" role="group" aria-label={t('pow.defPickBase')}>
@@ -101,18 +99,6 @@ export function PowDefCard({ id }: { id: string }) {
 
       <Tex block tex={`${basePowerTex(base, exp)} = ${productTex} = ${baseValueTex(base, exp)}`} />
 
-      {base.num < 0 && (
-        <p className="card-note lesson-text">
-          <Trans i18nKey="pow.defSignNote" components={{ b: <strong />, i: <em /> }} />
-        </p>
-      )}
-
-      <p className="mini-title">{t('pow.defTrapTitle')}</p>
-      <Tex block tex={`\\left(-2\\right)^{4} = 16 \\qquad -2^{4} = -16`} />
-      <p className="card-note lesson-text">
-        <Trans i18nKey="pow.defTrapNote" components={{ b: <strong />, i: <em /> }} />
-      </p>
-
       <p className="mini-title">{t('pow.defFoldTitle')}</p>
       <p className="card-note lesson-text">
         <Trans i18nKey="pow.defFoldIntro" components={{ b: <strong />, i: <em /> }} />
@@ -145,7 +131,7 @@ export function PowDefCard({ id }: { id: string }) {
         </div>
       </div>
       <Tex block tex={`2^{${folds}} = ${grouped(layers).replace(/ /g, '\\,')}`} />
-      <p className="alias-verdict" role="status" aria-live="polite">
+      <p className="lin-result lesson-text" role="status" aria-live="polite">
         {milestone ? t(milestone.compareKey) : t('pow.defFoldStart')}
       </p>
       <p className="card-note lesson-text">
@@ -158,6 +144,11 @@ export function PowDefCard({ id }: { id: string }) {
           }}
           components={{ b: <strong />, i: <em /> }}
         />
+      </p>
+
+      <Tex block tex={`\\left(-2\\right)^{4} = 16 \\qquad -2^{4} = -16`} />
+      <p className="card-note lesson-text">
+        <Trans i18nKey="pow.defTrapNote" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <Exercise

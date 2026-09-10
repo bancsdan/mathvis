@@ -51,17 +51,14 @@ export function AlgCompleteCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('alg.completeTitle')}</h2>
+        <h2>{t('alg.q5')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="alg.completeIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="alg.completeIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="alg.completeDef" />
-        <p className="card-note">
-          <Trans i18nKey="alg.completeIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="controls-inline">
@@ -157,7 +154,7 @@ export function AlgCompleteCard({ id }: { id: string }) {
         ]}
       />
 
-      <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
         <Trans
           i18nKey="alg.completeVertex"
           values={{ x: signed(-h), k: signed(k) }}

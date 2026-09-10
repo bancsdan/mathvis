@@ -50,17 +50,14 @@ export function PropDirectCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('prop.directTitle')}</h2>
+        <h2>{t('prop.q1')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="prop.directIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="prop.directIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey={['prop.directDef1', 'prop.directDef2']} />
-        <p className="card-note">
-          <Trans i18nKey="prop.directIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="pill-row" role="group" aria-label={t('prop.directScAria')}>
@@ -141,7 +138,7 @@ export function PropDirectCard({ id }: { id: string }) {
         </table>
       </div>
 
-      <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
         <Trans
           i18nKey="prop.directConstant"
           values={{ k: `${groupThousands(sc.k)} ${unitY}/${unitX}` }}

@@ -1065,21 +1065,13 @@ p.card-note.lesson-text {
   background: var(--hover-wash);
 }
 
-.num-badge {
-  font-size: 11px;
-  padding: 2px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--accent-select);
-  color: var(--text-secondary);
-}
-
 /* Point labels sit above the axis of a number line. */
 .line-label {
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 
-/* One digit of a number being rounded, so the deciding one can be pointed at. */
+/* One boxed digit of a number, so a single one of them can be pointed at. */
 .digit-row {
   display: flex;
   align-items: center;
@@ -1107,16 +1099,6 @@ p.card-note.lesson-text {
 .digit-box.deciding {
   border-color: var(--accent-select);
   background: var(--hover-wash);
-  font-weight: 600;
-}
-
-.digit-box.dropped {
-  color: var(--text-muted);
-  border-style: dashed;
-}
-
-.digit-sep {
-  padding: 0 3px;
   font-weight: 600;
 }
 
@@ -1235,64 +1217,10 @@ p.card-note.lesson-text {
 
 /* --- algebraic expressions lesson -------------------------------------- */
 
-/* One term of an expression. The chip is a button as well as a picture, so
-   the same click that lights the like terms is reachable from a keyboard. */
-.alg-term-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin: 8px 0;
-}
-
-.alg-term {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--mark-muted);
-  background: var(--surface);
-  color: var(--text-primary);
-  font: inherit;
-  font-variant-numeric: tabular-nums;
-  cursor: pointer;
-}
-
-.alg-term.fam-0 {
-  border-color: var(--series-1);
-  background: color-mix(in srgb, var(--series-1) 18%, transparent);
-}
-
-.alg-term.fam-1 {
-  border-color: var(--series-2);
-  background: color-mix(in srgb, var(--series-2) 18%, transparent);
-}
-
-.alg-term.fam-2 {
-  border-color: var(--series-3);
-  background: color-mix(in srgb, var(--series-3) 18%, transparent);
-}
-
-.alg-term.lit {
-  outline: 2px solid var(--accent-select);
-  outline-offset: 1px;
-}
-
 /* The row a number trick ends on: the one that answers "why does it work". */
 .alg-final td {
   font-weight: 700;
   background: color-mix(in srgb, var(--accent-select) 12%, transparent);
-}
-
-/* Factor chips of a monomial, tinted by which letter they are. */
-.pow-factor.alg-x {
-  border-color: var(--series-2);
-  background: color-mix(in srgb, var(--series-2) 18%, transparent);
-}
-
-.pow-factor.alg-y {
-  border-color: var(--series-3);
-  background: color-mix(in srgb, var(--series-3) 18%, transparent);
 }
 
 /* Area pictures: a product drawn as the rectangle it measures. */
@@ -1322,33 +1250,6 @@ p.card-note.lesson-text {
 .alg-label {
   font-size: 11px;
   fill: var(--text-secondary);
-}
-
-/* One line of a solved equation, with the move that produced it. */
-.alg-steps {
-  list-style: none;
-  margin: 8px 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.alg-step {
-  padding: 6px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-}
-
-.alg-step .tex-block {
-  margin: 2px 0;
-}
-
-.alg-step-note {
-  display: block;
-  font-size: 12px;
-  color: var(--text-secondary);
 }
 
 /* --- arányosság, százalékszámítás -------------------------------------- */
@@ -1406,48 +1307,6 @@ p.card-note.lesson-text {
   border-color: var(--accent-select);
 }
 
-/* The ladder of units: rungs with the factor between them. */
-.prop-ladder {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
-  margin: 8px 0;
-}
-
-.prop-rung-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.prop-rung {
-  display: inline-block;
-  min-width: 34px;
-  padding: 3px 8px;
-  text-align: center;
-  border-radius: 5px;
-  border: 1px solid var(--series-1);
-  background: color-mix(in srgb, var(--series-1) 18%, transparent);
-  font-variant-numeric: tabular-nums;
-}
-
-.prop-rung.lit {
-  border: 2px solid var(--accent-select);
-  padding: 2px 7px;
-  font-weight: 600;
-}
-
-.prop-hop {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.prop-hop.lit {
-  color: var(--accent-select);
-  font-weight: 600;
-}
-
 /* The percentage bar: the whole is the base, the shaded part is the value. */
 .prop-bar {
   display: block;
@@ -1469,17 +1328,6 @@ p.card-note.lesson-text {
 .prop-bar-label {
   font-size: 11px;
   fill: var(--text-secondary);
-}
-
-/* The bill: amounts right aligned, the payable line ruled off. */
-.prop-bill td:last-child,
-.prop-bill th:last-child {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-.prop-bill .prop-total td {
-  border-top: 2px solid var(--border);
 }
 
 /* --- elsőfokú egyenletek, egyenlőtlenségek ----------------------------- */

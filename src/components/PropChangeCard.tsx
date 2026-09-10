@@ -47,19 +47,14 @@ export function PropChangeCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('prop.changeTitle')}</h2>
+        <h2>{t('prop.q5')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="prop.changeIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="prop.changeIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <p className="card-note">
-          <Trans i18nKey="prop.changeRule" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="prop.changeIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey="prop.changeDef" />
       </div>
 
       <div className="controls-inline">
@@ -134,20 +129,16 @@ export function PropChangeCard({ id }: { id: string }) {
 
       <Tex block tex={`${number(multiplier(first))} \\cdot ${number(multiplier(second))} = ${number(product)}`} />
 
-      <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
         <Trans
           i18nKey="prop.changeTotal"
           values={{ total: plainNumber(total, sep), naive: plainNumber(naive, sep) }}
           components={{ b: <strong />, i: <em /> }}
         />
       </p>
-
-      <div className="lesson-text">
-        <p className="card-note">
-          <Trans i18nKey="prop.changeIntro3" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <Definition i18nKey="prop.changeDef" />
-      </div>
+      <p className="card-note lesson-text">
+        <Trans i18nKey="prop.changeRule" components={{ b: <strong />, i: <em /> }} />
+      </p>
 
       <p className="mini-title">{t('prop.changePointsTitle')}</p>
       <div className="controls-inline">
@@ -168,14 +159,7 @@ export function PropChangeCard({ id }: { id: string }) {
       <p className="card-note lesson-text">
         <Trans
           i18nKey="prop.changePoints"
-          values={{ diff: plainNumber(diff, sep) }}
-          components={{ b: <strong />, i: <em /> }}
-        />
-      </p>
-      <p className="card-note lesson-text">
-        <Trans
-          i18nKey="prop.changePercent"
-          values={{ pct: plainNumber(pct, sep), ratio: plainNumber(ratio, sep) }}
+          values={{ diff: plainNumber(diff, sep), pct: plainNumber(pct, sep), ratio: plainNumber(ratio, sep) }}
           components={{ b: <strong />, i: <em /> }}
         />
       </p>

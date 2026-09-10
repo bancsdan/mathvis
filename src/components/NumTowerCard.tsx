@@ -35,8 +35,9 @@ const membershipTex = (s: SampleNumber): string =>
   ].join(', \\; ')
 
 /**
- * Számhalmazok egymásra épülése: the four sets as boxes inside each other,
- * with the sample numbers dropped into the innermost box that holds them.
+ * Miért kell egyre nagyobb számhalmaz: the four sets as boxes inside each
+ * other, with the sample numbers dropped into the innermost box that holds
+ * them, and the three calculations that force each next box.
  *
  * The boxes are ordinary elements rather than an SVG, so the numbers can be
  * real buttons carrying real KaTeX — clickable with a mouse and reachable with
@@ -79,17 +80,14 @@ export function NumTowerCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('num.towerTitle')}</h2>
+        <h2>{t('num.q1')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="num.towerIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="num.towerIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <p className="card-note">
-          <Trans i18nKey="num.towerIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <Definition i18nKey={['num.towerDef1', 'num.towerDef2', 'num.towerDef3', 'num.towerDef4', 'num.towerDef5']} />
+        <Definition i18nKey={['num.towerDef1', 'num.towerDef2', 'num.towerDef3', 'num.towerDef4']} />
       </div>
 
       <div className="num-tower">
@@ -102,16 +100,11 @@ export function NumTowerCard({ id }: { id: string }) {
         </div>
       </div>
 
-      {sample ? (
-        <>
-          <Tex block tex={texSeparator(membershipTex(sample), sep)} />
-          <p className="card-note lesson-text">{t(`num.towerSay_${sample.cls}`)}</p>
-        </>
-      ) : (
-        <p className="card-note lesson-text">{t('num.towerNone')}</p>
-      )}
+      {sample && <Tex block tex={texSeparator(membershipTex(sample), sep)} />}
+      <p className="lin-result lesson-text">
+        {sample ? t(`num.towerSay_${sample.cls}`) : t('num.towerNone')}
+      </p>
 
-      <p className="mini-title">{t('num.towerWhyTitle')}</p>
       <div className="table-wrap">
         <table className="paper-table">
           <tbody>

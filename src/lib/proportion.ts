@@ -1,17 +1,14 @@
 /**
- * Proportion, units and percent, for the Arányosság, százalékszámítás lesson.
+ * Proportion and percent, for the Arányosság, százalékszámítás lesson.
  * No React, no DOM — everything here is pure, so it can be unit tested.
  *
- * Two habits keep the numbers honest. First, anything that scales by a power of
- * ten walks the decimal point of a *string* with `shiftPoint` instead of
- * multiplying a float, so 0,7 m² is exactly 7000 cm² and not 6999.999999999999.
- * Everything else rounds through `round`, and the tests pin the exact strings.
- * Second, every exercise answer of the lesson lives here as an exported
- * constant, so the tests hold the page to it.
+ * Two habits keep the numbers honest. First, everything rounds through
+ * `round` rather than trusting a float, so a price is a price and not
+ * 6999.999999999999. Second, every exercise answer of the lesson lives here as
+ * an exported constant, so the tests hold the page to it.
  */
 
 import { formatDecimal } from './numbers'
-import { shiftPoint } from './powers'
 
 /* ------------------------------------------------------------------ */
 /* Numbers on screen                                                   */
@@ -197,84 +194,7 @@ export const SITUATIONS: readonly { id: string; kind: GraphKind | 'none' }[] = [
 export const SITUATIONS_ANSWER = SITUATIONS.map((s) => s.kind).join('|')
 
 /* ------------------------------------------------------------------ */
-/* 4. Units                                                            */
-/* ------------------------------------------------------------------ */
-
-export type UnitKind = 'length' | 'area' | 'volume' | 'time' | 'speed'
-
-export interface UnitLadder {
-  kind: UnitKind
-  /** Smallest first. */
-  units: readonly string[]
-  /** `factors[i]` is how many `units[i]` make one `units[i + 1]`. */
-  factors: readonly number[]
-}
-
-export const LADDERS: readonly UnitLadder[] = [
-  { kind: 'length', units: ['mm', 'cm', 'dm', 'm', 'km'], factors: [10, 10, 10, 1000] },
-  { kind: 'area', units: ['mm²', 'cm²', 'dm²', 'm²', 'ha', 'km²'], factors: [100, 100, 100, 10000, 100] },
-  { kind: 'volume', units: ['ml', 'cl', 'dl', 'l', 'hl', 'm³'], factors: [10, 10, 10, 100, 10] },
-  { kind: 'time', units: ['s', 'min', 'h', 'd'], factors: [60, 60, 24] },
-  // Ordered by size like every other ladder: one m/s is 3,6 km/h, so m/s is
-  // the larger unit and the 3,6 sits on the rung below it.
-  { kind: 'speed', units: ['km/h', 'm/s'], factors: [3.6] },
-]
-
-export function ladder(kind: UnitKind): UnitLadder {
-  return LADDERS.find((l) => l.kind === kind) ?? LADDERS[0]
-}
-
-/**
- * The rungs between two units, in walking order. Going down the ladder — to a
- * smaller unit — multiplies the number, going up divides it.
- */
-export function conversionHops(
-  kind: UnitKind,
-  from: string,
-  to: string
-): { factor: number; multiply: boolean }[] {
-  const { units, factors } = ladder(kind)
-  const i = units.indexOf(from)
-  const j = units.indexOf(to)
-  if (i < 0 || j < 0) return []
-  const hops: { factor: number; multiply: boolean }[] = []
-  if (j < i) for (let k = i - 1; k >= j; k--) hops.push({ factor: factors[k], multiply: true })
-  else for (let k = i; k < j; k++) hops.push({ factor: factors[k], multiply: false })
-  return hops
-}
-
-/**
- * Convert a decimal string from one unit to another, and give a decimal string
- * back. Powers of ten move the decimal point instead of touching a float; the
- * 60s, the 24 and the 3,6 go through arithmetic and are rounded.
- */
-export function convert(kind: UnitKind, value: string, from: string, to: string): string {
-  const normal = value.trim().replace(/−/g, '-').replace(',', '.')
-  const hops = conversionHops(kind, from, to)
-
-  let places = 0
-  let decimal = true
-  for (const hop of hops) {
-    const exponent = Math.log10(hop.factor)
-    if (!Number.isInteger(exponent)) {
-      decimal = false
-      break
-    }
-    places += hop.multiply ? exponent : -exponent
-  }
-  if (decimal) return shiftPoint(normal, places)
-
-  let out = Number(normal)
-  if (!Number.isFinite(out)) return '0'
-  for (const hop of hops) out = hop.multiply ? out * hop.factor : out / hop.factor
-  return String(round(out, 4))
-}
-
-/** 72 km/h is 20 m/s. */
-export const UNITS_ANSWER = '20'
-
-/* ------------------------------------------------------------------ */
-/* 5. Percent                                                          */
+/* 4. Percent                                                          */
 /* ------------------------------------------------------------------ */
 
 /** The százalékérték: how much `rate` percent of `base` is. */
@@ -296,7 +216,7 @@ export function percentBase(value: number, rate: number): number {
 export const PERCENT_ANSWER = 25
 
 /* ------------------------------------------------------------------ */
-/* 6. Percentage change                                                */
+/* 5. Percentage change                                                */
 /* ------------------------------------------------------------------ */
 
 /** The number one multiplies by: +20 → 1,2 and −20 → 0,8. */
@@ -330,32 +250,7 @@ export const POINT_EXAMPLE = { from: 3, to: 4 }
 export const CHANGE_ANSWER = 100
 
 /* ------------------------------------------------------------------ */
-/* 7. The household bill                                               */
-/* ------------------------------------------------------------------ */
-
-export interface Bill {
-  kwh: number
-  unitPrice: number
-  fixedFee: number
-  /** VAT in percent. */
-  vat: number
-}
-
-/** The lines of the bill, each a whole number of forints. */
-export function billLines(b: Bill): { energy: number; net: number; vatAmount: number; gross: number } {
-  const energy = Math.round(b.kwh * b.unitPrice)
-  const net = energy + b.fixedFee
-  const vatAmount = Math.round((net * b.vat) / 100)
-  return { energy, net, vatAmount, gross: net + vatAmount }
-}
-
-export const BILL_DEFAULT: Bill = { kwh: 210, unitPrice: 36, fixedFee: 1200, vat: 27 }
-
-/** 150 kWh: (150 · 36 + 1200) · 1,27 = 8382 Ft. */
-export const BILL_ANSWER = 8382
-
-/* ------------------------------------------------------------------ */
-/* 8. Interest and inflation                                           */
+/* 6. Compound interest                                                */
 /* ------------------------------------------------------------------ */
 
 /** The balance after 0, 1, … `years` years, each year's interest earning interest. */
@@ -366,11 +261,6 @@ export function compound(principal: number, rate: number, years: number): number
 /** The balance if only the original amount ever earned interest. */
 export function simpleInterest(principal: number, rate: number, years: number): number[] {
   return Array.from({ length: years + 1 }, (_, n) => Math.round(principal * (1 + (n * rate) / 100)))
-}
-
-/** What today's `amount` is still worth after 0, 1, … `years` years of inflation. */
-export function purchasingPower(amount: number, inflation: number, years: number): number[] {
-  return Array.from({ length: years + 1 }, (_, n) => Math.round(amount / Math.pow(multiplier(inflation), n)))
 }
 
 /** 200 000 Ft at 4% for two years: 200 000 · 1,04² = 216 320 Ft. */

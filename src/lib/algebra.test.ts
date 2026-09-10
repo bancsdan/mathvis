@@ -1,39 +1,24 @@
 import { describe, expect, it } from 'vitest'
 import {
   applyStep,
-  collectLike,
   completeSquare,
   completeStepsTex,
   COMPLETE_ANSWER,
   diffParts,
   DIFF_ANSWER,
-  divMono,
-  EQUATIONS,
   expandBinomials,
   expandedTex,
   EXPAND_ANSWER,
   FACTOR_EXAMPLES,
-  family,
   linearTex,
   mentalProduct,
   mentalSquare,
-  monoFactors,
-  monoTex,
-  mulMono,
   NEAR_TENS,
-  oddSquareMinusOne,
-  OPS_ANSWER,
   OR_TOKEN,
-  PATTERN_ANSWER,
-  PATTERN_IDS,
-  PATTERNS,
   polyTex,
-  powMono,
   quadValue,
   squareParts,
   SQUARE_ANSWER,
-  TERM_PRESETS,
-  TERMS_ANSWER,
   termTex,
   traceTrick,
   TRICK_ANSWER,
@@ -73,42 +58,15 @@ describe('terms and polynomials', () => {
   })
 
   it('joins terms with their own signs', () => {
-    expect(polyTex(TERM_PRESETS[0].terms)).toBe('3x^2 + 5x - 2x^2 + 7 - x + 4')
-  })
-})
-
-describe('collecting like terms', () => {
-  const collectedTex = (terms: readonly Term[]) => polyTex(collectLike(terms))
-
-  it('sums the coefficients of each letter part', () => {
-    expect(collectedTex(TERM_PRESETS[0].terms)).toBe('x^2 + 4x + 11')
-    expect(collectedTex(TERM_PRESETS[1].terms)).toBe('3a + 9b - 3')
-  })
-
-  it('drops the parts that cancel out', () => {
-    expect(collectLike(TERM_PRESETS[2].terms)).toEqual([{ coef: 5, part: '' }])
-  })
-
-  it('keeps first-appearance order rather than sorting', () => {
     const terms: Term[] = [
-      { coef: 1, part: '' },
-      { coef: 2, part: 'x^2' },
-      { coef: 3, part: 'x' },
+      { coef: 3, part: 'x^2' },
+      { coef: 5, part: 'x' },
+      { coef: -2, part: 'x^2' },
+      { coef: 7, part: '' },
+      { coef: -1, part: 'x' },
+      { coef: 4, part: '' },
     ]
-    expect(collectLike(terms).map((term) => term.part)).toEqual(['', 'x^2', 'x'])
-  })
-
-  it('gives the three families of a preset three different colours', () => {
-    expect(family('x^2')).toBe(0)
-    expect(family('x')).toBe(1)
-    expect(family('')).toBe(2)
-    expect(family('a')).toBe(0)
-    expect(family('b')).toBe(1)
-  })
-
-  it('pins the exercise answer to the letters preset', () => {
-    const collected = collectLike(TERM_PRESETS[1].terms)
-    expect(collected.map((term) => term.coef).join('|')).toBe(TERMS_ANSWER)
+    expect(polyTex(terms)).toBe('3x^2 + 5x - 2x^2 + 7 - x + 4')
   })
 })
 
@@ -183,54 +141,6 @@ describe('number tricks', () => {
     ] as const
     const rows = traceTrick(steps, 12)
     expect(rows[rows.length - 1].value).toBe(TRICK_ANSWER)
-  })
-})
-
-describe('monomials', () => {
-  it('writes the letters without an exponent of one', () => {
-    expect(monoTex({ coef: 6, x: 3, y: 4 })).toBe('6x^{3}y^{4}')
-    expect(monoTex({ coef: 1, x: 1, y: 0 })).toBe('x')
-    expect(monoTex({ coef: -2, x: 0, y: 1 })).toBe('-2y')
-  })
-
-  it('writes a monomial with no letters as its number', () => {
-    expect(monoTex({ coef: 5, x: 0, y: 0 })).toBe('5')
-    expect(monoTex({ coef: 1, x: 0, y: 0 })).toBe('1')
-  })
-
-  it('lists one chip per factor and none for a coefficient of one', () => {
-    expect(monoFactors({ coef: 2, x: 2, y: 1 })).toEqual(['2', 'x', 'x', 'y'])
-    expect(monoFactors({ coef: 1, x: 1, y: 2 })).toEqual(['x', 'y', 'y'])
-  })
-
-  it('multiplies numbers and adds exponents', () => {
-    expect(mulMono({ coef: 2, x: 2, y: 1 }, { coef: 3, x: 1, y: 3 })).toEqual({ coef: 6, x: 3, y: 4 })
-  })
-
-  it('raises every factor to the power', () => {
-    expect(powMono({ coef: 2, x: 2, y: 0 }, 3)).toEqual({ coef: 8, x: 6, y: 0 })
-    expect(powMono({ coef: 3, x: 2, y: 1 }, 2)).toEqual({ coef: 9, x: 4, y: 2 })
-  })
-
-  it('divides by subtracting exponents', () => {
-    expect(divMono({ coef: 6, x: 3, y: 4 }, { coef: 3, x: 1, y: 3 })).toEqual({ coef: 2, x: 2, y: 1 })
-  })
-
-  it('refuses a division that leaves the monomials', () => {
-    expect(divMono({ coef: 6, x: 1, y: 0 }, { coef: 4, x: 1, y: 0 })).toBeNull()
-    expect(divMono({ coef: 6, x: 1, y: 0 }, { coef: 3, x: 2, y: 0 })).toBeNull()
-    expect(divMono({ coef: 6, x: 1, y: 0 }, { coef: 3, x: 0, y: 1 })).toBeNull()
-  })
-
-  it('undoes a multiplication exactly', () => {
-    const a = { coef: 4, x: 3, y: 1 }
-    const b = { coef: 7, x: 2, y: 3 }
-    expect(divMono(mulMono(a, b), b)).toEqual(a)
-  })
-
-  it('pins the exercise answer', () => {
-    const squared = powMono({ coef: 3, x: 2, y: 1 }, 2)
-    expect(`${squared.coef}|${squared.x}|${squared.y}`).toBe(OPS_ANSWER)
   })
 })
 
@@ -309,64 +219,15 @@ describe('the difference of two squares', () => {
     expect(mentalProduct(50, 3)).toEqual({ lo: 47, hi: 53, mSq: 2500, dSq: 9, value: 2491 })
   })
 
-  it('makes n² − 1 a multiple of eight for every odd n', () => {
-    for (let n = 3; n <= 21; n += 2) {
-      const parts = oddSquareMinusOne(n)
-      expect(parts.product).toBe(n * n - 1)
-      expect(parts.eighth).toBe(Math.round(parts.eighth))
-      expect(parts.eighth * 8).toBe(parts.product)
-    }
-  })
-
   it('pins the exercise answer', () => {
     expect(mentalProduct(40, 1).value).toBe(DIFF_ANSWER)
   })
 })
 
-describe('identities in equations', () => {
-  it('offers every pattern id as a choice', () => {
-    expect(PATTERN_IDS).toEqual(['plus', 'minus', 'diff', 'none'])
-    for (const pattern of PATTERNS) expect(PATTERN_IDS).toContain(pattern.answer)
-  })
-
-  it('leaves only the odd one out unfactored', () => {
-    for (const pattern of PATTERNS) {
-      expect(pattern.factoredTex === '').toBe(pattern.answer === 'none')
-    }
-  })
-
-  it('pins the exercise answer', () => {
-    expect(PATTERN_ANSWER).toBe('plus|diff|minus|none|diff|plus')
-    expect(PATTERNS).toHaveLength(6)
-  })
-
-  it('starts every equation with itself and names every step', () => {
-    for (const eq of EQUATIONS) {
-      expect(eq.steps[0].noteKey).toBe('alg.stepStart')
-      for (const step of eq.steps) {
-        expect(step.tex).not.toBe('')
-        expect(step.noteKey.startsWith('alg.')).toBe(true)
-      }
-    }
-  })
-
-  it('keeps every step free of Hungarian, using a token instead', () => {
-    const withOr = EQUATIONS.flatMap((eq) => eq.steps).filter((step) => step.tex.includes(OR_TOKEN))
-    expect(withOr).toHaveLength(2)
-    for (const step of EQUATIONS.flatMap((eq) => eq.steps)) {
-      expect(step.tex).not.toMatch(/vagy|és|nem/)
-    }
-  })
-
-  it('ends each equation on a solved form', () => {
-    const last = (id: string) => {
-      const eq = EQUATIONS.find((e) => e.id === id)
-      return eq?.steps[eq.steps.length - 1].tex ?? ''
-    }
-    expect(last('linear')).toBe('x = 5')
-    expect(last('square')).toBe('x = 3')
-    expect(last('diff')).toContain('x = 5')
-    expect(last('perfect')).toBe('x = -3')
+describe('the translated "or"', () => {
+  it('never writes a Hungarian word into a tex string', () => {
+    expect(OR_TOKEN).toBe('OR')
+    expect(OR_TOKEN).toMatch(/^[A-Z]+$/)
   })
 })
 

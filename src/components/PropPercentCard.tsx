@@ -50,19 +50,14 @@ export function PropPercentCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('prop.percentTitle')}</h2>
+        <h2>{t('prop.q4')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="prop.percentIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="prop.percentIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <Definition
-          i18nKey={['prop.percentDef1', 'prop.percentDef2', 'prop.percentDef3', 'prop.percentDef4']}
-        />
-        <p className="card-note">
-          <Trans i18nKey="prop.percentIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey={['prop.percentDef1', 'prop.percentDef2', 'prop.percentDef3']} />
       </div>
 
       <div className="pill-row" role="group" aria-label={t('prop.percentModeAria')}>
@@ -149,7 +144,7 @@ export function PropPercentCard({ id }: { id: string }) {
 
       <Tex block tex={tex} />
 
-      <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
         <Trans
           i18nKey="prop.percentSentence"
           values={{

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { diffParts, DIFF_ANSWER, mentalProduct, NEAR_TENS, oddSquareMinusOne } from '../lib/algebra'
+import { diffParts, DIFF_ANSWER, mentalProduct, NEAR_TENS } from '../lib/algebra'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 import { useWidth } from './useWidth'
@@ -20,7 +20,6 @@ export function AlgDiffCard({ id }: { id: string }) {
   const [moved, setMoved] = useState(false)
   const [m, setM] = useState(100)
   const [d, setD] = useState(1)
-  const [half, setHalf] = useState(5)
   const [answer, setAnswer] = useState('')
 
   // The cut corner has to fit inside the square, and something has to be left.
@@ -41,28 +40,19 @@ export function AlgDiffCard({ id }: { id: string }) {
   const strip = moved ? { x: a, y: 0, w: b, h: rest } : { x: 0, y: rest, w: rest, h: b }
 
   const product = mentalProduct(m, d)
-  const odd = oddSquareMinusOne(2 * half + 1)
 
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('alg.diffTitle')}</h2>
+        <h2>{t('alg.q4')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="alg.diffIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="alg.diffRule" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="alg.diffIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
       <Tex block tex="(a + b)(a - b) = a^2 - b^2" />
-      <div className="lesson-text">
-        <p className="card-note">
-          <Trans i18nKey="alg.diffIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
-      </div>
 
       <div className="controls-inline">
         <label className="field">
@@ -143,12 +133,16 @@ export function AlgDiffCard({ id }: { id: string }) {
         block
         tex={`(${a} + ${b})(${a} - ${b}) = ${a}^2 - ${b}^2 = ${parts.a2} - ${parts.b2} = ${parts.value}`}
       />
-      <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
         <Trans
           i18nKey="alg.diffRead"
           values={{ width: parts.width, height: parts.height, value: parts.value }}
           components={{ b: <strong />, i: <em /> }}
         />
+      </p>
+
+      <p className="card-note lesson-text">
+        <Trans i18nKey="alg.diffRule" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <p className="mini-title">{t('alg.diffMentalTitle')}</p>
@@ -176,32 +170,6 @@ export function AlgDiffCard({ id }: { id: string }) {
       <Tex
         block
         tex={`${product.lo} \\cdot ${product.hi} = (${m} - ${d})(${m} + ${d}) = ${m}^2 - ${d}^2 = ${product.mSq} - ${product.dSq} = ${product.value}`}
-      />
-
-      <p className="mini-title">{t('alg.diffDivTitle')}</p>
-      <div className="lesson-text">
-        <p className="card-note">
-          <Trans i18nKey="alg.diffIntro3" components={{ b: <strong />, i: <em /> }} />
-        </p>
-      </div>
-      <div className="controls-inline">
-        <label className="field field-wide">
-          <span className="field-label">
-            {t('alg.diffPickN')} <strong>{2 * half + 1}</strong>
-          </span>
-          <input
-            type="range"
-            min={1}
-            max={10}
-            step={1}
-            value={half}
-            onChange={(e) => setHalf(Number(e.target.value))}
-          />
-        </label>
-      </div>
-      <Tex
-        block
-        tex={`${2 * half + 1}^2 - 1 = ${odd.lo} \\cdot ${odd.hi} = ${odd.product} = 8 \\cdot ${odd.eighth}`}
       />
 
       <Exercise

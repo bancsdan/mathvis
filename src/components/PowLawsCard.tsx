@@ -1,7 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { intPower, LAW_IDS, LAW_TEX, LAWS_ANSWER, lawInstance, SUM_TRAP, type LawId } from '../lib/powers'
-import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 
@@ -22,9 +21,9 @@ function chipRow(label: string, count: number, group: 'g1' | 'g2', key: string, 
 }
 
 /**
- * A hatványozás azonosságai. Each law is drawn as the factors it talks about,
- * so the student counts chips instead of memorising which exponents get added:
- * the picture is the proof, and it works for any m and n.
+ * Miért adódnak össze a kitevők: each law is drawn as the factors it talks
+ * about, so the student counts chips instead of memorising which exponents get
+ * added. The picture is the proof, and it works for any m and n.
  */
 export function PowLawsCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -105,20 +104,12 @@ export function PowLawsCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('pow.lawsTitle')}</h2>
+        <h2>{t('pow.q3')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="pow.lawsIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <Definition i18nKey={['pow.lawsDef1', 'pow.lawsDef2', 'pow.lawsDef3', 'pow.lawsDef4', 'pow.lawsDef5']}>
-          {/* Superscripts read badly as Unicode in prose, so the five general
-              forms are typeset once, inside the box, under the words. */}
-          <Tex block tex={LAW_IDS.map((lid) => LAW_TEX[lid]).join(' \\qquad ')} />
-        </Definition>
-        <p className="card-note">
-          <Trans i18nKey="pow.lawsIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="pow.lawsIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -199,22 +190,10 @@ export function PowLawsCard({ id }: { id: string }) {
 
       <Tex block tex={`${instance.leftTex} = ${instance.rightTex} = ${valueTex}`} />
       <Tex block tex={LAW_TEX[law]} />
-      {law === 'quotient' && (
-        <p className="card-note lesson-text">
-          <Trans
-            i18nKey="pow.lawsCancelNote"
-            values={{ cancel: instance.cancel, rest: instance.resultExponent }}
-            components={{ b: <strong />, i: <em /> }}
-          />
-        </p>
-      )}
-
-      <p className="mini-title">{t('pow.lawsWhyTitle')}</p>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="pow.lawsWhy" components={{ b: <strong />, i: <em /> }} />
+      <p className="lin-result lesson-text">
+        <Trans i18nKey={`pow.lawsResult_${law}`} components={{ b: <strong />, i: <em /> }} />
       </p>
 
-      <p className="mini-title">{t('pow.lawsTrapTitle')}</p>
       <Tex
         block
         tex={`(${SUM_TRAP.a} + ${SUM_TRAP.b})^{2} = ${intPower(SUM_TRAP.a + SUM_TRAP.b, 2)} \\ne ${intPower(SUM_TRAP.a, 2) + intPower(SUM_TRAP.b, 2)} = ${SUM_TRAP.a}^{2} + ${SUM_TRAP.b}^{2}`}
