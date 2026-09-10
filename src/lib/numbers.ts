@@ -1,7 +1,6 @@
 /**
- * Number sets, fractions, the number line, intervals and absolute value, for
- * the Számhalmazok lesson. No React, no DOM — everything here is pure so it can
- * be unit tested.
+ * Fractions and the number line, for the Számhalmazok lesson. No React, no
+ * DOM — everything here is pure so it can be unit tested.
  *
  * Two ideas shape the file. First, a decimal is handled as a *string* wherever
  * a digit has to be looked at: `0.1` is not exactly 0.1 in binary, so the
@@ -13,82 +12,6 @@
  * `isTerminating` are the shared helpers other lessons import; the rest
  * belongs to this one.
  */
-
-/* ------------------------------------------------------------------ */
-/* Number sets                                                         */
-/* ------------------------------------------------------------------ */
-
-/** The narrowest of the four sets a number of the lesson can belong to. */
-export type NumberClass = 'natural' | 'integer' | 'rational' | 'irrational'
-
-/** Nesting order of the boxes drawn in the first explorer. */
-export const CLASS_ORDER = ['natural', 'integer', 'rational', 'irrational'] as const
-
-/** How each set is written in maths. Symbols only, so it needs no translation. */
-export const CLASS_TEX: Record<NumberClass, string> = {
-  natural: '\\mathbb{N}',
-  integer: '\\mathbb{Z}',
-  rational: '\\mathbb{Q}',
-  irrational: '\\mathbb{R} \\setminus \\mathbb{Q}',
-}
-
-/**
- * Is a number whose narrowest set is `cls` also a member of `set`?
- *
- * ℕ ⊂ ℤ ⊂ ℚ, and the irrationals are the part of ℝ outside ℚ, so they share no
- * member with any of the other three.
- */
-export function belongsTo(cls: NumberClass, set: NumberClass): boolean {
-  if (cls === 'irrational' || set === 'irrational') return cls === set
-  return CLASS_ORDER.indexOf(cls) <= CLASS_ORDER.indexOf(set)
-}
-
-export interface SampleNumber {
-  id: string
-  /** LaTeX, symbols only. Decimals carry `{,}` through `formatDecimal`. */
-  tex: string
-  value: number
-  /** The narrowest set the number belongs to. */
-  cls: NumberClass
-}
-
-/**
- * The numbers dropped into the nested boxes. `7/1` is the trap: written as a
- * fraction, but it is the natural number 7.
- */
-export const SAMPLE_NUMBERS: readonly SampleNumber[] = [
-  { id: 'five', tex: '5', value: 5, cls: 'natural' },
-  { id: 'zero', tex: '0', value: 0, cls: 'natural' },
-  { id: 'twelve', tex: '12', value: 12, cls: 'natural' },
-  { id: 'sevenOverOne', tex: '\\frac{7}{1}', value: 7, cls: 'natural' },
-  { id: 'minusThree', tex: '-3', value: -3, cls: 'integer' },
-  { id: 'minusHundred', tex: '-100', value: -100, cls: 'integer' },
-  { id: 'half', tex: '\\frac{1}{2}', value: 0.5, cls: 'rational' },
-  { id: 'threeQuarters', tex: '0.75', value: 0.75, cls: 'rational' },
-  { id: 'minusTwoHalf', tex: '-2.5', value: -2.5, cls: 'rational' },
-  { id: 'root2', tex: '\\sqrt{2}', value: Math.SQRT2, cls: 'irrational' },
-  { id: 'pi', tex: '\\pi', value: Math.PI, cls: 'irrational' },
-  { id: 'made', tex: '0.101001000\\ldots', value: 0.101001, cls: 'irrational' },
-]
-
-export interface QuizNumber {
-  id: string
-  tex: string
-  /** The narrowest set, which is what the exercise asks for. */
-  cls: NumberClass
-}
-
-/** √9 is the trap: it is 3, so the narrowest set is ℕ, not the irrationals. */
-export const TOWER_QUIZ: readonly QuizNumber[] = [
-  { id: 'q1', tex: '-4', cls: 'integer' },
-  { id: 'q2', tex: '0.6', cls: 'rational' },
-  { id: 'q3', tex: '\\sqrt{5}', cls: 'irrational' },
-  { id: 'q4', tex: '\\sqrt{9}', cls: 'natural' },
-  { id: 'q5', tex: '-\\frac{7}{2}', cls: 'rational' },
-]
-
-/** The five choices of `TOWER_QUIZ`, in order, as one comparable string. */
-export const TOWER_ANSWER = TOWER_QUIZ.map((q) => q.cls).join('|')
 
 /* ------------------------------------------------------------------ */
 /* Writing numbers down                                                */
@@ -265,7 +188,8 @@ export interface ZoomTarget {
   /** Plain-text form for the SVG, which cannot hold KaTeX. */
   plain: string
   value: number
-  kind: NumberClass
+  /** Whether its decimals settle into a repeating pattern or never do. */
+  kind: 'rational' | 'irrational'
 }
 
 /** Two numbers whose decimals settle into a pattern and two that never do. */
@@ -278,86 +202,3 @@ export const ZOOM_TARGETS: readonly ZoomTarget[] = [
 
 /** √10 is between 3,1 and 3,2 — the answer of the number-line exercise. */
 export const ROOT10_LOWER = 3.1
-
-/* ------------------------------------------------------------------ */
-/* Intervals                                                           */
-/* ------------------------------------------------------------------ */
-
-/**
- * Interval notation, which is not the same everywhere: Hungarian textbooks
- * turn the bracket outwards at an open end, `]a; b[`, while English ones use a
- * round bracket, `(a, b)`.
- *
- * `format` decides how a bound is written, so the same function serves prose
- * (`−1,5`) and KaTeX (`-1{,}5`).
- */
-export function intervalNotation(
-  a: number,
-  b: number,
-  leftClosed: boolean,
-  rightClosed: boolean,
-  style: 'hu' | 'en',
-  format: (v: number) => string = String,
-): string {
-  const left = leftClosed ? '[' : style === 'hu' ? ']' : '('
-  const right = rightClosed ? ']' : style === 'hu' ? '[' : ')'
-  const sep = style === 'hu' ? '; ' : ', '
-  return `${left}${format(a)}${sep}${format(b)}${right}`
-}
-
-/** Is x inside? A closed end takes its bound with it, an open one does not. */
-export function intervalContains(
-  a: number,
-  b: number,
-  leftClosed: boolean,
-  rightClosed: boolean,
-  x: number,
-): boolean {
-  const okLeft = leftClosed ? x >= a : x > a
-  const okRight = rightClosed ? x <= b : x < b
-  return okLeft && okRight
-}
-
-/** The same interval as a condition on x: `-1 < x \le 3`. Symbols only. */
-export function intervalSetBuilder(
-  a: number,
-  b: number,
-  leftClosed: boolean,
-  rightClosed: boolean,
-  format: (v: number) => string = String,
-): string {
-  return `${format(a)} ${leftClosed ? '\\le' : '<'} x ${rightClosed ? '\\le' : '<'} ${format(b)}`
-}
-
-/** The interval the exercise describes: −1 < x ≤ 3. */
-export const INTERVAL_QUIZ = { a: -1, b: 3, leftClosed: false, rightClosed: true }
-
-/** The four ways to close the two ends, offered as answers. */
-export const INTERVAL_OPTIONS: readonly { id: string; leftClosed: boolean; rightClosed: boolean }[] = [
-  { id: 'oo', leftClosed: false, rightClosed: false },
-  { id: 'oc', leftClosed: false, rightClosed: true },
-  { id: 'co', leftClosed: true, rightClosed: false },
-  { id: 'cc', leftClosed: true, rightClosed: true },
-]
-
-/** Id of the option that matches `INTERVAL_QUIZ`. */
-export const INTERVAL_ANSWER = 'oc'
-
-/* ------------------------------------------------------------------ */
-/* Opposite and absolute value                                         */
-/* ------------------------------------------------------------------ */
-
-/** The number the same distance from 0 on the other side. */
-export const opposite = (x: number): number => 0 - x
-
-/** Distance of x from 0, so never negative. */
-export const absValue = (x: number): number => Math.abs(x)
-
-/** Distance of two numbers on the line, which is |a − b|. */
-export const distance = (a: number, b: number): number => Math.abs(a - b)
-
-/** The two numbers whose distance the absolute value exercise asks for. */
-export const ABS_QUIZ = { a: -7, b: 3 }
-
-/** |−7 − 3| = 10 — the answer of that exercise. */
-export const ABS_ANSWER = distance(ABS_QUIZ.a, ABS_QUIZ.b)

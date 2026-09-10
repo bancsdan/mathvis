@@ -12,17 +12,11 @@ import {
   inR,
   interR,
   interSize,
-  isDisjoint,
-  isProperSubset,
   isSubset,
-  MAPPINGS,
   nameRegionSet,
   popcount,
-  PREDICATES,
   regionsOf,
   regionTex,
-  relationOf,
-  selectBy,
   setsEqual,
   sieveTerms,
   sieveTotal,
@@ -30,6 +24,7 @@ import {
   unionR,
   unionSize,
   UNIVERSE,
+  type Predicate,
 } from './sets'
 
 describe('region bitfields', () => {
@@ -196,105 +191,49 @@ describe('inclusion-exclusion', () => {
 })
 
 describe('the element universe', () => {
+  // Three predicates that fill all eight regions, standing in for the ones the
+  // logic lesson feeds to the diagram.
+  const PREDS: Predicate[] = [
+    { id: 'even', labelKey: 'x', test: (e) => e.id % 2 === 0 },
+    { id: 'gt6', labelKey: 'x', test: (e) => e.id > 6 },
+    { id: 'div3', labelKey: 'x', test: (e) => e.id % 3 === 0 },
+  ]
+
   it('has twelve elements numbered 1 to 12', () => {
     expect(UNIVERSE).toHaveLength(12)
     expect(UNIVERSE.map((e) => e.id)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
   })
 
-  it('gives every predicate a non-trivial extension', () => {
-    // A predicate matching nothing or everything would make the lesson pointless.
-    for (const p of PREDICATES) {
-      const picked = selectBy(p)
-      expect(picked.size, `${p.id} matched nothing`).toBeGreaterThan(0)
-      expect(picked.size, `${p.id} matched everything`).toBeLessThan(UNIVERSE.length)
-    }
-  })
-
-  it('offers a predicate pair for every set relation the lesson names', () => {
-    const found = new Set(
-      PREDICATES.flatMap((p) =>
-        PREDICATES.map((q) => relationOf(selectBy(p), selectBy(q))),
-      ),
-    )
-    for (const rel of ['equal', 'subsetAB', 'subsetBA', 'disjoint', 'overlap']) {
-      expect(found, `no predicate pair produces ${rel}`).toContain(rel)
-    }
-  })
-
   it('partitions the universe across regions, losing and duplicating nothing', () => {
-    const preds = [PREDICATES[0], PREDICATES[2], PREDICATES[4]]
-    const buckets = bucketByRegion(preds)
+    const buckets = bucketByRegion(PREDS)
     expect(buckets).toHaveLength(8)
     expect(buckets.flat().sort((a, b) => a - b)).toEqual(UNIVERSE.map((e) => e.id))
   })
 
   it('puts each element in the bucket its own signature names', () => {
-    const preds = [PREDICATES[0], PREDICATES[2], PREDICATES[4]]
-    bucketByRegion(preds).forEach((ids, sig) => {
+    bucketByRegion(PREDS).forEach((ids, sig) => {
       for (const id of ids) {
         const elem = UNIVERSE.find((e) => e.id === id)!
-        expect(elemSignature(elem, preds)).toBe(sig)
+        expect(elemSignature(elem, PREDS)).toBe(sig)
       }
     })
   })
 })
 
-describe('set relations', () => {
+describe('set comparison', () => {
   const s = (...xs: number[]) => new Set(xs)
 
   it('recognises equality regardless of insertion order', () => {
     expect(setsEqual(s(1, 2, 3), s(3, 2, 1))).toBe(true)
-    expect(relationOf(s(1, 2), s(2, 1))).toBe('equal')
   })
 
   it('treats the empty set as a subset of everything', () => {
     expect(isSubset(s(), s(1, 2))).toBe(true)
-    expect(isProperSubset(s(), s(1))).toBe(true)
-    expect(relationOf(s(), s(1, 2))).toBe('subsetAB')
+    expect(setsEqual(s(), s(1))).toBe(false)
   })
 
-  it('does not call an equal set a proper subset', () => {
+  it('calls a set a subset of itself but not a different one', () => {
     expect(isSubset(s(1, 2), s(1, 2))).toBe(true)
-    expect(isProperSubset(s(1, 2), s(1, 2))).toBe(false)
-  })
-
-  it('reports containment before disjointness or overlap', () => {
-    expect(relationOf(s(1), s(1, 2))).toBe('subsetAB')
-    expect(relationOf(s(1, 2), s(1))).toBe('subsetBA')
-    expect(relationOf(s(1), s(2))).toBe('disjoint')
-    expect(relationOf(s(1, 2), s(2, 3))).toBe('overlap')
-  })
-
-  it('calls two empty sets equal rather than disjoint', () => {
-    expect(relationOf(s(), s())).toBe('equal')
-    expect(isDisjoint(s(), s())).toBe(true)
-  })
-})
-
-describe('bijections', () => {
-  it('never sends two different numbers to the same partner', () => {
-    for (const m of MAPPINGS) {
-      const seen = new Set<number>()
-      for (let n = 1; n <= 50; n++) {
-        const image = m.apply(n)
-        expect(seen.has(image), `${m.id} is not injective at ${n}`).toBe(false)
-        seen.add(image)
-      }
-    }
-  })
-
-  it('is strictly increasing, so the drawn arrows never cross', () => {
-    for (const m of MAPPINGS) {
-      for (let n = 1; n < 50; n++) expect(m.apply(n + 1)).toBeGreaterThan(m.apply(n))
-    }
-  })
-
-  it('maps onto the sets the lesson claims', () => {
-    const double = MAPPINGS.find((m) => m.id === 'double')!
-    expect([1, 2, 3, 4].map(double.apply)).toEqual([2, 4, 6, 8])
-    const odd = MAPPINGS.find((m) => m.id === 'odd')!
-    expect([1, 2, 3, 4].map(odd.apply)).toEqual([1, 3, 5, 7])
-    const triple = MAPPINGS.find((m) => m.id === 'triple')!
-    expect([1, 2, 3, 4].map(triple.apply)).toEqual([3, 6, 9, 12])
+    expect(isSubset(s(1, 2), s(1))).toBe(false)
   })
 })

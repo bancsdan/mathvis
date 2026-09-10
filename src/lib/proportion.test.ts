@@ -4,19 +4,12 @@ import {
   CHANGE_ANSWER,
   compound,
   curve,
-  DIRECT_ANSWER,
-  DIRECT_QUIZ,
-  DIRECT_SCENARIOS,
-  directTable,
-  directValue,
   graphXs,
   groupThousands,
   INTEREST_ANSWER,
   INVERSE_ANSWER,
   INVERSE_SCENARIOS,
   inverseValue,
-  isDirect,
-  isInverse,
   multiplier,
   PERCENT_ANSWER,
   percentBase,
@@ -56,39 +49,6 @@ describe('numbers on screen', () => {
   })
 })
 
-describe('direct proportion', () => {
-  it('scales the value with the quantity', () => {
-    expect(directValue(600, 2)).toBe(1200)
-    expect(directValue(600, 0.5)).toBe(300)
-    expect(directValue(600, 0)).toBe(0)
-  })
-
-  it('doubling the quantity doubles the value', () => {
-    for (const sc of DIRECT_SCENARIOS) {
-      expect(directValue(sc.k, 4)).toBe(2 * directValue(sc.k, 2))
-    }
-  })
-
-  it('gives the same quotient in every row of the table', () => {
-    const rows = directTable(600, [1, 2, 5, 10])
-    expect(rows.map((r) => r.y)).toEqual([600, 1200, 3000, 6000])
-    expect(new Set(rows.map((r) => r.ratio))).toEqual(new Set([600]))
-  })
-
-  it('recognises a direct proportion and rejects the near misses', () => {
-    expect(isDirect(DIRECT_QUIZ[0].pairs)).toBe(true)
-    expect(isDirect(DIRECT_QUIZ[1].pairs)).toBe(false)
-    expect(isDirect(DIRECT_QUIZ[2].pairs)).toBe(false)
-    expect(isDirect([{ x: 0, y: 0 }])).toBe(false)
-    expect(isDirect([])).toBe(false)
-  })
-
-  it('names the quiz table that is proportional', () => {
-    const answer = DIRECT_QUIZ.filter((q) => isDirect(q.pairs))
-    expect(answer.map((q) => q.id)).toEqual([DIRECT_ANSWER])
-  })
-})
-
 describe('inverse proportion', () => {
   it('keeps the product constant', () => {
     expect(inverseValue(24, 2)).toBe(12)
@@ -100,12 +60,6 @@ describe('inverse proportion', () => {
     for (const sc of INVERSE_SCENARIOS) {
       expect(inverseValue(sc.k, 2 * sc.xMin)).toBe(inverseValue(sc.k, sc.xMin) / 2)
     }
-  })
-
-  it('recognises an inverse proportion', () => {
-    expect(isInverse(DIRECT_QUIZ[2].pairs)).toBe(true)
-    expect(isInverse(DIRECT_QUIZ[0].pairs)).toBe(false)
-    expect(isInverse([])).toBe(false)
   })
 
   it('answers the painters with the constant amount of work', () => {

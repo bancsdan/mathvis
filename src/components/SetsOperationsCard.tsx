@@ -126,6 +126,10 @@ export function SetsOperationsCard({ id }: { id: string }) {
         <p className="lin-result">{t('sets.opsNoName')}</p>
       )}
 
+      <p className="card-note">
+        <Trans i18nKey="sets.opsElemNote" components={{ b: <strong />, i: <em /> }} />
+      </p>
+
       <Exercise
         promptKey="sets.opsTask"
         isCorrect={answer === task.value}

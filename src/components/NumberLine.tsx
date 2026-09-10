@@ -22,14 +22,6 @@ export interface LineSegmentMark {
   color: string
 }
 
-/** A measuring bar drawn above the point labels, e.g. |x| from 0 to x. */
-export interface LineBarMark {
-  from: number
-  to: number
-  color: string
-  label?: string
-}
-
 interface Props {
   min: number
   max: number
@@ -39,7 +31,6 @@ interface Props {
   tickText?: (v: number) => string
   points?: readonly LinePointMark[]
   segments?: readonly LineSegmentMark[]
-  bars?: readonly LineBarMark[]
   /** A faint band, used by the zoom panel to show the interval being entered. */
   highlight?: { from: number; to: number }
   height?: number
@@ -59,10 +50,10 @@ const wholeNumbers = (min: number, max: number): number[] => {
 }
 
 /**
- * One number line: ticks, dots, intervals and measuring bars on a single axis.
+ * One number line: ticks, dots and intervals on a single axis.
  *
- * Everything is placed through the same scale, so a point, the segment it falls
- * in and the bar measuring it always line up.
+ * Everything is placed through the same scale, so a point and the segment it
+ * falls in always line up.
  */
 export function NumberLine({
   min,
@@ -71,7 +62,6 @@ export function NumberLine({
   tickText = String,
   points = [],
   segments = [],
-  bars = [],
   highlight,
   height = 108,
   ariaLabel,
@@ -125,24 +115,6 @@ export function NumberLine({
               </text>
             </g>
           ))}
-
-          {bars.map((bar, i) => {
-            const y = axisY - 44
-            const from = x(Math.min(bar.from, bar.to))
-            const to = x(Math.max(bar.from, bar.to))
-            return (
-              <g key={`bar-${i}`}>
-                <line x1={from} y1={y} x2={to} y2={y} stroke={bar.color} strokeWidth={3} />
-                <line x1={from} y1={y - 4} x2={from} y2={y + 4} stroke={bar.color} />
-                <line x1={to} y1={y - 4} x2={to} y2={y + 4} stroke={bar.color} />
-                {bar.label && (
-                  <text x={(from + to) / 2} y={y - 8} textAnchor="middle" className="line-label" fill={bar.color}>
-                    {bar.label}
-                  </text>
-                )}
-              </g>
-            )
-          })}
 
           {segments.map((seg, i) => (
             <g key={`seg-${i}`}>

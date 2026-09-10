@@ -31,95 +31,7 @@ export function plainNumber(x: number, sep: string): string {
 }
 
 /* ------------------------------------------------------------------ */
-/* 1. Direct proportion: y = k · x                                     */
-/* ------------------------------------------------------------------ */
-
-export interface DirectScenario {
-  id: string
-  /** The unit price, i.e. the constant of proportionality. */
-  k: number
-  xMax: number
-  xStep: number
-}
-
-export const DIRECT_SCENARIOS: readonly DirectScenario[] = [
-  { id: 'apples', k: 600, xMax: 10, xStep: 0.5 },
-  { id: 'petrol', k: 620, xMax: 50, xStep: 1 },
-  { id: 'wage', k: 2500, xMax: 40, xStep: 1 },
-  { id: 'download', k: 25, xMax: 60, xStep: 1 },
-]
-
-export function directValue(k: number, x: number): number {
-  return round(k * x, 2)
-}
-
-/** One row per x: the value, and the quotient that is the same in every row. */
-export function directTable(
-  k: number,
-  xs: readonly number[]
-): { x: number; y: number; ratio: number }[] {
-  return xs.map((x) => {
-    const y = directValue(k, x)
-    return { x, y, ratio: x === 0 ? 0 : round(y / x, 4) }
-  })
-}
-
-export interface Pair {
-  x: number
-  y: number
-}
-
-const EPS = 1e-9
-
-/** True when every y : x is the same number, so the table is a direct proportion. */
-export function isDirect(pairs: readonly Pair[]): boolean {
-  if (pairs.length === 0 || pairs.some((p) => p.x === 0)) return false
-  const first = pairs[0].y / pairs[0].x
-  return pairs.every((p) => Math.abs(p.y / p.x - first) < EPS)
-}
-
-/** True when every x · y is the same number, so the table is an inverse proportion. */
-export function isInverse(pairs: readonly Pair[]): boolean {
-  if (pairs.length === 0) return false
-  const first = pairs[0].x * pairs[0].y
-  return pairs.every((p) => Math.abs(p.x * p.y - first) < EPS)
-}
-
-/**
- * Three tables, one of each kind a student meets: proportional, growing
- * together but not through zero, and inversely proportional.
- */
-export const DIRECT_QUIZ: readonly { id: string; pairs: readonly Pair[] }[] = [
-  {
-    id: 'a',
-    pairs: [
-      { x: 2, y: 500 },
-      { x: 4, y: 1000 },
-      { x: 6, y: 1500 },
-    ],
-  },
-  {
-    id: 'b',
-    pairs: [
-      { x: 1, y: 10 },
-      { x: 2, y: 15 },
-      { x: 3, y: 20 },
-    ],
-  },
-  {
-    id: 'c',
-    pairs: [
-      { x: 2, y: 12 },
-      { x: 3, y: 8 },
-      { x: 4, y: 6 },
-    ],
-  },
-]
-
-export const DIRECT_ANSWER = 'a'
-
-/* ------------------------------------------------------------------ */
-/* 2. Inverse proportion: y = k / x                                    */
+/* 1. Inverse proportion: y = k / x                                    */
 /* ------------------------------------------------------------------ */
 
 export interface InverseScenario {
@@ -145,7 +57,7 @@ export function inverseValue(k: number, x: number): number {
 export const INVERSE_ANSWER = 15
 
 /* ------------------------------------------------------------------ */
-/* 3. The shapes: what a dependence looks like on a graph              */
+/* 2. The shapes: what a dependence looks like on a graph              */
 /* ------------------------------------------------------------------ */
 
 export type GraphKind = 'direct' | 'inverse' | 'linear' | 'square' | 'root'
@@ -194,7 +106,7 @@ export const SITUATIONS: readonly { id: string; kind: GraphKind | 'none' }[] = [
 export const SITUATIONS_ANSWER = SITUATIONS.map((s) => s.kind).join('|')
 
 /* ------------------------------------------------------------------ */
-/* 4. Percent                                                          */
+/* 3. Percent                                                          */
 /* ------------------------------------------------------------------ */
 
 /** The százalékérték: how much `rate` percent of `base` is. */
@@ -216,7 +128,7 @@ export function percentBase(value: number, rate: number): number {
 export const PERCENT_ANSWER = 25
 
 /* ------------------------------------------------------------------ */
-/* 5. Percentage change                                                */
+/* 4. Percentage change                                                */
 /* ------------------------------------------------------------------ */
 
 /** The number one multiplies by: +20 → 1,2 and −20 → 0,8. */
@@ -250,7 +162,7 @@ export const POINT_EXAMPLE = { from: 3, to: 4 }
 export const CHANGE_ANSWER = 100
 
 /* ------------------------------------------------------------------ */
-/* 6. Compound interest                                                */
+/* 5. Compound interest                                                */
 /* ------------------------------------------------------------------ */
 
 /** The balance after 0, 1, … `years` years, each year's interest earning interest. */

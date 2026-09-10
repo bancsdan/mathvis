@@ -966,25 +966,6 @@ p.card-note.lesson-text {
   border-color: var(--accent-select);
 }
 
-.nim-log {
-  margin: 6px 0;
-  padding-left: 20px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.checkbox-inline {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.checkbox-inline input {
-  accent-color: var(--series-1);
-}
-
 /* --- combinatorics lesson ---------------------------------------------- */
 
 /* Names do not fit the fixed-width element buttons of the sets lesson. */
@@ -1003,67 +984,6 @@ p.card-note.lesson-text {
 }
 
 /* --- number sets lesson ------------------------------------------------ */
-
-/* ℕ inside ℤ inside ℚ inside ℝ, drawn as boxes rather than an SVG so the
-   numbers can stay real buttons carrying real KaTeX. */
-.num-tower {
-  border: 1px solid var(--axis);
-  border-radius: 12px;
-  padding: 8px 10px 10px;
-  margin: 10px 0;
-}
-
-.num-box {
-  border: 1px solid var(--axis);
-  border-radius: 10px;
-  padding: 6px 8px 8px;
-  margin-top: 4px;
-}
-
-.num-box.active {
-  border-color: var(--accent-select);
-  background: var(--hover-wash);
-}
-
-/* The part of ℝ left over once ℚ is taken out: where the irrationals live. */
-.num-band {
-  margin-top: 6px;
-  padding-top: 4px;
-  border-top: 1px dashed var(--axis);
-}
-
-.num-box-label {
-  display: block;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.num-chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.num-chip {
-  font: inherit;
-  padding: 3px 9px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-primary);
-  cursor: pointer;
-  line-height: 1.2;
-}
-
-.num-chip:hover {
-  background: var(--hover-wash);
-}
-
-.num-chip.selected {
-  border-color: var(--accent-select);
-  background: var(--hover-wash);
-}
 
 /* Point labels sit above the axis of a number line. */
 .line-label {
@@ -1287,24 +1207,6 @@ p.card-note.lesson-text {
   margin: 2px 0 0;
   font-size: 12px;
   color: var(--text-secondary);
-}
-
-/* The three quiz tables of section 1, side by side to be compared. */
-.prop-quiz {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.prop-quiz-table {
-  padding: 6px;
-  border: 1px solid var(--mark-muted);
-  border-radius: 8px;
-}
-
-.prop-quiz-table.lit {
-  border-color: var(--accent-select);
 }
 
 /* The percentage bar: the whole is the base, the shaded part is the value. */

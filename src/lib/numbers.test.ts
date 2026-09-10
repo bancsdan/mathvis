@@ -1,32 +1,17 @@
 import { describe, expect, it } from 'vitest'
 import {
-  ABS_ANSWER,
-  ABS_QUIZ,
-  absValue,
-  belongsTo,
   DECIMAL_PRESETS,
   digitsOf,
-  distance,
   formatDecimal,
   FRACTION_ANSWER,
   gcd,
-  INTERVAL_ANSWER,
-  INTERVAL_OPTIONS,
-  INTERVAL_QUIZ,
-  intervalContains,
-  intervalNotation,
-  intervalSetBuilder,
   isTerminating,
   nestedIntervals,
-  opposite,
   parseDecimal,
   reduce,
   repeatingToFraction,
   ROOT10_LOWER,
-  SAMPLE_NUMBERS,
   texSeparator,
-  TOWER_ANSWER,
-  TOWER_QUIZ,
   ZOOM_TARGETS,
   type DecimalPreset,
 } from './numbers'
@@ -39,41 +24,6 @@ function presetValue(p: DecimalPreset): number {
   const r = p.repeating.length
   return head + Number(p.repeating) / (10 ** n * (10 ** r - 1))
 }
-
-describe('number sets', () => {
-  it('nests ℕ in ℤ in ℚ and keeps the irrationals apart', () => {
-    expect(belongsTo('natural', 'integer')).toBe(true)
-    expect(belongsTo('natural', 'rational')).toBe(true)
-    expect(belongsTo('integer', 'natural')).toBe(false)
-    expect(belongsTo('rational', 'integer')).toBe(false)
-    expect(belongsTo('irrational', 'rational')).toBe(false)
-    expect(belongsTo('rational', 'irrational')).toBe(false)
-    expect(belongsTo('irrational', 'irrational')).toBe(true)
-  })
-
-  it('places every sample number in the narrowest set that holds it', () => {
-    const byId = new Map(SAMPLE_NUMBERS.map((s) => [s.id, s]))
-    // 7/1 is written as a fraction but it is the natural number 7.
-    expect(byId.get('sevenOverOne')?.cls).toBe('natural')
-    expect(byId.get('minusThree')?.cls).toBe('integer')
-    expect(byId.get('threeQuarters')?.value).toBe(0.75)
-    expect(byId.get('pi')?.cls).toBe('irrational')
-    expect(SAMPLE_NUMBERS).toHaveLength(12)
-    expect(new Set(SAMPLE_NUMBERS.map((s) => s.id)).size).toBe(12)
-  })
-
-  it('pins the answers of the tower exercise', () => {
-    expect(TOWER_QUIZ.map((q) => q.cls)).toEqual([
-      'integer',
-      'rational',
-      'irrational',
-      // √9 = 3, so the trap answer is ℕ.
-      'natural',
-      'rational',
-    ])
-    expect(TOWER_ANSWER).toBe('integer|rational|irrational|natural|rational')
-  })
-})
 
 describe('writing numbers down', () => {
   it('swaps the decimal point for the separator of the language', () => {
@@ -97,12 +47,7 @@ describe('writing numbers down', () => {
   })
 
   it('keeps every stored tex free of a language-specific separator', () => {
-    const texts = [
-      ...SAMPLE_NUMBERS.map((s) => s.tex),
-      ...TOWER_QUIZ.map((q) => q.tex),
-      ...ZOOM_TARGETS.map((z) => z.tex),
-    ]
-    for (const tex of texts) expect(tex, tex).not.toContain('{,}')
+    for (const z of ZOOM_TARGETS) expect(z.tex, z.tex).not.toContain('{,}')
   })
 
   it('reads a decimal typed with either separator and rejects junk', () => {
@@ -217,7 +162,7 @@ describe('the number line', () => {
     expect(ZOOM_TARGETS.map((z) => z.id)).toEqual(['root2', 'pi', 'third', 'twentyTwoSevenths'])
     // 22/7 is the old school approximation of π, so the two sit almost on top
     // of each other — the zoom has to survive that.
-    expect(distance(22 / 7, Math.PI)).toBeLessThan(0.002)
+    expect(Math.abs(22 / 7 - Math.PI)).toBeLessThan(0.002)
     // The SVG can only draw plain text, so every target carries some.
     expect(ZOOM_TARGETS.map((z) => z.plain)).toEqual(['√2', 'π', '1/3', '22/7'])
   })
@@ -227,62 +172,5 @@ describe('the number line', () => {
     expect(3.1 ** 2).toBeLessThan(10)
     expect(3.2 ** 2).toBeGreaterThan(10)
     expect(nestedIntervals(Math.sqrt(10), 1)[1].lo).toBeCloseTo(3.1, 12)
-  })
-})
-
-describe('intervals', () => {
-  it('writes the brackets the way each language does', () => {
-    expect(intervalNotation(-1, 3, false, true, 'hu')).toBe(']-1; 3]')
-    expect(intervalNotation(-1, 3, false, true, 'en')).toBe('(-1, 3]')
-    expect(intervalNotation(2, 5, true, true, 'hu')).toBe('[2; 5]')
-    expect(intervalNotation(2, 5, false, false, 'en')).toBe('(2, 5)')
-    expect(intervalNotation(-1.5, 3, true, false, 'hu', (v) => formatDecimal(String(v), ',', false))).toBe(
-      '[−1,5; 3[',
-    )
-  })
-
-  it('lets a closed end in and keeps an open one out', () => {
-    expect(intervalContains(-1, 3, false, true, -1)).toBe(false)
-    expect(intervalContains(-1, 3, false, true, 3)).toBe(true)
-    expect(intervalContains(-1, 3, false, true, 0)).toBe(true)
-    expect(intervalContains(-1, 3, true, false, -1)).toBe(true)
-    expect(intervalContains(-1, 3, true, false, 3)).toBe(false)
-    expect(intervalContains(-1, 3, true, true, 3.5)).toBe(false)
-  })
-
-  it('states the same interval as a condition on x', () => {
-    expect(intervalSetBuilder(-1, 3, false, true)).toBe('-1 < x \\le 3')
-    expect(intervalSetBuilder(0, 1, true, true)).toBe('0 \\le x \\le 1')
-  })
-
-  it('pins the open-left, closed-right option as the interval answer', () => {
-    const pick = INTERVAL_OPTIONS.find((o) => o.id === INTERVAL_ANSWER)
-    expect(pick).toEqual({ id: 'oc', leftClosed: false, rightClosed: true })
-    expect(pick?.leftClosed).toBe(INTERVAL_QUIZ.leftClosed)
-    expect(pick?.rightClosed).toBe(INTERVAL_QUIZ.rightClosed)
-    expect(INTERVAL_OPTIONS).toHaveLength(4)
-  })
-})
-
-describe('opposite and absolute value', () => {
-  it('sends a number to the other side of zero and back', () => {
-    expect(opposite(3)).toBe(-3)
-    expect(opposite(-2.5)).toBe(2.5)
-    expect(opposite(0)).toBe(0)
-    expect(opposite(opposite(7))).toBe(7)
-  })
-
-  it('measures distance from zero and between two numbers', () => {
-    expect(absValue(-4)).toBe(4)
-    expect(absValue(4)).toBe(4)
-    expect(absValue(-3)).toBe(absValue(3))
-    expect(distance(-2, 5)).toBe(7)
-    expect(distance(5, -2)).toBe(7)
-  })
-
-  it('pins 10 as the distance of −7 and 3', () => {
-    expect(ABS_ANSWER).toBe(10)
-    expect(distance(ABS_QUIZ.a, ABS_QUIZ.b)).toBe(ABS_ANSWER)
-    expect(absValue(ABS_QUIZ.a - ABS_QUIZ.b)).toBe(ABS_ANSWER)
   })
 })

@@ -225,45 +225,11 @@ export interface Predicate {
   test: (e: Elem) => boolean
 }
 
-export const PREDICATES: readonly Predicate[] = [
-  { id: 'even', labelKey: 'sets.predEven', test: (e) => e.id % 2 === 0 },
-  { id: 'odd', labelKey: 'sets.predOdd', test: (e) => e.id % 2 === 1 },
-  { id: 'gt6', labelKey: 'sets.predGt6', test: (e) => e.id > 6 },
-  { id: 'div3', labelKey: 'sets.predDiv3', test: (e) => e.id % 3 === 0 },
-  // Nests inside both "even" and "divisible by 3", which is what gives the
-  // relations section a genuine proper-subset pair to find.
-  { id: 'div6', labelKey: 'sets.predDiv6', test: (e) => e.id % 6 === 0 },
-  { id: 'blue', labelKey: 'sets.predBlue', test: (e) => e.color === 'blue' },
-  { id: 'green', labelKey: 'sets.predGreen', test: (e) => e.color === 'green' },
-  { id: 'square', labelKey: 'sets.predSquare', test: (e) => e.shape === 'square' },
-  { id: 'circle', labelKey: 'sets.predCircle', test: (e) => e.shape === 'circle' },
-  { id: 'large', labelKey: 'sets.predLarge', test: (e) => e.size === 'large' },
-] as const
-
-export const predicateById = (id: string): Predicate =>
-  PREDICATES.find((p) => p.id === id) ?? PREDICATES[0]
-
 /** A set of elements, held as their ids. */
 export type ElemSet = ReadonlySet<number>
 
-export const selectBy = (p: Predicate): Set<number> =>
-  new Set(UNIVERSE.filter(p.test).map((e) => e.id))
-
 export const isSubset = (a: ElemSet, b: ElemSet): boolean => [...a].every((x) => b.has(x))
 export const setsEqual = (a: ElemSet, b: ElemSet): boolean => a.size === b.size && isSubset(a, b)
-export const isDisjoint = (a: ElemSet, b: ElemSet): boolean => ![...a].some((x) => b.has(x))
-export const isProperSubset = (a: ElemSet, b: ElemSet): boolean => isSubset(a, b) && a.size < b.size
-
-export type Relation = 'equal' | 'subsetAB' | 'subsetBA' | 'disjoint' | 'overlap'
-
-/** Which of the five possible relations holds between two sets. */
-export function relationOf(a: ElemSet, b: ElemSet): Relation {
-  if (setsEqual(a, b)) return 'equal'
-  if (isSubset(a, b)) return 'subsetAB'
-  if (isSubset(b, a)) return 'subsetBA'
-  if (isDisjoint(a, b)) return 'disjoint'
-  return 'overlap'
-}
 
 /** Which Venn region an element falls into, given the predicates defining each circle. */
 export const elemSignature = (e: Elem, preds: readonly Predicate[]): number =>
@@ -275,21 +241,3 @@ export function bucketByRegion(preds: readonly Predicate[]): number[][] {
   for (const e of UNIVERSE) out[elemSignature(e, preds)].push(e.id)
   return out
 }
-
-/* ------------------------------------------------------------------ */
-/* Bijections between infinite sets                                    */
-/* ------------------------------------------------------------------ */
-
-export interface Mapping {
-  id: string
-  labelKey: string
-  tex: string
-  apply: (n: number) => number
-}
-
-export const MAPPINGS: readonly Mapping[] = [
-  { id: 'double', labelKey: 'sets.mapDouble', tex: 'n \\mapsto 2n', apply: (n) => 2 * n },
-  { id: 'odd', labelKey: 'sets.mapOdd', tex: 'n \\mapsto 2n - 1', apply: (n) => 2 * n - 1 },
-  { id: 'triple', labelKey: 'sets.mapTriple', tex: 'n \\mapsto 3n', apply: (n) => 3 * n },
-  { id: 'square', labelKey: 'sets.mapSquare', tex: 'n \\mapsto n^2', apply: (n) => n * n },
-] as const

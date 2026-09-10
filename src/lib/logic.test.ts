@@ -4,7 +4,6 @@ import {
   applyConnective,
   connectiveRegions,
   domainOf,
-  eulerPolynomial,
   evalQuantified,
   idsWhere,
   implicationReport,
@@ -12,13 +11,6 @@ import {
   LOGIC_PREDICATES,
   logicPredicateById,
   negate,
-  nimComputerMove,
-  nimIsLosing,
-  nimWinningMove,
-  PROOF_STEPS,
-  PROOF_STEPS_SHUFFLED,
-  proofOrderCorrect,
-  smallestFactor,
 } from './logic'
 
 describe('connectives', () => {
@@ -109,45 +101,8 @@ describe('implication', () => {
   })
 })
 
-describe('proof', () => {
-  it('primes and factors', () => {
+describe('primality', () => {
+  it('sorts the small numbers into primes and composites', () => {
     expect([1, 2, 3, 4, 41, 1681].map(isPrime)).toEqual([false, true, true, false, true, false])
-    expect(smallestFactor(1681)).toBe(41)
-    expect(smallestFactor(43)).toBe(43)
-  })
-
-  it("Euler's polynomial is prime for forty cases and then fails", () => {
-    for (let n = 0; n < 40; n++) expect(isPrime(eulerPolynomial(n))).toBe(true)
-    expect(eulerPolynomial(40)).toBe(41 * 41)
-    expect(isPrime(eulerPolynomial(40))).toBe(false)
-  })
-
-  it('the shuffled steps are a permutation and only the true order passes', () => {
-    expect([...PROOF_STEPS_SHUFFLED].sort()).toEqual([...PROOF_STEPS].sort())
-    expect(proofOrderCorrect(PROOF_STEPS)).toBe(true)
-    expect(proofOrderCorrect(PROOF_STEPS_SHUFFLED)).toBe(false)
-    expect(proofOrderCorrect(PROOF_STEPS.slice(0, 3))).toBe(false)
-  })
-})
-
-describe('nim', () => {
-  it('leaves a multiple of four when it can', () => {
-    expect(nimWinningMove(13)).toBe(1)
-    expect(nimWinningMove(7)).toBe(3)
-    expect(nimWinningMove(8)).toBeNull()
-    expect(nimWinningMove(2)).toBe(2)
-  })
-
-  it('always makes a legal move', () => {
-    for (let pile = 1; pile <= 20; pile++) {
-      const take = nimComputerMove(pile)
-      expect(take).toBeGreaterThanOrEqual(1)
-      expect(take).toBeLessThanOrEqual(Math.min(3, pile))
-    }
-  })
-
-  it('knows the losing positions', () => {
-    expect([4, 8, 12].every((p) => nimIsLosing(p))).toBe(true)
-    expect([1, 2, 3, 5, 13].some((p) => nimIsLosing(p))).toBe(false)
   })
 })

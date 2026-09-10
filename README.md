@@ -110,27 +110,26 @@ reusable parts worth knowing about:
   a pruned search stays visible.
 - [GraphDiagram.tsx](src/components/GraphDiagram.tsx) spreads vertices on a
   circle with optional degree badges and click-to-toggle edges.
-- [NumberLine.tsx](src/components/NumberLine.tsx) puts ticks, dots, intervals
-  and measuring bars on one scale, with crowded labels stepping up a row rather
-  than being dropped. Its labels are plain text, since KaTeX cannot live inside
+- [NumberLine.tsx](src/components/NumberLine.tsx) puts ticks, dots and
+  intervals on one scale, with crowded labels stepping up a row rather than
+  being dropped. Its labels are plain text, since KaTeX cannot live inside
   an SVG.
 - [ArrowDiagram.tsx](src/components/ArrowDiagram.tsx) draws an assignment as two
   columns of labelled nodes with arrows between them, and tints the one node
   that spoils the property being tested. It only draws: the arrows are edited in
   ordinary form controls, so the picture stays keyboard-operable.
 - [src/lib/](src/lib/) holds the pure logic, all unit tested: `sets.ts` and
-  `venn.ts` (set operations and Venn geometry), `logic.ts` (truth tables,
-  quantifier and implication checks and the NIM strategy), `combinatorics.ts`
-  (counting, choice trees and graph helpers), `numbers.ts` (set membership,
-  decimal to fraction, nested intervals, interval notation and the shared
-  decimal helpers), `powers.ts` (integer, zero and negative exponents, the laws
+  `venn.ts` (set operations and Venn geometry), `logic.ts` (truth tables and
+  quantifier and implication checks), `combinatorics.ts` (counting, choice
+  trees and graph helpers), `numbers.ts` (decimal to fraction, nested intervals
+  and the shared decimal helpers), `powers.ts` (integer, zero and negative exponents, the laws
   of powers as factor groups, string-based normal form, square roots and n-th
   roots with rational exponents), `algebra.ts` (terms and polynomials with one
   tex writer, the linear tracker behind the number tricks, the named identities
   with their mental-arithmetic forms, and completing the square),
-  `proportion.ts` (direct and inverse proportion with the table checks that
-  tell them apart, the graph shapes, the three percent questions, chained
-  percentage changes, and compound interest against simple interest),
+  `proportion.ts` (inverse proportion, the graph shapes, the three percent
+  questions, chained percentage changes, and compound interest against simple
+  interest),
   `linear.ts` (sides and fractions so a root stays 3/2, the balance moves that
   only exist when both pans can afford them, the inequality solver that records
   where the sign turns, substitution and equal coefficients for a two-by-two
