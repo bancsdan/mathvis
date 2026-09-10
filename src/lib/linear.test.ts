@@ -6,7 +6,6 @@ import {
   BALANCE_START,
   balanceTex,
   balanceTilt,
-  BASE_SETS,
   canApply,
   checkSystem,
   DATA_ANSWER,
@@ -20,7 +19,6 @@ import {
   GRAPH_ANSWER,
   GRAPH_PRESET,
   holds,
-  inBase,
   INEQ_ANSWER,
   INEQ_OPTIONS,
   INEQ_PRESETS,
@@ -34,26 +32,15 @@ import {
   mixConcentration,
   mixSolve,
   MODEL_ANSWER,
-  MONEY,
-  moneySplit,
   plainValue,
   positions,
   rowTex,
   rowY,
-  rowYTex,
-  SET_ANSWER,
-  SET_PRESETS,
-  SET_TASK,
   sideTex,
-  solutionSet,
-  solutionSetTex,
   solveIneq,
   solveLinear,
-  solveSteps,
   solveSystem,
   substitutionSteps,
-  SYSGRAPH_ANSWER,
-  SYSGRAPH_PRESETS,
   SYSTEM_ANSWER,
   SYSTEM_PRESETS,
   SYSTEM_TASK,
@@ -126,38 +113,6 @@ describe('solveLinear', () => {
   })
 })
 
-describe('solveSteps', () => {
-  it('moves x left, numbers right, then divides', () => {
-    expect(solveSteps(side(4, -3), side(2, 1)).map((s) => s.tex)).toEqual([
-      '4x - 3 = 2x + 1',
-      '2x - 3 = 1',
-      '2x = 4',
-      'x = 2',
-    ])
-  })
-
-  it('leaves out a step that would change nothing', () => {
-    expect(solveSteps(side(2, 5), side(0, 8)).map((s) => s.tex)).toEqual([
-      '2x + 5 = 8',
-      '2x = 3',
-      'x = \\frac{3}{2}',
-    ])
-  })
-
-  it('ends at 0 = 0 for an identity and 0 = 1 for a contradiction', () => {
-    expect(solveSteps(side(2, 6), side(2, 6)).map((s) => s.tex)).toEqual([
-      '2x + 6 = 2x + 6',
-      '6 = 6',
-      '0 = 0',
-    ])
-    expect(solveSteps(side(1, 1), side(1, 2)).map((s) => s.tex)).toEqual([
-      'x + 1 = x + 2',
-      '1 = 2',
-      '0 = 1',
-    ])
-  })
-})
-
 describe('the balance', () => {
   it('allows only what both pans can afford', () => {
     expect(canApply(BALANCE_START, { kind: 'removeX', n: 1 })).toBe(true)
@@ -204,50 +159,6 @@ describe('the balance', () => {
 
   it('writes an empty pan as 0', () => {
     expect(balanceTex({ left: { x: 0, units: 0 }, right: { x: 1, units: 0 } })).toBe('0 = x')
-  })
-})
-
-describe('base sets and solution sets', () => {
-  it('counts 0 as a natural number', () => {
-    expect(inBase(frac(0, 1), 'N')).toBe(true)
-    expect(inBase(frac(-1, 1), 'N')).toBe(false)
-    expect(inBase(frac(-1, 1), 'Z')).toBe(true)
-    expect(inBase(frac(3, 2), 'Z')).toBe(false)
-    expect(inBase(frac(3, 2), 'Q')).toBe(true)
-  })
-
-  it('empties the solution set when the base set has no room for the root', () => {
-    const frac32 = solveLinear(side(2, 5), side(0, 8))
-    expect(solutionSet(frac32, 'Q')).toEqual({ kind: 'single', x: { p: 3, q: 2 } })
-    expect(solutionSet(frac32, 'Z')).toEqual({ kind: 'empty' })
-    expect(solutionSet(frac32, 'N')).toEqual({ kind: 'empty' })
-  })
-
-  it('gives the whole base set to an identity', () => {
-    for (const base of BASE_SETS) {
-      const all = solutionSet(solveLinear(side(2, 6), side(2, 6)), base)
-      expect(all).toEqual({ kind: 'all' })
-      expect(solutionSetTex(all, base)).toBe(`\\mathbb{${base}}`)
-    }
-  })
-
-  it('writes the three shapes of a solution set', () => {
-    expect(solutionSetTex({ kind: 'single', x: frac(5, 1) }, 'Q')).toBe('\\{ 5 \\}')
-    expect(solutionSetTex({ kind: 'empty' }, 'Z')).toBe('\\emptyset')
-  })
-
-  it('carries presets that show all four outcomes', () => {
-    const kinds = SET_PRESETS.map((p) => solveLinear(p.l, p.r).kind)
-    expect(kinds).toEqual(['one', 'one', 'all', 'none'])
-    expect(solveLinear(SET_PRESETS[1].l, SET_PRESETS[1].r)).toEqual({
-      kind: 'one',
-      x: { p: 3, q: 2 },
-    })
-  })
-
-  it('answers its own exercise', () => {
-    const set = solutionSet(solveLinear(SET_TASK.l, SET_TASK.r), SET_TASK.base)
-    expect(set.kind).toBe(SET_ANSWER)
   })
 })
 
@@ -335,9 +246,7 @@ describe('systems', () => {
     expect(rowTex(-2, -2, -1600)).toBe('-2x - 2y = -1600')
   })
 
-  it('rewrites a row as a function of x', () => {
-    expect(rowYTex(1, 1, 5)).toBe('y = -x + 5')
-    expect(rowYTex(1, -1, -1)).toBe('y = x + 1')
+  it('lifts a row over x, so the system can be drawn', () => {
     expect(rowY(1, 1, 5, 2)).toBe(3)
     expect(rowY(1, -1, -1, 2)).toBe(3)
   })
@@ -349,17 +258,6 @@ describe('systems', () => {
       { kind: 'one', x: { p: 3, q: 1 }, y: { p: 2, q: 1 } },
       { kind: 'one', x: { p: 300, q: 1 }, y: { p: 500, q: 1 } },
     ])
-  })
-
-  it('tells the three graphical cases apart', () => {
-    const kinds = SYSGRAPH_PRESETS.map((p) => solveSystem(p.s).kind)
-    expect(kinds).toEqual(['one', 'none', 'infinite'])
-    expect(solveSystem(SYSGRAPH_PRESETS[0].s)).toEqual({
-      kind: 'one',
-      x: { p: 2, q: 1 },
-      y: { p: 3, q: 1 },
-    })
-    expect(SYSGRAPH_ANSWER).toBe('2|3')
   })
 
   it('checks a pair row by row', () => {
@@ -418,8 +316,9 @@ describe('systems', () => {
   })
 
   it('walks no steps for a system without exactly one whole solution', () => {
-    expect(substitutionSteps(SYSGRAPH_PRESETS[1].s)).toEqual([])
-    expect(additionSteps(SYSGRAPH_PRESETS[2].s)).toEqual([])
+    // Parallel lines, then two names for the same line.
+    expect(substitutionSteps({ a1: 2, b1: 1, c1: 3, a2: 2, b2: 1, c2: 6 })).toEqual([])
+    expect(additionSteps({ a1: 1, b1: 1, c1: 4, a2: 2, b2: 2, c2: 8 })).toEqual([])
   })
 
   it('answers its own exercise', () => {
@@ -450,7 +349,7 @@ describe('the meeting model', () => {
   })
 })
 
-describe('work, mixture and money', () => {
+describe('work, mixture and faulty data', () => {
   it('adds up the parts of the job rather than the times', () => {
     expect(workDone(1)).toEqual({ part1: 1 / 6, part2: 1 / 3, total: 1 / 2 })
     expect(workDone(2).total).toBeCloseTo(1, 12)
@@ -462,13 +361,6 @@ describe('work, mixture and money', () => {
     expect(mixConcentration(MIX.total)).toBe(MIX.c1)
     expect(mixConcentration(2)).toBe(MIX.target)
     expect(mixSolve()).toBe(2)
-  })
-
-  it('splits a sum with a known difference', () => {
-    expect(moneySplit(MONEY.total, MONEY.diff)).toEqual({ small: 13000, big: 17000 })
-    const { small, big } = moneySplit(MONEY.total, MONEY.diff)
-    expect(small + big).toBe(MONEY.total)
-    expect(big - small).toBe(MONEY.diff)
   })
 
   it('names one faulty-data variant of each kind', () => {

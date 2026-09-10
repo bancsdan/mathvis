@@ -98,27 +98,6 @@ export interface SolveStep {
   noteKey: string
 }
 
-/**
- * The mérlegelv written out: move the x terms to the left, the numbers to the
- * right, then divide. A step that would change nothing is left out, so a
- * reader never sees the same line twice.
- */
-export function solveSteps(l: Side, r: Side): SolveStep[] {
-  const steps: SolveStep[] = [{ tex: equationTex(l, r), noteKey: 'lin.stepStart' }]
-  const a = l.a - r.a
-  const b = r.b - l.b
-  if (r.a !== 0) {
-    steps.push({ tex: equationTex({ a, b: l.b }, { a: 0, b: r.b }), noteKey: 'lin.stepMoveX' })
-  }
-  if (l.b !== 0) {
-    steps.push({ tex: equationTex({ a, b: 0 }, { a: 0, b }), noteKey: 'lin.stepMoveNum' })
-  }
-  if (a !== 0 && a !== 1) {
-    steps.push({ tex: `x = ${fracTex(frac(b, a))}`, noteKey: 'lin.stepDivide' })
-  }
-  return steps
-}
-
 /* ------------------------------------------------------------------ */
 /* 1. The balance                                                      */
 /* ------------------------------------------------------------------ */
@@ -201,54 +180,7 @@ export function balanceTilt(b: Balance, x: number): -1 | 0 | 1 {
 export const BALANCE_ANSWER = 5
 
 /* ------------------------------------------------------------------ */
-/* 2. Base set and solution set                                        */
-/* ------------------------------------------------------------------ */
-
-export type BaseSet = 'N' | 'Z' | 'Q'
-
-export const BASE_SETS: readonly BaseSet[] = ['N', 'Z', 'Q']
-
-/** Here 0 counts as a natural number, as the lesson says out loud. */
-export function inBase(x: Frac, base: BaseSet): boolean {
-  if (base === 'Q') return true
-  if (x.q !== 1) return false
-  return base === 'Z' || x.p >= 0
-}
-
-export type SolutionSet = { kind: 'single'; x: Frac } | { kind: 'empty' } | { kind: 'all' }
-
-/** The root, but only if the base set has it. */
-export function solutionSet(r: LinearResult, base: BaseSet): SolutionSet {
-  if (r.kind === 'none') return { kind: 'empty' }
-  if (r.kind === 'all') return { kind: 'all' }
-  return inBase(r.x, base) ? { kind: 'single', x: r.x } : { kind: 'empty' }
-}
-
-/** `\{5\}`, `\emptyset`, `\mathbb{Z}`. */
-export function solutionSetTex(s: SolutionSet, base: BaseSet): string {
-  if (s.kind === 'empty') return '\\emptyset'
-  if (s.kind === 'all') return `\\mathbb{${base}}`
-  return `\\{ ${fracTex(s.x)} \\}`
-}
-
-export const SET_PRESETS: readonly { id: string; l: Side; r: Side }[] = [
-  { id: 'one', l: { a: 4, b: -3 }, r: { a: 2, b: 1 } },
-  { id: 'frac', l: { a: 2, b: 5 }, r: { a: 0, b: 8 } },
-  { id: 'all', l: { a: 2, b: 6 }, r: { a: 2, b: 6 } },
-  { id: 'none', l: { a: 1, b: 1 }, r: { a: 1, b: 2 } },
-]
-
-/** 2x + 7 = 4 over Z. */
-export const SET_TASK: { l: Side; r: Side; base: BaseSet } = {
-  l: { a: 2, b: 7 },
-  r: { a: 0, b: 4 },
-  base: 'Z',
-}
-
-export const SET_ANSWER = 'empty'
-
-/* ------------------------------------------------------------------ */
-/* 3. Graphical solution                                               */
+/* 2. Graphical solution                                               */
 /* ------------------------------------------------------------------ */
 
 /** The height of one side above each x, ready for `LineChart`. */
@@ -262,7 +194,7 @@ export const GRAPH_PRESET: { l: Side; r: Side } = { l: { a: 1, b: 1 }, r: { a: -
 export const GRAPH_ANSWER = 3
 
 /* ------------------------------------------------------------------ */
-/* 4. Inequalities                                                     */
+/* 3. Inequalities                                                     */
 /* ------------------------------------------------------------------ */
 
 export type Rel = 'lt' | 'le' | 'gt' | 'ge'
@@ -351,7 +283,7 @@ export const INEQ_OPTIONS: readonly { id: string; rel: Rel; bound: number }[] = 
 export const INEQ_ANSWER = 'le3'
 
 /* ------------------------------------------------------------------ */
-/* 5. Systems of two equations                                         */
+/* 4. Systems of two equations                                         */
 /* ------------------------------------------------------------------ */
 
 /** a₁x + b₁y = c₁ and a₂x + b₂y = c₂. */
@@ -375,14 +307,6 @@ export function rowTex(a: number, b: number, c: number): string {
 /** Both rows, in order. */
 export function systemTex(s: System): string[] {
   return [rowTex(s.a1, s.b1, s.c1), rowTex(s.a2, s.b2, s.c2)]
-}
-
-/** `y = -2x + 3`: the row rewritten as a function, so it can be drawn. */
-export function rowYTex(a: number, b: number, c: number): string {
-  return `y = ${polyTex([
-    { coef: -a / b, part: 'x' },
-    { coef: c / b, part: '' },
-  ])}`
 }
 
 /** The height of the row's line above x. */
@@ -501,8 +425,8 @@ function pickExpressRow(s: System): 1 | 2 {
 /**
  * Express y from one row, write it into the other, solve, come back.
  *
- * Returns nothing for a system without exactly one solution: the lesson walks
- * those through the picture in section 6 instead.
+ * Returns nothing for a system without exactly one solution: those are the
+ * parallel and coincident lines of the graphical explorer.
  */
 export function substitutionSteps(s: System): SolveStep[] {
   const result = solveSystem(s)
@@ -587,19 +511,7 @@ export const SYSTEM_TASK: System = { a1: 1, b1: 1, c1: 12, a2: 1, b2: -1, c2: 2 
 export const SYSTEM_ANSWER = '7|5'
 
 /* ------------------------------------------------------------------ */
-/* 6. Systems on a graph                                               */
-/* ------------------------------------------------------------------ */
-
-export const SYSGRAPH_PRESETS: readonly { id: string; s: System }[] = [
-  { id: 'meet', s: { a1: 1, b1: 1, c1: 5, a2: 1, b2: -1, c2: -1 } },
-  { id: 'parallel', s: { a1: 2, b1: 1, c1: 3, a2: 2, b2: 1, c2: 6 } },
-  { id: 'same', s: { a1: 1, b1: 1, c1: 4, a2: 2, b2: 2, c2: 8 } },
-]
-
-export const SYSGRAPH_ANSWER = '2|3'
-
-/* ------------------------------------------------------------------ */
-/* 7. The model: two cars driving towards each other                   */
+/* 5. The model: two cars driving towards each other                   */
 /* ------------------------------------------------------------------ */
 
 export const MEETING = { distance: 180, v1: 60, v2: 30 }
@@ -622,7 +534,7 @@ export function meetingTime(distance: number, v1: number, v2: number): number {
 export const MODEL_ANSWER = 1.8
 
 /* ------------------------------------------------------------------ */
-/* 8. Work, mixture, money, and faulty data                            */
+/* 6. Work, mixture, and faulty data                                  */
 /* ------------------------------------------------------------------ */
 
 /** Alone in 6 and in 3 hours, so together in 2. */
@@ -651,14 +563,6 @@ export function mixConcentration(x: number, m = MIX): number {
 /** How many litres of the weaker solution hit the target strength. */
 export function mixSolve(m = MIX): number {
   return (m.total * (m.c2 - m.target)) / (m.c2 - m.c1)
-}
-
-/** Two bills, 30 000 Ft together, one 4000 Ft bigger. */
-export const MONEY = { total: 30000, diff: 4000 }
-
-export function moneySplit(total: number, diff: number): { small: number; big: number } {
-  const small = (total - diff) / 2
-  return { small, big: small + diff }
 }
 
 export type DataKind = 'missing' | 'redundant' | 'contradictory'

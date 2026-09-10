@@ -28,17 +28,15 @@ const VIEW: Record<ElemId, { yDomain: [number, number]; cMin: number; cMax: numb
   recip: { yDomain: [-5, 5], cMin: -8, cMax: 8 },
 }
 
-/** The rows of the properties table, each one filled per function. */
-const ROWS = ['domain', 'range', 'zero', 'min', 'max', 'up', 'down'] as const
-
 const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi)
 
 /**
  * Elemi függvények: x², √x és 1/x.
  *
- * The properties table is the graph written out in words, and the horizontal
- * line turns "how many solutions has f(x) = c?" into something you count on
- * the picture: it is the number of places the line meets the curve.
+ * The horizontal line asks the reverse question — which x has this value? —
+ * and turns it into something you count on the picture: the answer is the
+ * number of places the line meets the curve, which is none, one or two
+ * depending on the curve and on where the line sits.
  */
 export function FnElementaryCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -63,30 +61,17 @@ export function FnElementaryCard({ id }: { id: string }) {
   const root = (v: number) =>
     `${Math.abs(v - Math.round(v * 100) / 100) > 1e-9 ? '≈ ' : ''}${fmt(v, sep)}`
 
-  const cellOf = (row: (typeof ROWS)[number]) => {
-    if (row === 'domain') return <Tex tex={ELEM[elemId].domainTex} />
-    if (row === 'range') return <Tex tex={ELEM[elemId].rangeTex} />
-    if (row === 'zero') {
-      const zero = ELEM[elemId].zeroTex
-      return zero === '' ? t('fn.elemNone') : <Tex tex={zero} />
-    }
-    return t(`fn.elem${row.charAt(0).toUpperCase()}${row.slice(1)}_${elemId}`)
-  }
-
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('fn.elemTitle')}</h2>
+        <h2>{t('fn.q4')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="fn.elemIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="fn.elemIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey={['fn.elemDef1', 'fn.elemDef2', 'fn.elemDef3']} />
-        <p className="card-note">
-          <Trans i18nKey="fn.elemIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="pill-row" role="group" aria-label={t('fn.elemPickAria')}>
@@ -149,19 +134,6 @@ export function FnElementaryCard({ id }: { id: string }) {
           components={{ b: <strong />, i: <em /> }}
         />
       </p>
-
-      <div className="table-wrap">
-        <table className="paper-table">
-          <tbody>
-            {ROWS.map((row) => (
-              <tr key={row}>
-                <th scope="row">{t(`fn.elemRow_${row}`)}</th>
-                <td>{cellOf(row)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
       <Exercise
         promptKey="fn.elemTask"

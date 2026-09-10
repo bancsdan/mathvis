@@ -76,17 +76,14 @@ export function FnAssignCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('fn.assignTitle')}</h2>
+        <h2>{t('fn.q1')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="fn.assignIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="fn.assignIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <Definition i18nKey={['fn.assignDef1', 'fn.assignDef2', 'fn.assignDef3']} />
-        <p className="card-note">
-          <Trans i18nKey="fn.assignIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey={['fn.assignDef1', 'fn.assignDef2']} />
       </div>
 
       <div className="pill-row" role="group" aria-label={t('fn.assignScAria')}>

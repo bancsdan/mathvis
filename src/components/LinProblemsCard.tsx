@@ -7,8 +7,6 @@ import {
   fracPlain,
   MIX,
   mixConcentration,
-  MONEY,
-  moneySplit,
   plainValue,
   WORK,
   workDone,
@@ -18,11 +16,8 @@ import { texSeparator } from '../lib/numbers'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 
-const TABS = ['work', 'mix', 'money'] as const
+const TABS = ['work', 'mix'] as const
 const KINDS: readonly DataKind[] = ['missing', 'redundant', 'contradictory']
-
-/** 13 000 rather than 13000: an amount is easier to read in threes. */
-const grouped = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 
 /** One stacked bar: the whole box is the whole thing, the parts are the parts. */
 function Bar({ parts }: { parts: readonly { width: number; series: 1 | 2 }[] }) {
@@ -43,20 +38,19 @@ function Bar({ parts }: { parts: readonly { width: number; series: 1 | 2 }[] }) 
 }
 
 /**
- * Közös munka, keverés, pénz — és a hibás adatok. Each story has one quantity
- * that has to add up, and the slider is a search for the place where it does.
- * The last part is the other half of modelling: noticing that a text cannot be
- * modelled at all.
+ * Közös munka és keverés. Both stories have one quantity that has to add up —
+ * parts of a job, litres of dissolved substance — and the slider is a search
+ * for the place where it does. The exercise is the other half of modelling:
+ * noticing that a text cannot be modelled at all.
  */
 export function LinProblemsCard({ id }: { id: string }) {
   const { t } = useTranslation()
   const sep = t('num.decimalSep')
   const tex = (raw: string) => texSeparator(raw, sep)
-  const [tab, setTab] = useState<'work' | 'mix' | 'money'>('work')
+  const [tab, setTab] = useState<'work' | 'mix'>('work')
   /** Halves of an hour, and halves of a litre: sliders that never drift. */
   const [workHalves, setWorkHalves] = useState(2)
   const [mixHalves, setMixHalves] = useState(0)
-  const [small, setSmall] = useState(10000)
   const [picks, setPicks] = useState<Record<string, string>>({})
 
   const workT = workHalves / 2
@@ -65,27 +59,18 @@ export function LinProblemsCard({ id }: { id: string }) {
   const mixRest = MIX.total - mixX
   const mixPct = mixConcentration(mixX)
   const mixAmount = (mixPct * MIX.total) / 100
-  const moneySum = 2 * small + MONEY.diff
-  const moneyHit = MONEY.total === moneySum
-  const solution = moneySplit(MONEY.total, MONEY.diff)
 
   const answerKey = DATA_VARIANTS.map((v) => picks[v.id] ?? '').join('|')
 
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('lin.problemsTitle')}</h2>
+        <h2>{t('lin.q6')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="lin.problemsIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="lin.problemsWorkRule" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="lin.problemsMixRule" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="lin.problemsIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -152,6 +137,9 @@ export function LinProblemsCard({ id }: { id: string }) {
           <Tex block tex={`\\frac{t}{${WORK.t1}} + \\frac{t}{${WORK.t2}} = 1`} />
           <Tex block tex="t + 2t = 6" />
           <Tex block tex="t = 2" />
+          <p className="card-note lesson-text">
+            <Trans i18nKey="lin.problemsWorkRule" components={{ b: <strong />, i: <em /> }} />
+          </p>
         </>
       )}
 
@@ -202,61 +190,11 @@ export function LinProblemsCard({ id }: { id: string }) {
           <Tex block tex={tex('0.2x + 3 - 0.5x = 2.4')} />
           <Tex block tex={tex('-0.3x = -0.6')} />
           <Tex block tex="x = 2" />
-        </>
-      )}
-
-      {tab === 'money' && (
-        <>
-          <p className="card-note lesson-text">{t('lin.moneyText')}</p>
-          <div className="controls-inline">
-            <label className="field field-wide">
-              <span className="field-label">
-                {t('lin.moneyPickSmall')}{' '}
-                <strong>
-                  {grouped(small)} {t('lin.ft')}
-                </strong>
-              </span>
-              <input
-                type="range"
-                min={0}
-                max={MONEY.total}
-                step={1000}
-                value={small}
-                onChange={(e) => setSmall(Number(e.target.value))}
-              />
-            </label>
-          </div>
-          <Bar
-            parts={[
-              { width: small / MONEY.total, series: 1 },
-              { width: (small + MONEY.diff) / MONEY.total, series: 2 },
-            ]}
-          />
-          <p className="lin-result lesson-text">
-            {moneyHit ? (
-              <Trans i18nKey="lin.moneyDone" components={{ b: <strong />, i: <em /> }} />
-            ) : (
-              <Trans
-                i18nKey="lin.moneyLine"
-                values={{
-                  small: grouped(small),
-                  diff: grouped(MONEY.diff),
-                  sum: grouped(moneySum),
-                }}
-                components={{ b: <strong />, i: <em /> }}
-              />
-            )}
+          <p className="card-note lesson-text">
+            <Trans i18nKey="lin.problemsMixRule" components={{ b: <strong />, i: <em /> }} />
           </p>
-          <Tex block tex={`x + (x + ${MONEY.diff}) = ${MONEY.total}`} />
-          <Tex block tex={`2x = ${MONEY.total - MONEY.diff}`} />
-          <Tex block tex={`x = ${solution.small}`} />
         </>
       )}
-
-      <p className="mini-title">{t('lin.dataTitle')}</p>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="lin.problemsIntro2" components={{ b: <strong />, i: <em /> }} />
-      </p>
 
       <Exercise
         promptKey="lin.problemsTask"

@@ -125,18 +125,12 @@ export function FnModelCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('fn.modelTitle')}</h2>
+        <h2>{t('fn.q7')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="fn.modelIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="fn.modelRule" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="fn.modelIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="fn.modelIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -194,6 +188,10 @@ export function FnModelCard({ id }: { id: string }) {
               }}
               components={{ b: <strong />, i: <em /> }}
             />
+          </p>
+
+          <p className="card-note lesson-text">
+            <Trans i18nKey="fn.modelRule" components={{ b: <strong />, i: <em /> }} />
           </p>
         </>
       )}

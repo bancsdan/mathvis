@@ -15,7 +15,7 @@
  * to swap out.
  */
 
-import { OR_TOKEN, polyTex, termTex } from './algebra'
+import { OR_TOKEN, polyTex } from './algebra'
 import { frac, fracTex, type Frac, type Rel } from './linear'
 import { formatDecimal, gcd } from './numbers'
 import { isPerfectSquare, simplifyRoot } from './powers'
@@ -153,43 +153,8 @@ export function formulaSubstitutedTex(q: Quad): string {
 }
 
 /* ------------------------------------------------------------------ */
-/* 1. Standard form and equivalent transformations                     */
+/* 1. The lost root                                                    */
 /* ------------------------------------------------------------------ */
-
-export interface StandardPreset {
-  id: string
-  givenTex: string
-  /** The rearranging, one line each; the last one is the standard form. */
-  steps: string[]
-  std: Quad
-}
-
-export const STANDARD_PRESETS: readonly StandardPreset[] = [
-  {
-    id: 'move',
-    givenTex: '3x^2 = 5 - 2x',
-    steps: ['3x^2 + 2x - 5 = 0'],
-    std: { a: 3, b: 2, c: -5 },
-  },
-  {
-    id: 'expand',
-    givenTex: '(x + 1)(x - 3) = 5',
-    steps: ['x^2 - 2x - 3 = 5', 'x^2 - 2x - 8 = 0'],
-    std: { a: 1, b: -2, c: -8 },
-  },
-  {
-    id: 'product',
-    givenTex: 'x(x + 2) = 3x + 6',
-    steps: ['x^2 + 2x = 3x + 6', 'x^2 - x - 6 = 0'],
-    std: { a: 1, b: -1, c: -6 },
-  },
-  {
-    id: 'square',
-    givenTex: '(x - 2)^2 = 2x - 1',
-    steps: ['x^2 - 4x + 4 = 2x - 1', 'x^2 - 6x + 5 = 0'],
-    std: { a: 1, b: -6, c: 5 },
-  },
-]
 
 /**
  * `x² = 4x`: dividing by x looks harmless and loses the root 0, while
@@ -201,8 +166,8 @@ export const LOST_ROOT = {
   rightTex: 'x(x - 4) = 0',
 }
 
-/** `3x² = 5 − 2x` rearranged: a, b, c. */
-export const STANDARD_ANSWER = '3|2|-5'
+/** `x² = 3x`: the same trap one number along, roots sorted. */
+export const LOST_ROOT_ANSWER = '0|3'
 
 /* ------------------------------------------------------------------ */
 /* 2. Factoring and the root-factor form                               */
@@ -248,115 +213,14 @@ export const FACTOR_PRESETS: readonly Quad[] = [
 /** `x² − 7x + 12 = 0`, roots sorted. */
 export const FACTOR_ANSWER = '3|4'
 
-/* ------------------------------------------------------------------ */
-/* 3. Completing the square                                            */
-/* ------------------------------------------------------------------ */
-
 /** One line of a worked solution, with the key of the move that produced it. */
 export interface QuadStep {
   tex: string
   noteKey: string
 }
 
-/** `(x + 3)`, `(x - 3)`, or plain `x` when there is nothing to add. */
-function baseTex(h: number): string {
-  if (h === 0) return 'x'
-  return `(x ${h < 0 ? '-' : '+'} ${Math.abs(h)})`
-}
-
-/** `x + 3`, `x - 3`, `x`: the same base without the brackets. */
-function bareBaseTex(h: number): string {
-  if (h === 0) return 'x'
-  return `x ${h < 0 ? '-' : '+'} ${Math.abs(h)}`
-}
-
-/** `2\sqrt{3}`, `5`, `\sqrt{5}`. */
-function rootValueTex(k: number): string {
-  if (isPerfectSquare(k)) return String(Math.sqrt(k))
-  if (!Number.isInteger(k)) return `\\sqrt{${k}}`
-  const { outside, inside } = simplifyRoot(k)
-  return outside === 1 ? `\\sqrt{${inside}}` : `${outside}\\sqrt{${inside}}`
-}
-
-/** `-3 + \sqrt{5}`, `2`, `-\sqrt{5}`: the root once the base is undone. */
-function shiftedRootTex(h: number, k: number, plus: boolean): string {
-  if (isPerfectSquare(k)) {
-    const s = Math.sqrt(k)
-    return String(plus ? -h + s : -h - s)
-  }
-  const value = rootValueTex(k)
-  if (h === 0) return plus ? value : `-${value}`
-  return `${-h} ${plus ? '+' : '-'} ${value}`
-}
-
-/**
- * `x² + px + q = 0` solved by completing the square, one line per move.
- *
- * The right side after isolating the square is the whole story: positive gives
- * two roots, zero gives one, negative gives none — and in that last case the
- * steps stop there rather than pretending a root exists.
- */
-export function completeSolveSteps(p: number, q: number): QuadStep[] {
-  const h = p / 2
-  const k = h * h - q
-  const start = polyTex([
-    { coef: 1, part: 'x^2' },
-    { coef: p, part: 'x' },
-    { coef: q, part: '' },
-  ])
-  const shift = termTex({ coef: -k, part: '' }, false)
-  const completed = shift === '' ? `${baseTex(h)}^2` : `${baseTex(h)}^2 ${shift}`
-
-  const steps: QuadStep[] = [{ tex: `${start} = 0`, noteKey: 'quad.stepStart' }]
-  // With b = 0 there is nothing to complete: the square is already there, and
-  // a "completed" line would only repeat the one above it.
-  if (h !== 0) steps.push({ tex: `${completed} = 0`, noteKey: 'quad.stepComplete' })
-
-  if (k < 0) {
-    steps.push({ tex: `${baseTex(h)}^2 = ${k}`, noteKey: 'quad.stepNoRoot' })
-    return steps
-  }
-
-  // With k = 0 the completed line already reads `(x + h)² = 0`: repeating it
-  // as an "isolate" step would show the same line twice.
-  if (k === 0) {
-    if (h === 0) return [...steps, { tex: 'x = 0', noteKey: 'quad.stepRootZero' }]
-    steps.push({ tex: `${bareBaseTex(h)} = 0`, noteKey: 'quad.stepRootZero' })
-    steps.push({ tex: `x = ${-h}`, noteKey: 'quad.stepSolve' })
-    return steps
-  }
-
-  steps.push({ tex: `${baseTex(h)}^2 = ${k}`, noteKey: 'quad.stepIsolate' })
-
-  const value = rootValueTex(k)
-  steps.push({
-    tex: `${bareBaseTex(h)} = ${value} \\text{ ${OR_TOKEN} } ${bareBaseTex(h)} = -${value}`,
-    noteKey: 'quad.stepRoot',
-  })
-  // With h = 0 the line above already reads `x = …`: there is nothing to
-  // subtract, so the last move would produce the same line again.
-  if (h !== 0) {
-    steps.push({
-      tex: `x = ${shiftedRootTex(h, k, true)} \\text{ ${OR_TOKEN} } x = ${shiftedRootTex(h, k, false)}`,
-      noteKey: 'quad.stepSolve',
-    })
-  }
-  return steps
-}
-
-/** Two roots, one root, none — and a right side that is not a square. */
-export const COMPLETE_PRESETS: readonly { p: number; q: number }[] = [
-  { p: 6, q: 5 },
-  { p: -4, q: -12 },
-  { p: 2, q: 1 },
-  { p: 4, q: 7 },
-]
-
-/** `x² − 4x − 12 = 0`, roots sorted. */
-export const COMPLETE_ANSWER = '-2|6'
-
 /* ------------------------------------------------------------------ */
-/* 4. The formula, derived twice at once                               */
+/* 3. The formula, derived twice at once                               */
 /* ------------------------------------------------------------------ */
 
 /** One row of the derivation: the same move in letters and in numbers. */
@@ -466,14 +330,14 @@ export const FORMULA_PRESETS: readonly Quad[] = [
 export const FORMULA_ANSWER = '0.5|2'
 
 /* ------------------------------------------------------------------ */
-/* 5. The discriminant and the parabola                                */
+/* 4. The discriminant and the parabola                                */
 /* ------------------------------------------------------------------ */
 
 /** `x² + 4x + c = 0` has one root exactly when 16 − 4c = 0. */
 export const DISC_ANSWER = 4
 
 /* ------------------------------------------------------------------ */
-/* 6. Quadratic inequalities                                           */
+/* 5. Quadratic inequalities                                           */
 /* ------------------------------------------------------------------ */
 
 export type QuadIneqSet =
@@ -558,7 +422,7 @@ export const QINEQ_TASK: { q: Quad; rel: Rel } = { q: { a: 1, b: 0, c: -4 }, rel
 export const QINEQ_ANSWER = 'outside2'
 
 /* ------------------------------------------------------------------ */
-/* 7. Equations that reduce to a quadratic                             */
+/* 6. Equations that reduce to a quadratic                             */
 /* ------------------------------------------------------------------ */
 
 export interface ReducePreset {
@@ -649,7 +513,7 @@ export function reduceSteps(p: ReducePreset): QuadStep[] {
 export const REDUCE_ANSWER = 4
 
 /* ------------------------------------------------------------------ */
-/* 8. Word problems                                                    */
+/* 7. Word problems                                                    */
 /* ------------------------------------------------------------------ */
 
 /** One side 3 m longer than the other, 40 m² of garden: x = 5, and −8 is not. */

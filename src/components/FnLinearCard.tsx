@@ -48,17 +48,14 @@ export function FnLinearCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('fn.linearTitle')}</h2>
+        <h2>{t('fn.q3')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="fn.linearIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="fn.linearIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey={['fn.linearDef1', 'fn.linearDef2']} />
-        <p className="card-note">
-          <Trans i18nKey="fn.linearIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="controls-inline">

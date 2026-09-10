@@ -3,13 +3,9 @@ import { OR_TOKEN } from './algebra'
 import {
   BALL,
   ballHeight,
-  COMPLETE_ANSWER,
-  COMPLETE_PRESETS,
-  completeSolveSteps,
   DISC_ANSWER,
   discriminant,
   FACTOR_ANSWER,
-  FACTOR_PRESETS,
   factorTex,
   formulaSubstitutedTex,
   FORMULA_ANSWER,
@@ -20,6 +16,7 @@ import {
   gardenArea,
   holdsQuad,
   LOST_ROOT,
+  LOST_ROOT_ANSWER,
   parallelSteps,
   QINEQ_ANSWER,
   QINEQ_OPTIONS,
@@ -35,9 +32,6 @@ import {
   rootTex,
   solveQuad,
   solveQuadIneq,
-  STANDARD_ANSWER,
-  STANDARD_PRESETS,
-  vietaPair,
   WORD_ANSWER,
   type Quad,
 } from './quadratic'
@@ -146,17 +140,10 @@ describe('writing a root down', () => {
   })
 })
 
-describe('standard form', () => {
-  it('ends every preset on a zero-ordered equation matching its a, b, c', () => {
-    for (const preset of STANDARD_PRESETS) {
-      const last = preset.steps[preset.steps.length - 1]
-      expect(last).toBe(`${quadTex(preset.std)} = 0`)
-    }
-  })
-
+describe('the lost root', () => {
   it('holds the answer of the exercise', () => {
-    const { a, b, c } = STANDARD_PRESETS[0].std
-    expect(`${a}|${b}|${c}`).toBe(STANDARD_ANSWER)
+    const [r1, r2] = LOST_ROOT_ANSWER.split('|').map(Number)
+    expect(solveQuad({ a: 1, b: -3, c: 0 })).toMatchObject({ x1: r1, x2: r2 })
   })
 
   it('loses a root when x² = 4x is divided by x', () => {
@@ -181,76 +168,9 @@ describe('factoring', () => {
     expect(factorTex(1, -4, 2)).toBe('2(x - 1)(x + 4)')
   })
 
-  it('finds the pair with the right sum and product', () => {
-    expect(vietaPair(-5, 6)).toEqual([2, 3])
-    expect(vietaPair(2, -3)).toEqual([-3, 1])
-    expect(vietaPair(0, -9)).toEqual([-3, 3])
-    expect(vietaPair(1, 1)).toBeNull()
-    expect(vietaPair(3, -2)).toBeNull()
-  })
-
-  it('has a whole-number pair behind every preset', () => {
-    for (const preset of FACTOR_PRESETS) {
-      const pair = vietaPair(preset.b, preset.c)
-      expect(pair).not.toBeNull()
-      expect(fromRoots((pair as [number, number])[0], (pair as [number, number])[1])).toEqual(preset)
-    }
-  })
-
   it('holds the answer of the exercise', () => {
-    const pair = vietaPair(-7, 12) as [number, number]
-    expect(pair.join('|')).toBe(FACTOR_ANSWER)
-  })
-})
-
-describe('completing the square', () => {
-  it('walks x² + 6x + 5 = 0 to its two roots', () => {
-    expect(completeSolveSteps(6, 5).map((s) => s.tex)).toEqual([
-      'x^2 + 6x + 5 = 0',
-      '(x + 3)^2 - 4 = 0',
-      '(x + 3)^2 = 4',
-      `x + 3 = 2 \\text{ ${OR_TOKEN} } x + 3 = -2`,
-      `x = -1 \\text{ ${OR_TOKEN} } x = -5`,
-    ])
-  })
-
-  it('stops at one root when the right side is zero, without repeating a line', () => {
-    const steps = completeSolveSteps(2, 1)
-    expect(steps.map((s) => s.tex)).toEqual(['x^2 + 2x + 1 = 0', '(x + 1)^2 = 0', 'x + 1 = 0', 'x = -1'])
-    expect(steps[2].noteKey).toBe('quad.stepRootZero')
-  })
-
-  it('stops on the negative right side rather than inventing a root', () => {
-    const steps = completeSolveSteps(4, 7)
-    expect(steps).toHaveLength(3)
-    expect(steps[2].tex).toBe('(x + 2)^2 = -3')
-    expect(steps[2].noteKey).toBe('quad.stepNoRoot')
-  })
-
-  it('keeps the root sign when the right side is not a square', () => {
-    const steps = completeSolveSteps(6, 4)
-    expect(steps[3].tex).toBe(`x + 3 = \\sqrt{5} \\text{ ${OR_TOKEN} } x + 3 = -\\sqrt{5}`)
-    expect(steps[4].tex).toBe(`x = -3 + \\sqrt{5} \\text{ ${OR_TOKEN} } x = -3 - \\sqrt{5}`)
-  })
-
-  it('says nothing twice when there is nothing to complete', () => {
-    expect(completeSolveSteps(0, -7).map((s) => s.tex)).toEqual([
-      'x^2 - 7 = 0',
-      'x^2 = 7',
-      `x = \\sqrt{7} \\text{ ${OR_TOKEN} } x = -\\sqrt{7}`,
-    ])
-    expect(completeSolveSteps(0, 0).map((s) => s.tex)).toEqual(['x^2 = 0', 'x = 0'])
-    expect(completeSolveSteps(0, 5).map((s) => s.tex)).toEqual(['x^2 + 5 = 0', 'x^2 = -5'])
-  })
-
-  it('covers all three cases across the presets', () => {
-    const kinds = COMPLETE_PRESETS.map((p) => solveQuad({ a: 1, b: p.p, c: p.q }).kind)
-    expect(new Set(kinds)).toEqual(new Set(['two', 'one', 'none']))
-  })
-
-  it('holds the answer of the exercise', () => {
-    const roots = solveQuad(q(1, -4, -12))
-    expect(`${roots.x1}|${roots.x2}`).toBe(COMPLETE_ANSWER)
+    const [r1, r2] = FACTOR_ANSWER.split('|').map(Number)
+    expect(fromRoots(r1, r2)).toEqual({ a: 1, b: -7, c: 12 })
   })
 })
 

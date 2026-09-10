@@ -20,8 +20,9 @@ const Y_DOMAIN: [number, number] = [-12, 12]
 
 /**
  * Grafikus megoldás. The two sides are two lines, and the x of their crossing
- * is the root — which also makes "no solution" and "every number" something
- * you can see rather than something you have to be told.
+ * is the root. Sliding the lines into parallel or onto each other is also
+ * where the reader meets one, no and every solution: the three result lines
+ * name the case rather than a rule having to.
  */
 export function LinGraphCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -51,21 +52,12 @@ export function LinGraphCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('lin.graphTitle')}</h2>
+        <h2>{t('lin.q2')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="lin.graphIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="lin.graphRule" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="lin.graphIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="lin.graphIntro3" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="lin.graphIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -153,6 +145,10 @@ export function LinGraphCard({ id }: { id: string }) {
           }}
           components={{ b: <strong />, i: <em /> }}
         />
+      </p>
+
+      <p className="card-note lesson-text">
+        <Trans i18nKey="lin.graphNote" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <Exercise

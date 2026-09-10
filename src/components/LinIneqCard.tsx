@@ -15,7 +15,6 @@ import {
   solveIneq,
   type Rel,
 } from '../lib/linear'
-import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { NumberLine } from './NumberLine'
 import { Tex } from './Tex'
@@ -60,19 +59,12 @@ export function LinIneqCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('lin.ineqTitle')}</h2>
+        <h2>{t('lin.q3')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="lin.ineqIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <Definition i18nKey="lin.ineqDef" />
-        <p className="card-note">
-          <Trans i18nKey="lin.ineqRule" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="lin.ineqIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="lin.ineqIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -102,7 +94,6 @@ export function LinIneqCard({ id }: { id: string }) {
         ))}
       </ol>
 
-      <p className="mini-title">{t('lin.ineqLineTitle')}</p>
       <NumberLine
         min={MIN}
         max={MAX}
@@ -166,6 +157,10 @@ export function LinIneqCard({ id }: { id: string }) {
           }}
           components={{ b: <strong />, i: <em /> }}
         />
+      </p>
+
+      <p className="card-note lesson-text">
+        <Trans i18nKey="lin.ineqRule" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <Exercise

@@ -113,17 +113,14 @@ export function LinBalanceCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('lin.balanceTitle')}</h2>
+        <h2>{t('lin.q1')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="lin.balanceIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="lin.balanceIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="lin.balanceDef" />
-        <p className="card-note">
-          <Trans i18nKey="lin.balanceIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <Tex block tex={balanceTex(balance)} />

@@ -61,17 +61,14 @@ export function FnInverseCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('fn.inverseTitle')}</h2>
+        <h2>{t('fn.q6')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="fn.inverseIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="fn.inverseIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="fn.inverseDef" />
-        <p className="card-note">
-          <Trans i18nKey="fn.inverseIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="pill-row" role="group" aria-label={t('fn.inversePickAria')}>
@@ -142,9 +139,6 @@ export function FnInverseCard({ id }: { id: string }) {
           },
         ]}
       />
-      <p className="card-note lesson-text">{t('fn.inverseChartNote')}</p>
-
-      <p className="mini-title">{t('fn.inverseSquareTitle')}</p>
       <p className="card-note lesson-text">
         <Trans i18nKey="fn.inverseSquareNote" components={{ b: <strong />, i: <em /> }} />
       </p>

@@ -26,17 +26,14 @@ export function QuadReduceCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('quad.reduceTitle')}</h2>
+        <h2>{t('quad.q6')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="quad.reduceIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="quad.reduceIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="quad.reduceDef" />
-        <p className="card-note">
-          <Trans i18nKey="quad.reduceIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="pill-row" role="group" aria-label={t('quad.reduceEqAria')}>

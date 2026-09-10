@@ -3,10 +3,8 @@ import {
   ASSIGN_ANSWER,
   ASSIGN_PRESETS,
   ASSIGN_QUIZ,
-  backOptions,
   classify,
   DAY_TEMPS,
-  DEFINE_ANSWER,
   ELEM,
   ELEM_ANSWER,
   ELEM_IDS,
@@ -29,11 +27,8 @@ import {
   linear,
   linearTex,
   monotoneRuns,
-  preimages,
-  rangeOf,
   READ_ANSWER,
   READ_OPTIONS,
-  RULES,
   slopeBetween,
   solutionCount,
   solutions,
@@ -44,13 +39,9 @@ import {
   transformWords,
   TRIP,
   tripSpeed,
-  valueTable,
   whyNot,
   zerosOf,
-  type Rule,
 } from './functions'
-
-const rule = (id: string): Rule => RULES.find((r) => r.id === id) as Rule
 
 describe('writing numbers', () => {
   it('keeps at most two decimals and the reader’s separator', () => {
@@ -106,49 +97,6 @@ describe('assignments', () => {
   it('spells the quiz answer out of the quiz itself', () => {
     expect(ASSIGN_ANSWER).toBe('function|notFunction|oneToOne|function')
     expect(ASSIGN_QUIZ).toHaveLength(4)
-  })
-})
-
-describe('giving a function', () => {
-  it('tabulates the rule on its domain', () => {
-    expect(valueTable(rule('line')).slice(0, 3)).toEqual([
-      { x: -2, y: -7 },
-      { x: -1, y: -5 },
-      { x: 0, y: -3 },
-    ])
-    expect(valueTable(rule('taxi'))[3]).toEqual({ x: 3, y: 1600 })
-  })
-
-  it('collects the values it actually takes, each one once', () => {
-    expect(rangeOf(rule('square'))).toEqual([-4, -3, 0, 5])
-    expect(rangeOf(rule('half'))).toEqual([1, 2, 3, 4, 6, 12])
-  })
-
-  it('finds every x that leads to a value', () => {
-    expect(preimages(rule('square'), 5)).toEqual([-3, 3])
-    expect(preimages(rule('square'), 0)).toEqual([-2, 2])
-    expect(preimages(rule('square'), 4)).toEqual([])
-  })
-
-  it('offers values the function misses as well as ones it takes', () => {
-    const options = backOptions(rule('square'))
-    expect(options).toContain(5)
-    expect(options).toContain(4)
-    expect(preimages(rule('square'), 4)).toEqual([])
-    const fares = backOptions(rule('taxi'))
-    expect(fares).toContain(700)
-    expect(fares).toContain(850)
-    expect(fares.length).toBeLessThan(30)
-  })
-
-  it('writes one substitution the way it is done on paper', () => {
-    expect(rule('taxi').sub(3)).toBe('f(3) = 300 \\cdot 3 + 700 = 1600')
-    expect(rule('square').sub(-3)).toBe('f(-3) = (-3)^2 - 4 = 5')
-    expect(rule('half').sub(4)).toBe('f(4) = \\frac{12}{4} = 3')
-  })
-
-  it('answers f(x) = 3x − 5 = 7', () => {
-    expect(3 * DEFINE_ANSWER - 5).toBe(7)
   })
 })
 
@@ -254,7 +202,6 @@ describe('the elementary functions', () => {
   })
 
   it('knows which graph never reaches the x axis', () => {
-    expect(ELEM[ELEM_ANSWER].zeroTex).toBe('')
     expect(solutionCount(ELEM_ANSWER, 0)).toBe(0)
   })
 })
