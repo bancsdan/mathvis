@@ -2,10 +2,7 @@ import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import {
   DECIMAL_PRESETS,
-  decimalExpansion,
-  expansionToTex,
   FRACTION_ANSWER,
-  isTerminating,
   reduce,
   repeatingToFraction,
   type DecimalPreset,
@@ -13,10 +10,6 @@ import {
 import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
-
-const NUMERATORS = Array.from({ length: 30 }, (_, i) => i + 1)
-const DENOMINATORS = Array.from({ length: 29 }, (_, i) => i + 2)
-const SHOWN_STEPS = 12
 
 /** A decimal written out: whole part, the digits before the period, the period. */
 const decimalTex = (whole: string, before: string, repeating: string, sep: string): string => {
@@ -49,21 +42,16 @@ function backSteps(d: DecimalPreset, sep: string): string[] {
 }
 
 /**
- * Tizedes tört és közönséges tört: the long division that turns a fraction into
- * a decimal, and the subtraction trick that turns it back.
+ * Hogyan lesz 0,2727…-ből tört: the subtraction trick, step by step, for any
+ * of the decimals on the pills.
  */
 export function NumFractionCard({ id }: { id: string }) {
   const { t } = useTranslation()
   const sep = t('num.decimalSep')
-  const [p, setP] = useState(1)
-  const [q, setQ] = useState(6)
-  const [presetId, setPresetId] = useState('p36')
+  const [presetId, setPresetId] = useState('p27')
   const [answerP, setAnswerP] = useState('')
   const [answerQ, setAnswerQ] = useState('')
 
-  const expansion = decimalExpansion(p, q)
-  const stops = isTerminating(p, q)
-  const steps = expansion.steps.slice(0, SHOWN_STEPS)
   const preset = DECIMAL_PRESETS.find((d) => d.id === presetId) ?? DECIMAL_PRESETS[0]
 
   const given = reduce(Number(answerP), Number(answerQ))
@@ -73,87 +61,16 @@ export function NumFractionCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('num.fracTitle')}</h2>
+        <h2>{t('num.q2')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="num.fracIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="num.fracIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="num.fracDef" />
-        <p className="card-note">
-          <Trans i18nKey="num.fracIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
-      <div className="controls-inline">
-        <label className="field">
-          <span className="field-label">{t('num.fracPickP')}</span>
-          <select value={p} onChange={(e) => setP(Number(e.target.value))}>
-            {NUMERATORS.map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="field">
-          <span className="field-label">{t('num.fracPickQ')}</span>
-          <select value={q} onChange={(e) => setQ(Number(e.target.value))}>
-            {DENOMINATORS.map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-
-      <Tex block tex={`\\frac{${p}}{${q}} = ${expansionToTex(expansion, sep)}`} />
-      <p className="pill-row">
-        <span className="num-badge">{stops ? t('num.fracBadgeStop') : t('num.fracBadgeRepeat')}</span>
-      </p>
-
-      <p className="mini-title">{t('num.fracStepsTitle')}</p>
-      <div className="table-wrap">
-        <table className="paper-table">
-          <thead>
-            <tr>
-              <th>{t('num.fracThStep')}</th>
-              <th>{t('num.fracThDigit')}</th>
-              <th>{t('num.fracThRemainder')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {steps.map((step, i) => (
-              <tr
-                key={i}
-                className={expansion.repeatStart !== null && i >= expansion.repeatStart ? 'row-ok' : undefined}
-              >
-                <td>{i + 1}.</td>
-                <td>{step.digit}</td>
-                <td>{step.remainder}</td>
-              </tr>
-            ))}
-            {steps.length < expansion.steps.length && (
-              <tr className="ellipsis-row">
-                <td>…</td>
-                <td />
-                <td />
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="num.fracRemainderNote" values={{ q }} components={{ b: <strong />, i: <em /> }} />
-      </p>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="num.fracStopRule" components={{ b: <strong />, i: <em /> }} />
-      </p>
-
-      <p className="mini-title">{t('num.fracBackTitle')}</p>
-      <p className="card-note lesson-text">{t('num.fracBackIntro')}</p>
       <div className="pill-row" role="group" aria-label={t('num.fracPickDecimalAria')}>
         {DECIMAL_PRESETS.map((d) => (
           <button
@@ -170,8 +87,9 @@ export function NumFractionCard({ id }: { id: string }) {
       {backSteps(preset, sep).map((tex) => (
         <Tex key={tex} block tex={tex} />
       ))}
-      <p className="card-note lesson-text">
-        <Trans i18nKey="num.fracBackNote" components={{ b: <strong />, i: <em /> }} />
+
+      <p className="lin-result lesson-text">
+        <Trans i18nKey="num.fracResult" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <Exercise

@@ -1,25 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import {
   ABS_ANSWER,
+  ABS_QUIZ,
   absValue,
-  agreeingPrefix,
-  areaBounds,
   belongsTo,
-  checkTargetExpression,
-  claimValue,
-  CLAIMS,
-  CLAIMS_ANSWER,
-  decimalExpansion,
   DECIMAL_PRESETS,
   digitsOf,
   distance,
-  ESTIMATE_PRESETS,
-  estimateOf,
-  expansionToTex,
   formatDecimal,
-  texSeparator,
   FRACTION_ANSWER,
-  fractionOf,
   gcd,
   INTERVAL_ANSWER,
   INTERVAL_OPTIONS,
@@ -28,31 +17,28 @@ import {
   intervalNotation,
   intervalSetBuilder,
   isTerminating,
-  LAWS_ANSWER,
-  LINE_POINTS,
   nestedIntervals,
   opposite,
   parseDecimal,
-  reciprocal,
   reduce,
   repeatingToFraction,
-  ROOM,
-  ROOM_ERRORS,
   ROOT10_LOWER,
-  ROUND_ANSWER,
-  ROUND_PRESETS,
-  roundAt,
-  roundingError,
-  roundSignificant,
   SAMPLE_NUMBERS,
-  TARGET_DIGITS,
-  TARGETS,
+  texSeparator,
   TOWER_ANSWER,
   TOWER_QUIZ,
-  usedDigits,
   ZOOM_TARGETS,
-  evaluateExpression,
+  type DecimalPreset,
 } from './numbers'
+
+/** What a preset really is, summed as a geometric series rather than divided. */
+function presetValue(p: DecimalPreset): number {
+  const head = Number(`${p.intPart}.${p.nonRepeating || '0'}`)
+  if (p.repeating === '') return head
+  const n = p.nonRepeating.length
+  const r = p.repeating.length
+  return head + Number(p.repeating) / (10 ** n * (10 ** r - 1))
+}
 
 describe('number sets', () => {
   it('nests ℕ in ℤ in ℚ and keeps the irrationals apart', () => {
@@ -114,7 +100,6 @@ describe('writing numbers down', () => {
     const texts = [
       ...SAMPLE_NUMBERS.map((s) => s.tex),
       ...TOWER_QUIZ.map((q) => q.tex),
-      ...LINE_POINTS.map((p) => p.tex),
       ...ZOOM_TARGETS.map((z) => z.tex),
     ]
     for (const tex of texts) expect(tex, tex).not.toContain('{,}')
@@ -153,43 +138,6 @@ describe('fractions', () => {
     expect(isTerminating(15, 30)).toBe(true)
   })
 
-  it('divides long, and stops when a remainder comes back', () => {
-    const third = decimalExpansion(1, 3)
-    expect(third.intPart).toBe('0')
-    expect(third.nonRepeating).toBe('')
-    expect(third.repeating).toBe('3')
-    expect(third.truncated).toBe(false)
-
-    const sixth = decimalExpansion(1, 6)
-    expect(sixth.nonRepeating).toBe('1')
-    expect(sixth.repeating).toBe('6')
-
-    const eighth = decimalExpansion(1, 8)
-    expect(eighth.nonRepeating).toBe('125')
-    expect(eighth.repeating).toBe('')
-    expect(eighth.repeatStart).toBeNull()
-    expect(eighth.steps.at(-1)?.remainder).toBe(0)
-
-    expect(decimalExpansion(22, 7).repeating).toBe('142857')
-    expect(decimalExpansion(-1, 3).intPart).toBe('-0')
-    expect(decimalExpansion(7, 1).nonRepeating).toBe('')
-  })
-
-  it('never needs more steps than the denominator, because remainders run out', () => {
-    for (let q = 2; q <= 30; q++) {
-      const e = decimalExpansion(1, q)
-      expect(e.truncated, `1/${q}`).toBe(false)
-      expect(e.steps.length).toBeLessThanOrEqual(q)
-    }
-  })
-
-  it('draws the period with an overline', () => {
-    expect(expansionToTex(decimalExpansion(1, 6), ',')).toBe('0{,}1\\overline{6}')
-    expect(expansionToTex(decimalExpansion(3, 4), ',')).toBe('0{,}75')
-    expect(expansionToTex(decimalExpansion(3, 4), '.')).toBe('0{.}75')
-    expect(expansionToTex(decimalExpansion(6, 3), ',')).toBe('2')
-  })
-
   it('turns a repeating decimal back into a fraction', () => {
     const s = repeatingToFraction('0', '', '36')
     expect(s.mult1).toBe(1)
@@ -218,26 +166,21 @@ describe('fractions', () => {
     expect([negative.reducedP, negative.reducedQ]).toEqual([-1, 3])
   })
 
-  it('round-trips every preset through the long division', () => {
+  it('gives back the very number each preset writes down', () => {
     for (const p of DECIMAL_PRESETS) {
       const f = repeatingToFraction(p.intPart, p.nonRepeating, p.repeating)
-      const back = decimalExpansion(f.reducedP, f.reducedQ)
-      expect(back.nonRepeating, p.id).toBe(p.nonRepeating)
-      expect(back.repeating, p.id).toBe(p.repeating)
+      expect(f.reducedP / f.reducedQ, p.id).toBeCloseTo(presetValue(p), 12)
+      expect(gcd(f.reducedP, f.reducedQ), p.id).toBe(1)
     }
+    // The question in the title, 0,2727… = 3/11, is one of the pills.
+    const p27 = DECIMAL_PRESETS.find((p) => p.id === 'p27')
+    const f27 = repeatingToFraction('0', '', p27?.repeating ?? '')
+    expect([f27.reducedP, f27.reducedQ]).toEqual([3, 11])
   })
 
   it('pins 0,(36) = 4/11 as the fraction exercise answer', () => {
     const f = repeatingToFraction('0', '', '36')
     expect({ p: f.reducedP, q: f.reducedQ }).toEqual(FRACTION_ANSWER)
-  })
-
-  it('writes a nice decimal as a fraction and gives up on the rest', () => {
-    expect(fractionOf(0.75)).toEqual({ p: 3, q: 4 })
-    expect(fractionOf(-2.5)).toEqual({ p: -5, q: 2 })
-    expect(fractionOf(3)).toEqual({ p: 3, q: 1 })
-    expect(fractionOf(0.25 * 3)).toEqual({ p: 3, q: 4 })
-    expect(fractionOf(Math.SQRT2)).toBeNull()
   })
 })
 
@@ -270,18 +213,13 @@ describe('the number line', () => {
     expect(nestedIntervals(1 / 3, 4).map((l) => l.digit)).toEqual([3, 3, 3, 3, 3])
   })
 
-  it('keeps the line points sorted and classified', () => {
-    const values = LINE_POINTS.map((p) => p.value)
-    expect([...values].sort((a, b) => a - b)).toEqual(values)
-    expect(LINE_POINTS.filter((p) => p.kind === 'irrational').map((p) => p.id)).toEqual(['root2', 'pi'])
-    // 22/7 is the old school approximation of π, so the two sit almost on top
-    // of each other — the line has to survive that.
-    expect(distance(22 / 7, Math.PI)).toBeLessThan(0.002)
+  it('offers two numbers that settle into a pattern and two that never do', () => {
     expect(ZOOM_TARGETS.map((z) => z.id)).toEqual(['root2', 'pi', 'third', 'twentyTwoSevenths'])
-    // The SVG can only draw plain text, so every point carries one.
-    expect(LINE_POINTS.every((p) => p.plain !== '')).toBe(true)
+    // 22/7 is the old school approximation of π, so the two sit almost on top
+    // of each other — the zoom has to survive that.
+    expect(distance(22 / 7, Math.PI)).toBeLessThan(0.002)
+    // The SVG can only draw plain text, so every target carries some.
     expect(ZOOM_TARGETS.map((z) => z.plain)).toEqual(['√2', 'π', '1/3', '22/7'])
-    expect(formatDecimal(LINE_POINTS[0].plain, ',', false)).toBe('−2,5')
   })
 
   it('pins 3,1 as the tenth below √10', () => {
@@ -326,19 +264,12 @@ describe('intervals', () => {
   })
 })
 
-describe('opposite, reciprocal, absolute value', () => {
+describe('opposite and absolute value', () => {
   it('sends a number to the other side of zero and back', () => {
     expect(opposite(3)).toBe(-3)
     expect(opposite(-2.5)).toBe(2.5)
     expect(opposite(0)).toBe(0)
     expect(opposite(opposite(7))).toBe(7)
-  })
-
-  it('has no reciprocal for zero and swaps a fraction otherwise', () => {
-    expect(reciprocal(0)).toBeNull()
-    expect(reciprocal(4)).toBe(0.25)
-    expect(reciprocal(-0.5)).toBe(-2)
-    expect(fractionOf(reciprocal(-0.75) as number)).toEqual({ p: -4, q: 3 })
   })
 
   it('measures distance from zero and between two numbers', () => {
@@ -349,184 +280,9 @@ describe('opposite, reciprocal, absolute value', () => {
     expect(distance(5, -2)).toBe(7)
   })
 
-  it('pins 4/3 as the opposite of the reciprocal of −3/4', () => {
-    const r = reciprocal(-3 / 4) as number
-    expect(fractionOf(opposite(r))).toEqual(ABS_ANSWER)
-  })
-})
-
-describe('estimating', () => {
-  it('keeps one leading digit', () => {
-    expect(roundSignificant(398, 1)).toBe(400)
-    expect(roundSignificant(51, 1)).toBe(50)
-    expect(roundSignificant(2987, 1)).toBe(3000)
-    expect(roundSignificant(0.49, 1)).toBe(0.5)
-    expect(roundSignificant(81, 1)).toBe(80)
-    expect(roundSignificant(-1234, 2)).toBe(-1200)
-    expect(roundSignificant(0, 1)).toBe(0)
-  })
-
-  it('estimates each preset within a fifth of the truth', () => {
-    for (const p of ESTIMATE_PRESETS) {
-      const e = estimateOf(p)
-      expect(Math.abs(e.estimate - e.exact) / Math.abs(e.exact), p.id).toBeLessThan(0.2)
-    }
-    const first = estimateOf(ESTIMATE_PRESETS[0])
-    expect([first.ra, first.rb, first.estimate, first.exact]).toEqual([400, 50, 20000, 20298])
-  })
-
-  it('pins the five calculator claims', () => {
-    expect(CLAIMS.map((c) => c.plausible)).toEqual([true, false, false, true, false])
-    expect(CLAIMS_ANSWER).toBe('ok|bad|bad|ok|bad')
-    for (const c of CLAIMS) {
-      expect(claimValue(c), c.id).toBeCloseTo(Number(c.exact), 10)
-      expect(Number(c.claimed) === Number(c.exact), c.id).toBe(c.plausible)
-    }
-    const byId = new Map(CLAIMS.map((c) => [c.id, c]))
-    expect(byId.get('c2')?.exact).toBe('204')
-    expect(byId.get('c3')?.exact).toBe('0.06')
-    expect(byId.get('c5')?.exact).toBe('625')
-  })
-})
-
-describe('reaching a target number', () => {
-  it('understands the operators a Hungarian pupil writes', () => {
-    expect(evaluateExpression('2 + 3 · 4')).toBe(14)
-    expect(evaluateExpression('(2 + 3) · 4')).toBe(20)
-    expect(evaluateExpression('12 : 4')).toBe(3)
-    expect(evaluateExpression('12 ÷ 4')).toBe(3)
-    expect(evaluateExpression('5 − 3')).toBe(2)
-    expect(evaluateExpression('1 : 0')).toBeNull()
-    expect(evaluateExpression('2 +')).toBeNull()
-    expect(evaluateExpression('  ')).toBeNull()
-  })
-
-  it('lists the digits used, sorted', () => {
-    expect(usedDigits('4 · (3 − 1) + 2')).toBe('1234')
-    expect(usedDigits('11 + 2')).toBe('112')
-    expect(usedDigits('')).toBe('')
-  })
-
-  it('hits every target with 1, 2, 3 and 4 used once each', () => {
-    const solutions: Record<number, string> = {
-      24: '1 · 2 · 3 · 4',
-      10: '1 + 2 + 3 + 4',
-      36: '(1 + 2) · 3 · 4',
-      1: '(4 − 3) · (2 − 1)',
-    }
-    expect(TARGETS.map(String).sort()).toEqual(Object.keys(solutions).sort())
-    for (const target of TARGETS) {
-      const check = checkTargetExpression(solutions[target], target)
-      expect(check.hit, String(target)).toBe(true)
-      expect(check.digitsOk).toBe(true)
-      expect(check.charsOk).toBe(true)
-    }
-    expect(TARGET_DIGITS).toBe('1234')
-  })
-
-  it('says which rule an attempt breaks', () => {
-    const missing = checkTargetExpression('1 + 2 + 3', 24)
-    expect(missing.digitsOk).toBe(false)
-    expect(missing.hit).toBe(false)
-
-    const wrongValue = checkTargetExpression('1 + 2 + 3 + 4', 24)
-    expect(wrongValue.digitsOk).toBe(true)
-    expect(wrongValue.value).toBe(10)
-    expect(wrongValue.hit).toBe(false)
-
-    const cheating = checkTargetExpression('sqrt(1234)', 24)
-    expect(cheating.charsOk).toBe(false)
-    expect(cheating.value).toBeNull()
-  })
-})
-
-describe('rounding', () => {
-  it('rounds a decimal string the way a pupil does on paper', () => {
-    expect(roundAt('3.14159', 3).result).toBe('3.142')
-    expect(roundAt('3.14159', 3).deciding).toBe('5')
-    expect(roundAt('3.14159', 3).up).toBe(true)
-    expect(roundAt('3.14159', 2).result).toBe('3.14')
-    expect(roundAt('3.14159', 0).result).toBe('3')
-    expect(roundAt('2.71828', 4).result).toBe('2.7183')
-  })
-
-  it('does not lose the digit a float would swallow', () => {
-    // (2.675).toFixed(2) answers "2.67": the stored double is a hair below 2.675.
-    expect((2.675).toFixed(2)).toBe('2.67')
-    expect(roundAt('2.675', 2).result).toBe('2.68')
-    expect(roundAt('1.005', 2).result).toBe('1.01')
-    expect(roundAt('8.475', 2).result).toBe('8.48')
-  })
-
-  it('carries a nine all the way up', () => {
-    expect(roundAt('9.99', 1).result).toBe('10.0')
-    expect(roundAt('0.96', 1).result).toBe('1.0')
-    expect(roundAt('9999.5', 0).result).toBe('10000')
-  })
-
-  it('rounds to tens, hundreds and thousands too', () => {
-    expect(roundAt('1234.5678', -1).result).toBe('1230')
-    expect(roundAt('1234.5678', -2).result).toBe('1200')
-    expect(roundAt('1234.5678', -3).result).toBe('1000')
-    expect(roundAt('45', -2).result).toBe('0')
-    expect(roundAt('55', -2).result).toBe('100')
-    expect(roundAt('149597870.7', -3).result).toBe('149598000')
-  })
-
-  it('keeps the sign, except on a rounded-away zero', () => {
-    expect(roundAt('-2.675', 2).result).toBe('-2.68')
-    expect(roundAt('-0.04', 1).result).toBe('0.0')
-    expect(roundAt('0.04567', 3).result).toBe('0.046')
-  })
-
-  it('reports how far the rounding moved the number', () => {
-    expect(roundingError('3.14159', 3)).toBeCloseTo(0.00041, 12)
-    expect(roundingError('1234.5678', -2)).toBeCloseTo(-34.5678, 9)
-    expect(roundingError('2.5', 0)).toBeCloseTo(0.5, 12)
-  })
-
-  it('pins 3,142 as the rounding exercise answer', () => {
-    expect(Number(roundAt('3.14159', 3).result)).toBe(ROUND_ANSWER)
-    expect(parseDecimal('3,142')).toBe(ROUND_ANSWER)
-    expect(ROUND_PRESETS.map((p) => p.id)).toContain('pi')
-    expect(ROUND_PRESETS.every((p) => /^\d+(\.\d+)?$/.test(p.value))).toBe(true)
-  })
-})
-
-describe('measuring', () => {
-  it('lets the error grow with the sides', () => {
-    const b = areaBounds(ROOM.length, ROOM.width, 0.01)
-    expect(b.nominal).toBeCloseTo(43.5398, 9)
-    expect(b.min).toBeLessThan(b.nominal)
-    expect(b.max).toBeGreaterThan(b.nominal)
-    // ±1 cm on each side is worth over a tenth of a square metre.
-    expect(b.max - b.min).toBeGreaterThan(0.2)
-  })
-
-  it('keeps only the digits both bounds agree on', () => {
-    expect(agreeingPrefix('43.473375', '43.606275')).toBe('43')
-    expect(agreeingPrefix('43.526511', '43.552491')).toBe('43.5')
-    expect(agreeingPrefix('12', '12')).toBe('12')
-    expect(agreeingPrefix('1.0', '2.0')).toBe('')
-  })
-
-  it('shows a finer measurement settling one more digit', () => {
-    const prefixes = ROOM_ERRORS.map((err) => {
-      const b = areaBounds(ROOM.length, ROOM.width, err)
-      return agreeingPrefix(b.min.toFixed(6), b.max.toFixed(6))
-    })
-    expect(prefixes[0]).toBe('43.5')
-    expect(prefixes[1]).toBe('43')
-    expect(prefixes[2]).toBe('43')
-    // However fine the ruler, the printed 43,5398 m² is never all true.
-    for (const p of prefixes) expect('43.5398'.startsWith(p)).toBe(true)
-  })
-})
-
-describe('operation laws', () => {
-  it('pins 47 · 99 = 4653', () => {
-    expect(LAWS_ANSWER).toBe(4653)
-    // 99 = 100 − 1, which is how the section asks for it to be worked out.
-    expect(47 * 100 - 47).toBe(LAWS_ANSWER)
+  it('pins 10 as the distance of −7 and 3', () => {
+    expect(ABS_ANSWER).toBe(10)
+    expect(distance(ABS_QUIZ.a, ABS_QUIZ.b)).toBe(ABS_ANSWER)
+    expect(absValue(ABS_QUIZ.a - ABS_QUIZ.b)).toBe(ABS_ANSWER)
   })
 })

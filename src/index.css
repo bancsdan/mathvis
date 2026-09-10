@@ -1126,21 +1126,13 @@ p.card-note.lesson-text {
   background: var(--hover-wash);
 }
 
-.num-badge {
-  font-size: 11px;
-  padding: 2px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--accent-select);
-  color: var(--text-secondary);
-}
-
 /* Point labels sit above the axis of a number line. */
 .line-label {
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 
-/* One digit of a number being rounded, so the deciding one can be pointed at. */
+/* One boxed digit of a number, so a single one of them can be pointed at. */
 .digit-row {
   display: flex;
   align-items: center;
@@ -1168,16 +1160,6 @@ p.card-note.lesson-text {
 .digit-box.deciding {
   border-color: var(--accent-select);
   background: var(--hover-wash);
-  font-weight: 600;
-}
-
-.digit-box.dropped {
-  color: var(--text-muted);
-  border-style: dashed;
-}
-
-.digit-sep {
-  padding: 0 3px;
   font-weight: 600;
 }
 

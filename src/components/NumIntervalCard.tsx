@@ -27,8 +27,8 @@ function reasonKey(lo: number, hi: number, leftClosed: boolean, rightClosed: boo
 }
 
 /**
- * Nyílt és zárt intervallumok: which numbers a stretch of the line takes with
- * it, and the two ways of writing that down.
+ * Benne van a végpont: which numbers a stretch of the line takes with it, the
+ * two ways of writing that down, and a test value checked against both ends.
  */
 export function NumIntervalCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -54,21 +54,19 @@ export function NumIntervalCard({ id }: { id: string }) {
   const tests = [...new Set([lo, hi, (lo + hi) / 2, Math.max(lo - 1, MIN), Math.min(hi + 1, MAX)])].sort(
     (x, y) => x - y,
   )
+  const resultKey = `num.intervalResult_${leftClosed ? 'c' : 'o'}${rightClosed ? 'c' : 'o'}`
 
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('num.intervalTitle')}</h2>
+        <h2>{t('num.q4')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="num.intervalIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="num.intervalIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey={['num.intervalDef1', 'num.intervalDef2']} />
-        <p className="card-note">
-          <Trans i18nKey="num.intervalIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="controls-inline">
@@ -155,7 +153,6 @@ export function NumIntervalCard({ id }: { id: string }) {
         tex={`\\{\\, x \\in \\mathbb{R} \\mid ${intervalSetBuilder(lo, hi, leftClosed, rightClosed, texNum)} \\,\\}`}
       />
 
-      <p className="mini-title">{t('num.intervalTestTitle')}</p>
       <div className="table-wrap">
         <table className="paper-table">
           <thead>
@@ -179,6 +176,8 @@ export function NumIntervalCard({ id }: { id: string }) {
           </tbody>
         </table>
       </div>
+
+      <p className="lin-result lesson-text">{t(resultKey)}</p>
 
       <p className="card-note lesson-text">
         <Trans i18nKey="num.intervalOtherNote" components={{ b: <strong />, i: <em /> }} />
