@@ -77,20 +77,14 @@ export function AlgSquareCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('alg.squareTitle')}</h2>
+        <h2>{t('alg.q3')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="alg.squareIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="alg.squareIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <Definition i18nKey={['alg.squareDef1', 'alg.squareDef2']} />
-        <p className="card-note">
-          <Trans i18nKey="alg.squareIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="alg.squareIntro3" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey="alg.squareDef" />
       </div>
 
       <div className="pill-row" role="group" aria-label={t('alg.squareModeAria')}>
@@ -183,7 +177,7 @@ export function AlgSquareCard({ id }: { id: string }) {
 
       <Tex block tex={identityTex} />
       <Tex block tex={numbersTex} />
-      <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
         <Trans
           i18nKey={sign === 1 ? 'alg.squareReadPlus' : 'alg.squareReadMinus'}
           values={{ a, b, rest }}
