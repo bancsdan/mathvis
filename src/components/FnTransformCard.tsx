@@ -64,18 +64,12 @@ export function FnTransformCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('fn.transformTitle')}</h2>
+        <h2>{t('fn.q5')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="fn.transformIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="fn.transformRule" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="fn.transformIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="fn.transformIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -175,6 +169,10 @@ export function FnTransformCard({ id }: { id: string }) {
           values={{ steps }}
           components={{ b: <strong />, i: <em /> }}
         />
+      </p>
+
+      <p className="card-note lesson-text">
+        <Trans i18nKey="fn.transformRule" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <Exercise

@@ -86,17 +86,14 @@ export function FnReadCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('fn.readTitle')}</h2>
+        <h2>{t('fn.q2')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="fn.readIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="fn.readIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey={['fn.readDef1', 'fn.readDef2', 'fn.readDef3']} />
-        <p className="card-note">
-          <Trans i18nKey="fn.readIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="pill-row" role="group" aria-label={t('fn.readPropAria')}>
@@ -148,7 +145,7 @@ export function FnReadCard({ id }: { id: string }) {
         </label>
       </div>
 
-      <p className="lin-result lesson-text">
+      <p className="card-note lesson-text">
         <Trans
           i18nKey="fn.readAt"
           values={{ hour: fmt(hour, sep), temp: fmt(interpolate(DAY_TEMPS, hour), sep) }}

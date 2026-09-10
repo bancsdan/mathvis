@@ -1683,28 +1683,6 @@ p.card-note.lesson-text {
   fill: var(--text-muted);
 }
 
-/* Separate pairs, not a curve: a stem down to the axis places each dot, and
-   nothing is drawn between two x-es the function has no value between. */
-.fn-dot {
-  fill: var(--series-1);
-}
-
-.fn-stem {
-  stroke: var(--series-1);
-  stroke-width: 1;
-  stroke-dasharray: 3 3;
-}
-
-.fn-dot-label {
-  font-size: 10px;
-  fill: var(--text-secondary);
-}
-
-.fn-axis {
-  stroke: var(--axis);
-  stroke-width: 1;
-}
-
 /* The row of arrow pickers that edits the diagram from the keyboard. */
 .fn-selects {
   display: flex;

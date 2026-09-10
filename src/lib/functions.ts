@@ -133,104 +133,7 @@ export const ASSIGN_QUIZ: readonly { id: string; kind: AssignKind }[] = [
 export const ASSIGN_ANSWER = ASSIGN_QUIZ.map((q) => q.kind).join('|')
 
 /* ------------------------------------------------------------------ */
-/* 2. Giving a function: rule, domain, table, range                    */
-/* ------------------------------------------------------------------ */
-
-/**
- * A function given by a rule on a finite domain.
- *
- * `sub` writes one substitution the way it is done on paper —
- * `f(3) = 300 \cdot 3 + 700 = 1600` — because the whole point of the table is
- * that every row is the rule applied once.
- */
-export interface Rule {
-  id: string
-  f: Fn
-  tex: string
-  domain: readonly number[]
-  sub: (x: number) => string
-}
-
-/** `-2` in a product needs its brackets; `2` does not. */
-const paren = (x: number): string => (x < 0 ? `(${x})` : String(x))
-
-const range = (from: number, to: number): number[] =>
-  Array.from({ length: to - from + 1 }, (_, i) => from + i)
-
-export const RULES: readonly Rule[] = [
-  {
-    id: 'line',
-    f: (x) => 2 * x - 3,
-    tex: 'f(x) = 2x - 3',
-    domain: range(-2, 4),
-    sub: (x) => `f(${x}) = 2 \\cdot ${paren(x)} - 3 = ${2 * x - 3}`,
-  },
-  {
-    id: 'square',
-    f: (x) => x * x - 4,
-    tex: 'f(x) = x^2 - 4',
-    domain: range(-3, 3),
-    sub: (x) => `f(${x}) = ${paren(x)}^2 - 4 = ${x * x - 4}`,
-  },
-  {
-    id: 'taxi',
-    f: (x) => 300 * x + 700,
-    tex: 'f(x) = 300x + 700',
-    domain: range(0, 10),
-    sub: (x) => `f(${x}) = 300 \\cdot ${x} + 700 = ${300 * x + 700}`,
-  },
-  {
-    id: 'half',
-    f: (x) => 12 / x,
-    tex: 'f(x) = \\frac{12}{x}',
-    domain: [1, 2, 3, 4, 6, 12],
-    sub: (x) => `f(${x}) = \\frac{12}{${x}} = ${12 / x}`,
-  },
-]
-
-/** Every (x; f(x)) pair of the rule, in domain order. */
-export function valueTable(r: Rule): { x: number; y: number }[] {
-  return r.domain.map((x) => ({ x, y: r.f(x) }))
-}
-
-/** The values the function actually takes, sorted, each one once. */
-export function rangeOf(r: Rule): number[] {
-  return [...new Set(r.domain.map((x) => r.f(x)))].sort((a, b) => a - b)
-}
-
-/** Every x of the domain the rule sends to `y`. Empty when `y` is not taken. */
-export function preimages(r: Rule, y: number): number[] {
-  return r.domain.filter((x) => r.f(x) === y)
-}
-
-/**
- * The values the "which x gives this?" picker offers.
- *
- * It is the range plus values the function never takes, because "no such x"
- * is half of what the question teaches. Where the range is narrow every whole
- * number between its ends is offered; where it is wide (a taxi fare) the
- * midpoints between neighbouring values stand in for the misses.
- */
-export function backOptions(r: Rule): number[] {
-  const values = rangeOf(r)
-  const lo = values[0]
-  const hi = values[values.length - 1]
-  const extra: number[] = []
-  if (hi - lo <= 14) {
-    for (let v = Math.ceil(lo); v <= hi; v++) extra.push(v)
-  } else {
-    values.forEach((v, i) => {
-      if (i + 1 < values.length) extra.push(Math.round((v + values[i + 1]) / 2))
-    })
-  }
-  return [...new Set([...values, ...extra])].sort((a, b) => a - b)
-}
-
-/** f(x) = 3x − 5 sends this x to 7. */
-export const DEFINE_ANSWER = 4
-
-/* ------------------------------------------------------------------ */
-/* 3. Reading properties off a graph                                   */
+/* 2. Reading properties off a graph                                   */
 /* ------------------------------------------------------------------ */
 
 /** One point of a polyline: `[x, y]`. */
@@ -325,7 +228,7 @@ export const READ_OPTIONS: readonly { id: string; from: number; to: number }[] =
 export const READ_ANSWER = 'b'
 
 /* ------------------------------------------------------------------ */
-/* 4. The linear function                                              */
+/* 3. The linear function                                              */
 /* ------------------------------------------------------------------ */
 
 export function linear(m: number, b: number): Fn {
@@ -351,7 +254,7 @@ export const LINEAR_TASK: { p: Pt; q: Pt } = { p: [0, -1], q: [2, 3] }
 export const LINEAR_ANSWER = '2|-1'
 
 /* ------------------------------------------------------------------ */
-/* 5. The three elementary functions                                   */
+/* 4. The three elementary functions                                   */
 /* ------------------------------------------------------------------ */
 
 export type ElemId = 'square' | 'root' | 'recip'
@@ -363,31 +266,10 @@ export const ELEM_IDS: readonly ElemId[] = ['square', 'root', 'recip']
  * off them. `zeroTex` is empty where there is no zero at all, and the card
  * writes "none" in the reader's language.
  */
-export const ELEM: Record<
-  ElemId,
-  { f: Fn; tex: string; domainTex: string; rangeTex: string; zeroTex: string }
-> = {
-  square: {
-    f: (x) => x * x,
-    tex: 'f(x) = x^2',
-    domainTex: '\\mathbb{R}',
-    rangeTex: '[0; \\infty[',
-    zeroTex: 'x = 0',
-  },
-  root: {
-    f: (x) => (x < 0 ? NaN : Math.sqrt(x)),
-    tex: 'f(x) = \\sqrt{x}',
-    domainTex: '[0; \\infty[',
-    rangeTex: '[0; \\infty[',
-    zeroTex: 'x = 0',
-  },
-  recip: {
-    f: (x) => 1 / x,
-    tex: 'f(x) = \\frac{1}{x}',
-    domainTex: '\\mathbb{R} \\setminus \\{0\\}',
-    rangeTex: '\\mathbb{R} \\setminus \\{0\\}',
-    zeroTex: '',
-  },
+export const ELEM: Record<ElemId, { f: Fn; tex: string }> = {
+  square: { f: (x) => x * x, tex: 'f(x) = x^2' },
+  root: { f: (x) => (x < 0 ? NaN : Math.sqrt(x)), tex: 'f(x) = \\sqrt{x}' },
+  recip: { f: (x) => 1 / x, tex: 'f(x) = \\frac{1}{x}' },
 }
 
 /** How close to the pole of 1/x the curve is still drawn. */
@@ -440,7 +322,7 @@ export function solutions(id: ElemId, c: number): number[] {
 export const ELEM_ANSWER: ElemId = 'recip'
 
 /* ------------------------------------------------------------------ */
-/* 6. Transformations                                                  */
+/* 5. Transformations                                                  */
 /* ------------------------------------------------------------------ */
 
 /** `y = k · f(x + dx) + dy`, then the absolute value of all that if `abs`. */
@@ -518,7 +400,7 @@ export const TRANSFORM_OPTIONS: readonly { id: string; tex: string }[] = [
 export const TRANSFORM_ANSWER = 'minus3in'
 
 /* ------------------------------------------------------------------ */
-/* 7. Turning an assignment around                                     */
+/* 6. Turning an assignment around                                     */
 /* ------------------------------------------------------------------ */
 
 /** The steps of `mx + b` undone: subtract b, then divide by m. `m` ≠ 0. */
@@ -547,7 +429,7 @@ export const INVERSE_PRESETS: readonly { id: string; m: number; b: number }[] = 
 export const INVERSE_ANSWER = 2
 
 /* ------------------------------------------------------------------ */
-/* 8. Functions in practice                                            */
+/* 7. Functions in practice                                            */
 /* ------------------------------------------------------------------ */
 
 /** Getting to school: [minutes, metres from home]. */

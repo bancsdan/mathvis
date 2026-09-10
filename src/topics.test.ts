@@ -64,7 +64,7 @@ describe('the explorer registry', () => {
   })
 
   it('finds an explorer by topic and slug', () => {
-    expect(findExplorer('functions', 'transform')?.navKey).toBe('fn.nav6')
+    expect(findExplorer('functions', 'transform')?.navKey).toBe('fn.nav5')
     expect(findExplorer('functions', 'nope')).toBeNull()
     expect(findExplorer('nope', 'transform')).toBeNull()
   })
