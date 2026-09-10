@@ -2,9 +2,10 @@
 
 ## 🌐 [bancsdan.github.io/mathvis](https://bancsdan.github.io/mathvis/)
 
-**Interactive math lessons in the browser, in Hungarian and English.** Each
-lesson teaches one concept by letting you drag its central idea around. Free,
-open source, aimed at Hungarian students.
+**Interactive math lessons in the browser, in Hungarian and English.** A lesson
+is a short list of *explorers*: one interactive each, titled with the question
+it answers, so you can go straight at the thing that confuses you. Free, open
+source, aimed at Hungarian students.
 
 - [Topics](#topics)
 - [Languages](#languages)
@@ -14,15 +15,18 @@ open source, aimed at Hungarian students.
 
 ## Topics
 
-The left-hand menu has two collapsible groups. Each topic is deep-linkable via
-its hash, e.g. [`#derivative`](https://bancsdan.github.io/mathvis/#derivative).
-Topics without a lesson yet appear in the menu with a "soon" badge and show a
+The site opens on a grid of questions, one card per explorer. The left-hand
+menu has a home entry and two collapsible groups under it. The hash is the
+route: `#` is home, [`#derivative`](https://bancsdan.github.io/mathvis/#derivative)
+is a topic and
+[`#functions/transform`](https://bancsdan.github.io/mathvis/#functions/transform)
+is one explorer inside a topic. An unknown hash falls back to home. Topics
+without a lesson yet appear in the menu with a "soon" badge and show a
 placeholder page.
 
 ### High school
 
-Follows the topic overview table of the Hungarian framework curriculum. The
-site opens on Halmazok.
+Follows the topic overview table of the Hungarian framework curriculum.
 
 | Magyar | English | Lesson |
 |---|---|---|
@@ -72,16 +76,25 @@ npm run build    # type-check + production build
 
 ## Adding a lesson
 
-Topics live in [src/topics.ts](src/topics.ts). Write a page component, set it
-as the topic's `page`, and add its menu label under `topics.*` in both locale
-files. The sidebar, placeholder, and hash link update automatically.
+Topics live in [src/topics.ts](src/topics.ts). Write one card component per
+explorer, list them in `src/lessons/<prefix>.ts` as an `Explorer[]`, set the
+topic's `prefix` and `explorers`, and add the copy — the menu label under
+`topics.*`, the short nav label and the question — to both locale files. The
+sidebar, the home grid, the placeholder and the `#topic/slug` links update
+automatically. [LessonPage.tsx](src/components/LessonPage.tsx) renders any
+lesson from that list, so there is no per-lesson page component.
+
+### The explorer shape
+
+An explorer is the question as an `<h2>`, one short framing paragraph, a
+`<Definition>` only where the widget needs the term, the interactive itself
+with its single `.lin-result` line, at most one bold-led note about a trap the
+widget demonstrates, and one `<Exercise>` that checks it. Nothing else.
 
 ### The lesson kit
 
-[SetsPage.tsx](src/components/SetsPage.tsx) is the template for a long lesson.
-It stacks one card per section behind a sticky in-page menu, and each section
-pairs a manipulable diagram with a checkable exercise. Reusable parts worth
-knowing about:
+A card owns one interactive and its words, and takes a single `id` prop. The
+reusable parts worth knowing about:
 
 - [VennDiagram.tsx](src/components/VennDiagram.tsx) draws two or three circles
   and shades any set of regions. Shading is one SVG mask per region, so it needs
@@ -140,17 +153,9 @@ knowing about:
   happen, the inverse of a linear assignment, and the distance–time and fenced
   rectangle models).
 
-[LogicPage.tsx](src/components/LogicPage.tsx),
-[CombiPage.tsx](src/components/CombiPage.tsx),
-[NumPage.tsx](src/components/NumPage.tsx),
-[PowPage.tsx](src/components/PowPage.tsx),
-[AlgPage.tsx](src/components/AlgPage.tsx),
-[PropPage.tsx](src/components/PropPage.tsx),
-[LinPage.tsx](src/components/LinPage.tsx),
-[QuadPage.tsx](src/components/QuadPage.tsx) and
-[FnPage.tsx](src/components/FnPage.tsx) follow the same shape. The logic
-lesson puts the same twelve elements on a `VennDiagram`, so "and" is visibly
-the intersection and "if…, then…" visibly a subset.
+The lessons share this kit rather than growing their own: the logic lesson puts
+the same twelve elements on a `VennDiagram` as the sets lesson, so "and" is
+visibly the intersection and "if…, then…" visibly a subset.
 
 Decimals are written with a comma in Hungarian and a point in English, so no
 number is ever spelled out in a source file: the separator comes from the
@@ -162,6 +167,9 @@ number is ever spelled out in a source file: the separator comes from the
 - Both locale files are compared by
   [src/i18n/locales.test.ts](src/i18n/locales.test.ts): the same keys, no empty
   strings and the same interpolation variables in every language.
+- The registry is checked by [src/topics.test.ts](src/topics.test.ts): every
+  explorer's labels exist in both languages, slugs are unique inside a topic,
+  and a hash resolves to the topic and card id it should.
 - Diagrams carry `role="img"`, which hides their contents from assistive
   technology, so every interactive diagram is paired with a row of ordinary
   buttons that does the same job for keyboard users.
