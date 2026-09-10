@@ -23,8 +23,9 @@ function laidOut(digits: string, places: number): { all: string; point: number }
 }
 
 /**
- * Normálalak. The point is not computed away, it is walked: the reader moves
- * it one place at a time and watches the exponent count the moves.
+ * Hogyan írjuk le a Föld tömegét: the point is not computed away, it is
+ * walked. The reader moves it one place at a time and watches the exponent
+ * count the moves.
  */
 export function PowSciCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -54,19 +55,16 @@ export function PowSciCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('pow.sciTitle')}</h2>
+        <h2>{t('pow.q4')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="pow.sciIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="pow.sciIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="pow.sciDef">
           <Tex block tex="a \cdot 10^{k}, \qquad 1 \le a < 10, \quad k \in \mathbb{Z}" />
         </Definition>
-        <p className="card-note">
-          <Trans i18nKey="pow.sciIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="pill-row" role="group" aria-label={t('pow.sciPickAria')}>
@@ -126,11 +124,14 @@ export function PowSciCard({ id }: { id: string }) {
       </p>
       <Tex block tex={`${sciTex(sci, sep)}\\ \\text{${unit}}`} />
 
-      <p className="card-note lesson-text">
-        <Trans i18nKey="pow.sciNote1" components={{ b: <strong />, i: <em /> }} />
+      <p className="lin-result lesson-text">
+        <Trans
+          i18nKey={normal ? 'pow.sciResultOk' : 'pow.sciResultNo'}
+          components={{ b: <strong />, i: <em /> }}
+        />
       </p>
       <p className="card-note lesson-text">
-        <Trans i18nKey="pow.sciNote2" components={{ b: <strong />, i: <em /> }} />
+        <Trans i18nKey="pow.sciSignNote" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <Exercise

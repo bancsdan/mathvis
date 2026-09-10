@@ -9,9 +9,9 @@ import { Tex } from './Tex'
 const ROOT_INDICES = [2, 3, 4, 5]
 
 /**
- * n-edik gyök és törtkitevő. The cube root arrives as the edge of a cube, and
- * the fractional exponent is then forced by the laws of section 3 rather than
- * introduced as a new rule to accept.
+ * Mit jelent a törtkitevő: the n-th root and the exponent 1/n are shown as one
+ * and the same number, because that is the only reading under which the laws
+ * of the previous explorer stay true.
  */
 export function PowNthCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -22,12 +22,7 @@ export function PowNthCard({ id }: { id: string }) {
 
   const root = nthRoot(a, n)
   const whole = root !== null && Number.isInteger(root)
-  const rootTex =
-    root === null
-      ? '-'
-      : whole
-        ? String(root)
-        : formatDecimal(root.toFixed(3), sep, true)
+  const rootTex = root === null ? '-' : whole ? String(root) : formatDecimal(root.toFixed(3), sep, true)
 
   /** `16^{3/4} = \sqrt[4]{16^3} = (\sqrt[4]{16})^3 = 2^3 = 8` — the whole route. */
   const rowTex = (row: { a: number; m: number; n: number }): string => {
@@ -39,19 +34,16 @@ export function PowNthCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('pow.nthTitle')}</h2>
+        <h2>{t('pow.q6')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="pow.nthIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="pow.nthIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <Definition i18nKey="pow.nthDef1">
-          <Tex block tex="\sqrt[n]{a} = b \iff b^{n} = a" />
+        <Definition i18nKey={['pow.nthDef1', 'pow.nthDef2']}>
+          <Tex block tex="\sqrt[n]{a} = a^{\frac{1}{n}} \qquad a^{\frac{m}{n}} = \sqrt[n]{a^{m}}" />
         </Definition>
-        <p className="card-note">
-          <Trans i18nKey="pow.nthIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <span className="field-label">{t('pow.nthPickN')}</span>
@@ -91,23 +83,16 @@ export function PowNthCard({ id }: { id: string }) {
         </label>
       </div>
 
-      <Tex block tex={`\\sqrt[${n}]{${a}} ${whole ? '=' : '\\approx'} ${rootTex}`} />
+      <Tex
+        block
+        tex={`\\sqrt[${n}]{${a}} = ${a}^{\\frac{1}{${n}}} ${whole ? '=' : '\\approx'} ${rootTex}`}
+      />
       <p className={whole ? 'pow-badge ok' : 'pow-badge'} role="status" aria-live="polite">
         {whole ? t('pow.nthBadgeWhole') : t('pow.nthBadgeNot')}
       </p>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="pow.nthOddNote" components={{ b: <strong />, i: <em /> }} />
+      <p className="lin-result lesson-text">
+        <Trans i18nKey="pow.nthResult" components={{ b: <strong />, i: <em /> }} />
       </p>
-
-      <p className="mini-title">{t('pow.nthFracTitle')}</p>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="pow.nthFracIntro" components={{ b: <strong />, i: <em /> }} />
-      </p>
-      <div className="lesson-text">
-        <Definition i18nKey="pow.nthDef2">
-          <Tex block tex="a^{\frac{1}{n}} = \sqrt[n]{a} \qquad a^{\frac{m}{n}} = \sqrt[n]{a^{m}}" />
-        </Definition>
-      </div>
 
       <p className="mini-title">{t('pow.nthWhyTitle')}</p>
       <Tex block tex="\left(a^{\frac{1}{2}}\right)^{2} = a^{\frac{1}{2} \cdot 2} = a^{1} = a" />

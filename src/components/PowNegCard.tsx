@@ -10,8 +10,9 @@ import { Tex } from './Tex'
 const fractionTex = (f: Fraction): string => (f.q === 1 ? String(f.p) : `\\frac{${f.p}}{${f.q}}`)
 
 /**
- * Nulla és negatív kitevő. Neither is decreed: the ladder walks the exponents
- * down past 0 and the values are simply whatever the pattern already forces.
+ * Miért 1 a nulladik hatvány: neither the zero nor the negative exponent is
+ * decreed. The ladder walks the exponents down past 0 and the values are
+ * simply whatever the pattern already forces.
  */
 export function PowNegCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -31,15 +32,12 @@ export function PowNegCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('pow.negTitle')}</h2>
+        <h2>{t('pow.q2')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="pow.negIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="pow.negIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="pow.negIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey={['pow.negDef1', 'pow.negDef2']}>
           <Tex block tex="a^{0} = 1 \qquad a^{-n} = \frac{1}{a^{n}}" />
@@ -85,14 +83,11 @@ export function PowNegCard({ id }: { id: string }) {
         </table>
       </div>
 
-      <p className="alias-verdict">
+      <p className="lin-result lesson-text">
         <Trans i18nKey="pow.negZeroNote" components={{ b: <strong />, i: <em /> }} />
       </p>
       <p className="card-note lesson-text">
         <Trans i18nKey="pow.negTenNote" components={{ b: <strong />, i: <em /> }} />
-      </p>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="pow.negUndefNote" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <Exercise

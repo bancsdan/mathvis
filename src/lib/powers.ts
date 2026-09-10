@@ -5,8 +5,7 @@
  * Two ideas shape the file. First, normal form is handled on the *digits* of a
  * number rather than on its float: `0.00052` is not exactly 0.00052 in binary,
  * so walking the decimal point with arithmetic would turn a mantissa into
- * `5.199999999`. `toNormalForm` and `shiftPoint` therefore move a character,
- * not a value. Second, the answer to every exercise of the lesson lives here as
+ * `5.199999999`. `shiftPoint` therefore moves a character, not a value. Second, the answer to every exercise of the lesson lives here as
  * an exported constant, so the tests pin it rather than the page.
  */
 
@@ -330,33 +329,10 @@ export function shiftPoint(digits: string, places: number): string {
   return tidy(all.slice(0, point), all.slice(point), negative)
 }
 
-/** Where the first significant digit sits, or −1 when the number is all zeros. */
-function firstSignificant(all: string): number {
-  return all.search(/[1-9]/)
-}
-
-/** `'0.00052'` → `{ mantissa: '5.2', exponent: -4 }`. Trailing zeros are dropped. */
-export function toNormalForm(digits: string): Sci {
-  const negative = digits.trim().startsWith('-')
-  const body = digits.trim().replace(/^[-+]/, '')
-  const [rawInt = '0', rawFrac = ''] = body.split('.')
-  const all = rawInt + rawFrac
-  const first = firstSignificant(all)
-  if (first === -1) return { mantissa: '0', exponent: 0 }
-  const exponent = rawInt.length - 1 - first
-  const mantissa = tidy(all[first], all.slice(first + 1), negative)
-  return { mantissa, exponent }
-}
-
 /** True when the mantissa is where normal form wants it: 1 ≤ |m| < 10. */
 export function isNormalMantissa(m: string): boolean {
   const v = Math.abs(Number(m))
   return Number.isFinite(v) && v >= 1 && v < 10
-}
-
-/** Back to plain digits: `{ '5.2', -4 }` → `'0.00052'`. */
-export function fromNormalForm(s: Sci): string {
-  return shiftPoint(s.mantissa, s.exponent)
 }
 
 /** `5{,}2 \cdot 10^{-4}` — the reader's decimal separator, KaTeX flavour. */
@@ -380,65 +356,7 @@ export const SCI_PRESETS: readonly { id: string; digits: string; unit: string }[
 export const SCI_ANSWER: Sci = { mantissa: '5.2', exponent: -4 }
 
 /* ------------------------------------------------------------------ */
-/* 5. Calculating in normal form                                       */
-/* ------------------------------------------------------------------ */
-
-/** At most three significant digits, without slipping into exponent notation. */
-function threeDigits(x: number): string {
-  const s = x.toPrecision(3)
-  return s.includes('.') ? s.replace(/0+$/, '').replace(/\.$/, '') : s
-}
-
-function renormalise(raw: Sci): Sci {
-  const inner = toNormalForm(raw.mantissa)
-  return { mantissa: inner.mantissa, exponent: raw.exponent + inner.exponent }
-}
-
-/** Mantissas multiplied, exponents added — then the point moved back if it slipped. */
-export function multiplySci(a: Sci, b: Sci): { raw: Sci; result: Sci } {
-  const raw: Sci = {
-    mantissa: threeDigits(Number(a.mantissa) * Number(b.mantissa)),
-    exponent: a.exponent + b.exponent,
-  }
-  return { raw, result: renormalise(raw) }
-}
-
-/** Mantissas divided, exponents subtracted. */
-export function divideSci(a: Sci, b: Sci): { raw: Sci; result: Sci } {
-  const raw: Sci = {
-    mantissa: threeDigits(Number(a.mantissa) / Number(b.mantissa)),
-    exponent: a.exponent - b.exponent,
-  }
-  return { raw, result: renormalise(raw) }
-}
-
-export interface SciClaim {
-  id: string
-  mantissa: string
-  exponent: number
-  unit: string
-  plausible: boolean
-  trueMantissa: string
-  trueExponent: number
-}
-
-/** Sentences of the kind the internet is full of. Two of them are off by orders. */
-export const SCI_CLAIMS: readonly SciClaim[] = [
-  { id: 'hair', mantissa: '7', exponent: -5, unit: 'm', plausible: true, trueMantissa: '7', trueExponent: -5 },
-  { id: 'earthAge', mantissa: '4.5', exponent: 6, unit: '', plausible: false, trueMantissa: '4.5', trueExponent: 9 },
-  { id: 'yearSec', mantissa: '3.15', exponent: 7, unit: 's', plausible: true, trueMantissa: '3.15', trueExponent: 7 },
-  { id: 'cells', mantissa: '3.7', exponent: 13, unit: '', plausible: true, trueMantissa: '3.7', trueExponent: 13 },
-  { id: 'people', mantissa: '8', exponent: 12, unit: '', plausible: false, trueMantissa: '8', trueExponent: 9 },
-  { id: 'ant', mantissa: '5', exponent: -3, unit: 'kg', plausible: false, trueMantissa: '5', trueExponent: -6 },
-]
-
-export const SCI_CLAIMS_ANSWER = SCI_CLAIMS.map((c) => (c.plausible ? 'ok' : 'bad')).join('|')
-
-/** Seconds in a human life, the worked example: 80 · 3,15 · 10^7 ≈ 2,5 · 10^9. */
-export const LIFE_SECONDS = { years: 80, secondsPerYear: { mantissa: '3.15', exponent: 7 } as Sci }
-
-/* ------------------------------------------------------------------ */
-/* 6. The square root                                                  */
+/* 5. The square root                                                  */
 /* ------------------------------------------------------------------ */
 
 export function isPerfectSquare(n: number): boolean {
@@ -464,11 +382,17 @@ export function sqrtText(a: number, decimals: number): string {
   return Math.sqrt(a).toFixed(decimals)
 }
 
-/** `√((−7)^2) = 7`: the square comes first, and a root is never negative. */
-export const SQRT_ANSWER = 7
+/** `√(9 + 16) = 5`, but `√9 + √16 = 7`. There is no law for a sum. */
+export const ROOT_SUM_TRAP = { a: 9, b: 16 }
+
+/** The two numbers the square-root exercise asks for, on either side of the trap. */
+export const SQRT_ANSWER = {
+  whole: Math.sqrt(ROOT_SUM_TRAP.a + ROOT_SUM_TRAP.b),
+  parts: Math.sqrt(ROOT_SUM_TRAP.a) + Math.sqrt(ROOT_SUM_TRAP.b),
+}
 
 /* ------------------------------------------------------------------ */
-/* 7. The laws of square roots                                         */
+/* 6. Simplifying a root, for quadratic.ts                             */
 /* ------------------------------------------------------------------ */
 
 /** `√48 = 4√3`: the largest square factor steps outside the root sign. */
@@ -480,20 +404,8 @@ export function simplifyRoot(n: number): { outside: number; inside: number } {
   return { outside: 1, inside: n }
 }
 
-/** Numbers to try the product and quotient laws on: some square, some not. */
-export const ROOT_LAW_CHOICES: readonly number[] = [2, 3, 4, 5, 8, 9, 16, 25, 36, 49]
-
-/** `√(9 + 16) = 5`, but `√9 + √16 = 7`. There is no law for a sum. */
-export const ROOT_SUM_TRAP = { a: 9, b: 16 }
-
-/** `√48 = 4√3`. */
-export const SIMPLIFY_ANSWER = { outside: 4, inside: 3 }
-
-/** Numbers to pull out from under a root sign. */
-export const SIMPLIFY_CHOICES: readonly number[] = [8, 12, 18, 20, 27, 32, 45, 48, 50, 72, 75, 98, 200]
-
 /* ------------------------------------------------------------------ */
-/* 8. The n-th root and fractional exponents                           */
+/* 7. The n-th root and fractional exponents                           */
 /* ------------------------------------------------------------------ */
 
 /**

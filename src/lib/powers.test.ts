@@ -5,13 +5,11 @@ import {
   basePowerTex,
   CUBE_PRESETS,
   DEF_ANSWER,
-  divideSci,
   factorList,
   FOLD_MILESTONES,
   FOLD_RECORD,
   foldLayers,
   foldThicknessMm,
-  fromNormalForm,
   humanLength,
   intPower,
   isNormalMantissa,
@@ -22,9 +20,7 @@ import {
   LAW_TEX,
   lawInstance,
   LAWS_ANSWER,
-  LIFE_SECONDS,
   milestoneAt,
-  multiplySci,
   NEG_ANSWER,
   neighbourSquares,
   NTH_ANSWER,
@@ -33,22 +29,16 @@ import {
   powerFraction,
   RATIONAL_TABLE,
   rationalPower,
-  ROOT_LAW_CHOICES,
   ROOT_SUM_TRAP,
   SCI_ANSWER,
-  SCI_CLAIMS,
-  SCI_CLAIMS_ANSWER,
   SCI_PRESETS,
   sciTex,
   SHEET_MM,
   shiftPoint,
-  SIMPLIFY_ANSWER,
-  SIMPLIFY_CHOICES,
   simplifyRoot,
   SQRT_ANSWER,
   sqrtText,
   SUM_TRAP,
-  toNormalForm,
 } from './powers'
 
 describe('powers with a positive integer exponent', () => {
@@ -263,25 +253,17 @@ describe('the laws of powers', () => {
 })
 
 describe('normal form', () => {
-  it('finds the mantissa and the exponent', () => {
-    expect(toNormalForm('149600000')).toEqual({ mantissa: '1.496', exponent: 8 })
-    expect(toNormalForm('0.00052')).toEqual({ mantissa: '5.2', exponent: -4 })
-    expect(toNormalForm('7')).toEqual({ mantissa: '7', exponent: 0 })
-    expect(toNormalForm('8849')).toEqual({ mantissa: '8.849', exponent: 3 })
-    expect(toNormalForm('0')).toEqual({ mantissa: '0', exponent: 0 })
-  })
-
-  it('keeps every digit of a number no float could hold', () => {
-    expect(toNormalForm('5972000000000000000000000')).toEqual({ mantissa: '5.972', exponent: 24 })
-    expect(toNormalForm('0.0000000001')).toEqual({ mantissa: '1', exponent: -10 })
-  })
-
   it('moves the point without going through a float', () => {
     expect(shiftPoint('149600000', -8)).toBe('1.496')
     expect(shiftPoint('149600000', 0)).toBe('149600000')
     expect(shiftPoint('149600000', -4)).toBe('14960')
     expect(shiftPoint('0.00052', 4)).toBe('5.2')
     expect(shiftPoint('5.2', -1)).toBe('0.52')
+  })
+
+  it('keeps every digit of a number no float could hold', () => {
+    expect(shiftPoint('5972000000000000000000000', -24)).toBe('5.972')
+    expect(shiftPoint('0.0000000001', 10)).toBe('1')
   })
 
   it('knows when a mantissa is where it belongs', () => {
@@ -291,16 +273,13 @@ describe('normal form', () => {
     expect(isNormalMantissa('14.96')).toBe(false)
   })
 
-  it('goes back to plain digits', () => {
-    expect(fromNormalForm({ mantissa: '5.2', exponent: -4 })).toBe('0.00052')
-    expect(fromNormalForm({ mantissa: '1.496', exponent: 8 })).toBe('149600000')
-  })
-
-  it('round-trips every preset', () => {
+  it('walks every preset into a legal mantissa and back again', () => {
     for (const p of SCI_PRESETS) {
-      const sci = toNormalForm(p.digits)
-      expect(isNormalMantissa(sci.mantissa), p.id).toBe(true)
-      expect(fromNormalForm(sci), p.id).toBe(shiftPoint(p.digits, 0))
+      const digits = p.digits.replace('.', '')
+      const shift = -(p.digits.split('.')[0].length - 1 - digits.search(/[1-9]/))
+      const mantissa = shiftPoint(p.digits, shift)
+      expect(isNormalMantissa(mantissa), p.id).toBe(true)
+      expect(shiftPoint(mantissa, -shift), p.id).toBe(shiftPoint(p.digits, 0))
     }
   })
 
@@ -310,59 +289,8 @@ describe('normal form', () => {
   })
 
   it('pins the exercise', () => {
-    expect(toNormalForm('0.00052')).toEqual(SCI_ANSWER)
-  })
-})
-
-describe('calculating in normal form', () => {
-  it('multiplies mantissas and adds exponents', () => {
-    const { raw, result } = multiplySci({ mantissa: '2', exponent: 3 }, { mantissa: '3', exponent: 4 })
-    expect(raw).toEqual({ mantissa: '6', exponent: 7 })
-    expect(result).toEqual({ mantissa: '6', exponent: 7 })
-  })
-
-  it('moves the point once more when the mantissa runs over 10', () => {
-    const { raw, result } = multiplySci({ mantissa: '4', exponent: 3 }, { mantissa: '5', exponent: 2 })
-    expect(raw).toEqual({ mantissa: '20', exponent: 5 })
-    expect(result).toEqual({ mantissa: '2', exponent: 6 })
-    expect(isNormalMantissa(result.mantissa)).toBe(true)
-  })
-
-  it('divides mantissas and subtracts exponents', () => {
-    const { raw, result } = divideSci({ mantissa: '2', exponent: 6 }, { mantissa: '8', exponent: 2 })
-    expect(raw).toEqual({ mantissa: '0.25', exponent: 4 })
-    expect(result).toEqual({ mantissa: '2.5', exponent: 3 })
-  })
-
-  it('keeps the value while renormalising', () => {
-    const a = { mantissa: '3.7', exponent: 5 }
-    const b = { mantissa: '8.1', exponent: -2 }
-    for (const { raw, result } of [multiplySci(a, b), divideSci(a, b)]) {
-      const rawValue = Number(raw.mantissa) * Math.pow(10, raw.exponent)
-      const value = Number(result.mantissa) * Math.pow(10, result.exponent)
-      expect(value / rawValue).toBeCloseTo(1, 9)
-      expect(isNormalMantissa(result.mantissa)).toBe(true)
-    }
-  })
-
-  it('has six claims, three of them plausible', () => {
-    expect(SCI_CLAIMS).toHaveLength(6)
-    expect(SCI_CLAIMS.filter((c) => c.plausible)).toHaveLength(3)
-    expect(SCI_CLAIMS_ANSWER).toBe('ok|bad|ok|ok|bad|bad')
-  })
-
-  it('marks a claim wrong exactly when it misses the true order of magnitude', () => {
-    for (const c of SCI_CLAIMS) {
-      expect(c.plausible, c.id).toBe(c.mantissa === c.trueMantissa && c.exponent === c.trueExponent)
-    }
-  })
-
-  it('gets a human life to a couple of billion seconds', () => {
-    const { result } = multiplySci(
-      toNormalForm(String(LIFE_SECONDS.years)),
-      LIFE_SECONDS.secondsPerYear,
-    )
-    expect(result).toEqual({ mantissa: '2.52', exponent: 9 })
+    expect(shiftPoint('0.00052', 4)).toBe(SCI_ANSWER.mantissa)
+    expect(SCI_ANSWER.exponent).toBe(-4)
   })
 })
 
@@ -398,12 +326,15 @@ describe('the square root', () => {
     expect(sqrtText(49, 0)).toBe('7')
   })
 
-  it('pins the exercise: a root is never negative', () => {
-    expect(Math.sqrt(intPower(-7, 2))).toBe(SQRT_ANSWER)
+  it('pins the sum trap and the exercise it asks about', () => {
+    expect(Math.sqrt(ROOT_SUM_TRAP.a + ROOT_SUM_TRAP.b)).toBe(5)
+    expect(Math.sqrt(ROOT_SUM_TRAP.a) + Math.sqrt(ROOT_SUM_TRAP.b)).toBe(7)
+    expect(SQRT_ANSWER).toEqual({ whole: 5, parts: 7 })
+    expect(SQRT_ANSWER.whole).not.toBe(SQRT_ANSWER.parts)
   })
 })
 
-describe('the laws of square roots', () => {
+describe('simplifying a root', () => {
   it('pulls the largest square factor outside', () => {
     expect(simplifyRoot(48)).toEqual({ outside: 4, inside: 3 })
     expect(simplifyRoot(36)).toEqual({ outside: 6, inside: 1 })
@@ -412,27 +343,12 @@ describe('the laws of square roots', () => {
   })
 
   it('keeps the value while simplifying', () => {
-    for (const n of SIMPLIFY_CHOICES) {
+    for (let n = 1; n <= 200; n++) {
       const { outside, inside } = simplifyRoot(n)
       expect(outside * outside * inside, String(n)).toBe(n)
       expect(outside * Math.sqrt(inside), String(n)).toBeCloseTo(Math.sqrt(n), 9)
       expect(simplifyRoot(inside).outside, String(n)).toBe(1)
     }
-  })
-
-  it('makes the product law hold for every pair of choices', () => {
-    for (const a of ROOT_LAW_CHOICES) {
-      for (const b of ROOT_LAW_CHOICES) {
-        expect(Math.sqrt(a * b)).toBeCloseTo(Math.sqrt(a) * Math.sqrt(b), 9)
-        expect(Math.sqrt(a / b)).toBeCloseTo(Math.sqrt(a) / Math.sqrt(b), 9)
-      }
-    }
-  })
-
-  it('pins the sum trap and the exercise', () => {
-    expect(Math.sqrt(ROOT_SUM_TRAP.a + ROOT_SUM_TRAP.b)).toBe(5)
-    expect(Math.sqrt(ROOT_SUM_TRAP.a) + Math.sqrt(ROOT_SUM_TRAP.b)).toBe(7)
-    expect(simplifyRoot(48)).toEqual(SIMPLIFY_ANSWER)
   })
 })
 
