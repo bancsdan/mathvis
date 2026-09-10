@@ -39,20 +39,14 @@ export function LinModelCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('lin.modelTitle')}</h2>
+        <h2>{t('lin.q5')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="lin.modelIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="lin.modelIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="lin.modelDef" />
-        <p className="card-note">
-          <Trans i18nKey="lin.modelSteps" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="lin.modelIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="controls-inline">
@@ -170,6 +164,10 @@ export function LinModelCard({ id }: { id: string }) {
       <Tex block tex={`${MEETING.v1}t + ${MEETING.v2}t = ${MEETING.distance}`} />
       <Tex block tex={`${MEETING.v1 + MEETING.v2}t = ${MEETING.distance}`} />
       <Tex block tex={`t = ${meetingTime(MEETING.distance, MEETING.v1, MEETING.v2)}`} />
+
+      <p className="card-note lesson-text">
+        <Trans i18nKey="lin.modelSteps" components={{ b: <strong />, i: <em /> }} />
+      </p>
 
       <Exercise
         promptKey="lin.modelTask"

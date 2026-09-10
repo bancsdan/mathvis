@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import {
   additionSteps,
   fracPlain,
+  rowY,
   solveSystem,
   substitutionSteps,
   SYSTEM_ANSWER,
@@ -12,14 +13,23 @@ import {
 } from '../lib/linear'
 import { Definition } from './Definition'
 import { Exercise } from './Exercise'
+import { LineChart } from './LineChart'
 import { Tex } from './Tex'
 
 const METHODS = ['Sub', 'Add'] as const
+
+/** Twelve units of x centred on the solution, so any system fits the window. */
+function windowAround(center: number): number[] {
+  return Array.from({ length: 25 }, (_, i) => center - 6 + i * 0.5)
+}
 
 /**
  * Egyenletrendszerek. Two methods, one idea: get rid of an unknown. Stepping
  * through them side by side is the argument that they are the same journey,
  * and the last step is the one that makes an answer an answer — the check.
+ *
+ * Under the steps the same system is two lines: the pair the arithmetic
+ * arrives at is the point where they cross.
  */
 export function LinSystemsCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -33,23 +43,21 @@ export function LinSystemsCard({ id }: { id: string }) {
   const preset = SYSTEM_PRESETS.find((p) => p.id === presetId) ?? SYSTEM_PRESETS[0]
   const steps = method === 'Sub' ? substitutionSteps(preset.s) : additionSteps(preset.s)
   const result = solveSystem(preset.s)
+  const xs = windowAround(result.kind === 'one' ? result.x.p / result.x.q : 0)
   const answerKey = `${ansX}|${ansY}`
   const [solX, solY] = SYSTEM_ANSWER.split('|')
 
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('lin.systemsTitle')}</h2>
+        <h2>{t('lin.q4')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="lin.systemsIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="lin.systemsIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="lin.systemsDef" />
-        <p className="card-note">
-          <Trans i18nKey="lin.systemsIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="pill-row" role="group" aria-label={t('lin.systemsEqAria')}>
@@ -118,6 +126,25 @@ export function LinSystemsCard({ id }: { id: string }) {
           {t('lin.systemsReset')}
         </button>
       </div>
+
+      <LineChart
+        xs={xs}
+        height={240}
+        xLabel="x"
+        yLabel="y"
+        series={[
+          {
+            name: t('lin.systemsRow1'),
+            color: 'var(--series-1)',
+            values: xs.map((x) => rowY(preset.s.a1, preset.s.b1, preset.s.c1, x)),
+          },
+          {
+            name: t('lin.systemsRow2'),
+            color: 'var(--series-2)',
+            values: xs.map((x) => rowY(preset.s.a2, preset.s.b2, preset.s.c2, x)),
+          },
+        ]}
+      />
 
       {shown >= steps.length && result.kind === 'one' && (
         <p className="lin-result lesson-text">
