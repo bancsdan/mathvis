@@ -5,11 +5,9 @@ import { useWidth } from './useWidth'
 interface Props {
   /** Root first; every other node names an existing parent. */
   nodes: readonly TreeNode[]
-  /** Depth a finished possibility sits at, so leaves can be told from dead ends. */
+  /** Depth a finished possibility sits at, so leaves can be told apart. */
   maxDepth: number
   ariaLabel: string
-  /** Ids of branches that died; drawn dashed and muted. */
-  dead?: ReadonlySet<string>
   /** Above this many rows the tree is unreadable and the note is shown instead. */
   maxRows?: number
   /** Translated stand-in for a tree with too many branches to draw. */
@@ -24,7 +22,7 @@ interface Props {
  * is centred over its children, so the leaves line up as a list and the student
  * can count them — which is the whole point of the picture.
  */
-export function ChoiceTree({ nodes, maxDepth, ariaLabel, dead, maxRows = 36, tooManyLabel, rowHeight = 20 }: Props) {
+export function ChoiceTree({ nodes, maxDepth, ariaLabel, maxRows = 36, tooManyLabel, rowHeight = 20 }: Props) {
   const [ref, width] = useWidth<HTMLDivElement>()
 
   const layout = useMemo(() => {
@@ -78,7 +76,6 @@ export function ChoiceTree({ nodes, maxDepth, ariaLabel, dead, maxRows = 36, too
             if (node.parent === null) return null
             const parent = byId.get(node.parent)
             if (!parent) return null
-            const isDead = dead?.has(node.id) ?? false
             return (
               <line
                 key={`e-${node.id}`}
@@ -86,17 +83,15 @@ export function ChoiceTree({ nodes, maxDepth, ariaLabel, dead, maxRows = 36, too
                 y1={y(layout.rows.get(parent.id) ?? 0)}
                 x2={x(node.depth) - 2}
                 y2={y(layout.rows.get(node.id) ?? 0)}
-                stroke={isDead ? 'var(--mark-muted)' : 'var(--axis)'}
+                stroke="var(--axis)"
                 strokeWidth={1.5}
-                strokeDasharray={isDead ? '3 3' : undefined}
               />
             )
           })}
           {nodes.map((node) => {
             const row = layout.rows.get(node.id) ?? 0
-            const isDead = dead?.has(node.id) ?? false
             const isLeaf = node.depth === maxDepth
-            const fill = isDead ? 'var(--mark-muted)' : isLeaf ? 'var(--series-1)' : 'var(--axis)'
+            const fill = isLeaf ? 'var(--series-1)' : 'var(--axis)'
             return (
               <g key={node.id}>
                 <circle cx={x(node.depth)} cy={y(row)} r={node.depth === 0 ? 4 : 3.5} fill={fill} />
@@ -105,8 +100,7 @@ export function ChoiceTree({ nodes, maxDepth, ariaLabel, dead, maxRows = 36, too
                     x={x(node.depth) + 7}
                     y={y(row) + 4}
                     fontSize={11}
-                    fill={isDead ? 'var(--text-muted)' : 'var(--text-primary)'}
-                    textDecoration={isDead ? 'line-through' : undefined}
+                    fill="var(--text-primary)"
                   >
                     {node.label}
                   </text>

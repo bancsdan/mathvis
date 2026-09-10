@@ -43,16 +43,14 @@ export function CombiSelectCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('combi.selTitle')}</h2>
+        <h2>{t('combi.q4')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="combi.selIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="combi.selIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <p className="card-note">
-          <Trans i18nKey="combi.selIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey="combi.selDef" />
       </div>
 
       <div className="controls-inline">
@@ -99,7 +97,7 @@ export function CombiSelectCard({ id }: { id: string }) {
         </button>
       </div>
 
-      <p className="mini-title">{t('combi.selTeamsTitle', { k })}</p>
+      <p className="card-note lesson-text">{t('combi.selTeamsTitle', { k })}</p>
       <div className="table-wrap">
         <table className="paper-table">
           <tbody>
@@ -122,7 +120,7 @@ export function CombiSelectCard({ id }: { id: string }) {
 
       {ordered && (
         <>
-          <p className="mini-title">{t('combi.selOrderedTitle')}</p>
+          <p className="card-note lesson-text">{t('combi.selOrderedTitle')}</p>
           {complete ? (
             <div className="table-wrap">
               <table className="paper-table">
@@ -146,17 +144,15 @@ export function CombiSelectCard({ id }: { id: string }) {
             <p className="card-note">{t('combi.selPickPrompt', { k })}</p>
           )}
           <Tex block tex={`${unordered} \\cdot ${k}! = ${unordered} \\cdot ${factorial(k)} = ${orderedCount}`} />
-          <p className="card-note lesson-text">
-            <Trans
-              i18nKey="combi.selBridge"
-              values={{ k, teams: unordered, each: factorial(k), total: orderedCount }}
-              components={{ b: <strong />, i: <em /> }}
-            />
-          </p>
         </>
       )}
 
-      <Definition i18nKey="combi.selDef" />
+      <p className="lin-result">
+        {ordered
+          ? t('combi.selResult_yes', { k, teams: unordered, each: factorial(k), total: orderedCount })
+          : t('combi.selResult_no', { total: unordered })}
+      </p>
+
       <p className="card-note lesson-text">
         <Trans i18nKey="combi.selNames" components={{ b: <strong />, i: <em /> }} />
       </p>

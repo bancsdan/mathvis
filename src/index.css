@@ -995,13 +995,6 @@ p.card-note.lesson-text {
   font-size: 12px;
 }
 
-/* One lesson of a timetable row: kept apart so the slots stay readable. */
-.tt-slot {
-  display: inline-block;
-  margin-right: 14px;
-  font-variant-numeric: tabular-nums;
-}
-
 /* Anagrams are shown, not chosen, so they are pills without the hover. */
 .word-pill {
   font-variant-numeric: tabular-nums;

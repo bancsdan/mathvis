@@ -15,7 +15,6 @@ import { Tex } from './Tex'
 
 const COUNTS = [2, 3, 4, 5]
 const SHOWN = 6
-const FACT_ROWS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 /** Letters only, so it needs no translating: two A's that look alike. */
 const WORD = 'ALMA'
@@ -24,7 +23,7 @@ const WORD = 'ALMA'
 const ANSWER = factorial(4) * 2
 
 export function CombiOrderCard({ id }: { id: string }) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [n, setN] = useState(3)
   const [answer, setAnswer] = useState('')
 
@@ -38,16 +37,14 @@ export function CombiOrderCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('combi.orderTitle')}</h2>
+        <h2>{t('combi.q3')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="combi.orderIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="combi.orderIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <p className="card-note">
-          <Trans i18nKey="combi.orderIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey="combi.orderDef" />
       </div>
 
       <div className="pill-row" role="group" aria-label={t('combi.orderPickN')}>
@@ -73,8 +70,8 @@ export function CombiOrderCard({ id }: { id: string }) {
       />
 
       <Tex block tex={`${Array.from({ length: n }, (_, i) => n - i).join(' \\cdot ')} = ${n}! = ${perms.length}`} />
+      <p className="lin-result">{t('combi.orderResult', { n, total: perms.length })}</p>
 
-      <p className="mini-title">{t('combi.orderListTitle')}</p>
       <div className="table-wrap">
         <table className="paper-table">
           <tbody>
@@ -94,29 +91,9 @@ export function CombiOrderCard({ id }: { id: string }) {
         </table>
       </div>
 
-      <Definition i18nKey="combi.orderDef" />
       <p className="card-note lesson-text">
         <Trans i18nKey="combi.orderRule" components={{ b: <strong />, i: <em /> }} />
       </p>
-
-      <div className="table-wrap">
-        <table className="paper-table">
-          <thead>
-            <tr>
-              <th>{t('combi.orderThN')}</th>
-              <th>{t('combi.orderThFact')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {FACT_ROWS.map((k) => (
-              <tr key={k}>
-                <td>{k}</td>
-                <td>{factorial(k).toLocaleString(i18n.language)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
       <p className="mini-title">{t('combi.orderWordTitle')}</p>
       <p className="card-note lesson-text">

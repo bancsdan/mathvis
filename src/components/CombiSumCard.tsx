@@ -1,12 +1,6 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import {
-  EXPRESSION_ANSWER,
-  EXPRESSION_STORIES,
-  EXPRESSION_TEX,
-  WRONG_SOLUTION,
-  WRONG_STEP,
-} from '../lib/combinatorics'
+import { WRONG_SOLUTION, WRONG_STEP } from '../lib/combinatorics'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 import { useWidth } from './useWidth'
@@ -62,7 +56,6 @@ export function CombiSumCard({ id }: { id: string }) {
   const [b, setB] = useState(3)
   const [mode, setMode] = useState<Mode>('or')
 
-  const [story, setStory] = useState('')
   const [step, setStep] = useState<number | null>(null)
 
   const total = mode === 'or' ? a + b : a * b
@@ -70,15 +63,12 @@ export function CombiSumCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('combi.sumTitle')}</h2>
+        <h2>{t('combi.q2')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="combi.sumIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="combi.sumIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="combi.sumIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -113,36 +103,11 @@ export function CombiSumCard({ id }: { id: string }) {
       <DotGrid a={a} b={b} mode={mode} ariaLabel={t(`combi.sumAria_${mode}`, { a, b, total })} />
 
       <Tex block tex={mode === 'or' ? `${a} + ${b} = ${total}` : `${a} \\cdot ${b} = ${total}`} />
-      <p className="card-note lesson-text">{t(`combi.sumRead_${mode}`, { a, b, total })}</p>
+      <p className="lin-result">{t(`combi.sumRead_${mode}`, { a, b, total })}</p>
 
       <p className="card-note lesson-text">
         <Trans i18nKey="combi.sumRule" components={{ b: <strong />, i: <em /> }} />
       </p>
-
-      <Exercise
-        promptKey="combi.sumExprTask"
-        isCorrect={story === EXPRESSION_ANSWER}
-        canCheck={story !== ''}
-        answerKey={story}
-        solutionKey={EXPRESSION_ANSWER}
-        onReveal={() => setStory(EXPRESSION_ANSWER)}
-        hintKey="combi.sumExprHint"
-      >
-        <Tex block tex={EXPRESSION_TEX} />
-        <div className="pill-row" role="group" aria-label={t('combi.sumExprAria')}>
-          {EXPRESSION_STORIES.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              className={story === s.id ? 'pill active' : 'pill'}
-              aria-pressed={story === s.id}
-              onClick={() => setStory(s.id)}
-            >
-              {t(s.labelKey)}
-            </button>
-          ))}
-        </div>
-      </Exercise>
 
       <p className="mini-title">{t('combi.wrongTitle')}</p>
       <p className="card-note lesson-text">{t(WRONG_SOLUTION.problemKey)}</p>

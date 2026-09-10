@@ -7,40 +7,22 @@ import {
   combinations,
   completeEdgeCount,
   completeGraphEdges,
-  countMultiples,
-  deadEnds,
   degreeSum,
   degrees,
   distinctPermutations,
   edgeKey,
-  EXPRESSION_ANSWER,
-  EXPRESSION_STORIES,
   factorial,
-  gcd,
-  GRAPH_STORIES,
-  GRAPH_STORY_ANSWER,
   hasEdge,
-  lcm,
-  leafCount,
   multisetPermutationCount,
   PEOPLE,
   productOf,
   regularGraphPossible,
-  satisfies,
-  sieveCounts,
-  stillPossible,
-  STORY_GRAPH_EDGES,
   subsets,
-  SUBJECTS,
-  TIMETABLE_CONSTRAINTS,
   toggleEdge,
-  validTimetables,
   variations,
   WRONG_SOLUTION,
   WRONG_STEP,
-  type Constraint,
   type Edge,
-  type Subject,
 } from './combinatorics'
 
 describe('counting', () => {
@@ -118,11 +100,11 @@ describe('choice tree', () => {
       ['n1', 'n2', 'n3'],
     ]
     const nodes = buildChoiceTree(levels)
-    expect(leafCount(nodes, 2)).toBe(6)
+    expect(nodes.filter((n) => n.depth === 2)).toHaveLength(6)
     expect(nodes.filter((n) => n.depth === 1)).toHaveLength(2)
     expect(nodes[0].parent).toBeNull()
     expect(new Set(nodes.map((n) => n.id)).size).toBe(nodes.length)
-    expect(leafCount(buildChoiceTree([['a', 'b'], ['c', 'd'], ['e', 'f', 'g']]), 3)).toBe(12)
+    expect(buildChoiceTree([['a', 'b'], ['c', 'd'], ['e', 'f', 'g']]).filter((n) => n.depth === 3)).toHaveLength(12)
     expect(buildChoiceTree([])).toHaveLength(1)
   })
 
@@ -132,77 +114,20 @@ describe('choice tree', () => {
     for (const n of nodes.slice(1)) expect(ids.has(n.parent as string)).toBe(true)
   })
 
-  it('the unpruned ordering tree has n! leaves and no dead ends', () => {
+  it('the ordering tree has one leaf per permutation', () => {
     const nodes = buildPermutationTree(['A', 'B', 'C'])
-    expect(leafCount(nodes, 3)).toBe(6)
-    expect(deadEnds(nodes, 3).size).toBe(0)
+    expect(nodes.filter((n) => n.depth === 3)).toHaveLength(6)
   })
 
   it('pruning cuts a branch as soon as it is hopeless', () => {
     // "A must come first": the branches starting with B or C die at depth 1.
     const nodes = buildPermutationTree(['A', 'B', 'C'], (prefix) => prefix[0] === 'A')
-    expect(leafCount(nodes, 3)).toBe(2)
-    expect(deadEnds(nodes, 3).size).toBe(2)
+    expect(nodes.filter((n) => n.depth === 3)).toHaveLength(2)
     expect(nodes.filter((n) => n.depth === 1)).toHaveLength(3)
   })
 })
 
-describe('timetable', () => {
-  const named = (id: string): Constraint => TIMETABLE_CONSTRAINTS.find((c) => c.id === id)!.constraint
-
-  it('has four distinct conditions over the four subjects', () => {
-    expect(SUBJECTS).toHaveLength(4)
-    expect(new Set(TIMETABLE_CONSTRAINTS.map((c) => c.id)).size).toBe(4)
-  })
-
-  it('counts what each condition leaves', () => {
-    expect(validTimetables([])).toHaveLength(24)
-    expect(validTimetables([named('peLast')])).toHaveLength(6)
-    expect(validTimetables([named('peLast'), named('mathNotFirst')])).toHaveLength(4)
-    expect(validTimetables([named('huNextToHist')])).toHaveLength(12)
-    expect(validTimetables([named('huBeforeHist')])).toHaveLength(12)
-  })
-
-  it('all four conditions together leave exactly the brute-forced timetables', () => {
-    const all = TIMETABLE_CONSTRAINTS.map((c) => c.constraint)
-    const brute = allPermutations(SUBJECTS).filter((order) =>
-      all.every((c) => {
-        switch (c.kind) {
-          case 'inSlot':
-            return order[c.slot] === c.subject
-          case 'notInSlot':
-            return order[c.slot] !== c.subject
-          case 'adjacent':
-            return Math.abs(order.indexOf(c.a) - order.indexOf(c.b)) === 1
-          case 'before':
-            return order.indexOf(c.a) < order.indexOf(c.b)
-        }
-      }),
-    )
-    expect(validTimetables(all)).toEqual(brute)
-    expect(brute).toEqual([['hungarian', 'history', 'math', 'pe']])
-  })
-
-  it('a full order is possible exactly when it satisfies the condition', () => {
-    for (const { constraint } of TIMETABLE_CONSTRAINTS) {
-      for (const order of allPermutations(SUBJECTS)) {
-        expect(stillPossible(order, constraint, SUBJECTS.length)).toBe(satisfies(order, constraint))
-      }
-    }
-  })
-
-  it('pruning never throws away a valid timetable', () => {
-    // Over all 16 subsets of the conditions, the surviving leaves of the pruned
-    // tree are exactly the valid timetables.
-    for (let mask = 0; mask < 1 << TIMETABLE_CONSTRAINTS.length; mask++) {
-      const active = TIMETABLE_CONSTRAINTS.filter((_, i) => (mask >> i) & 1).map((c) => c.constraint)
-      const nodes = buildPermutationTree([...SUBJECTS], (prefix) =>
-        active.every((c) => stillPossible(prefix as Subject[], c, SUBJECTS.length)),
-      )
-      expect(leafCount(nodes, SUBJECTS.length)).toBe(validTimetables(active).length)
-    }
-  })
-
+describe('choosing people', () => {
   it('names five classmates for the choosing section', () => {
     expect(PEOPLE).toHaveLength(5)
     expect(new Set(PEOPLE).size).toBe(5)
@@ -263,63 +188,12 @@ describe('graphs', () => {
       }
     }
   })
-
-  it('the story graph is a star with one extra edge', () => {
-    expect(degrees(4, [...STORY_GRAPH_EDGES])).toEqual([3, 2, 2, 1])
-    expect(GRAPH_STORIES.map((s) => s.id)).toContain(GRAPH_STORY_ANSWER)
-    expect(new Set(GRAPH_STORIES.map((s) => s.id)).size).toBe(GRAPH_STORIES.length)
-    // The two wrong stories describe genuinely different graphs.
-    expect(STORY_GRAPH_EDGES).toHaveLength(4)
-    expect(completeEdgeCount(4)).toBe(6)
-  })
 })
 
-describe('sum rule and the planted mistake', () => {
-  it('offers exactly one story that matches the expression', () => {
-    expect(EXPRESSION_STORIES.map((s) => s.id)).toContain(EXPRESSION_ANSWER)
-    expect(new Set(EXPRESSION_STORIES.map((s) => s.id)).size).toBe(3)
-  })
-
+describe('the planted mistake', () => {
   it('points at the second step, where 3 should have been 2', () => {
     expect(WRONG_SOLUTION.stepKeys).toHaveLength(3)
     expect(WRONG_STEP).toBe(1)
     expect(WRONG_SOLUTION.answer).toBe(3 * 2)
-  })
-})
-
-describe('sieve', () => {
-  it('counts multiples up to a limit', () => {
-    expect(countMultiples(100, 3)).toBe(33)
-    expect(countMultiples(100, 1)).toBe(100)
-    expect(countMultiples(30, 7)).toBe(4)
-    expect(countMultiples(100, 0)).toBe(0)
-  })
-
-  it('gcd and lcm', () => {
-    expect(gcd(12, 18)).toBe(6)
-    expect(gcd(7, 5)).toBe(1)
-    expect(lcm(3, 5)).toBe(15)
-    expect(lcm(4, 6)).toBe(12)
-    expect(lcm(0, 6)).toBe(0)
-  })
-
-  it('subtracts the numbers counted twice', () => {
-    expect(sieveCounts(100, 3, 5)).toEqual({ a: 33, b: 20, both: 6, either: 47, neither: 53 })
-    expect(sieveCounts(100, 2, 3)).toEqual({ a: 50, b: 33, both: 16, either: 67, neither: 33 })
-  })
-
-  it('agrees with counting the numbers one by one', () => {
-    for (const limit of [30, 50, 100]) {
-      for (let a = 2; a <= 9; a++) {
-        for (let b = 2; b <= 9; b++) {
-          if (a === b) continue
-          const nums = Array.from({ length: limit }, (_, i) => i + 1)
-          const c = sieveCounts(limit, a, b)
-          expect(c.either).toBe(nums.filter((x) => x % a === 0 || x % b === 0).length)
-          expect(c.both).toBe(nums.filter((x) => x % a === 0 && x % b === 0).length)
-          expect(c.neither).toBe(nums.filter((x) => x % a !== 0 && x % b !== 0).length)
-        }
-      }
-    }
   })
 })

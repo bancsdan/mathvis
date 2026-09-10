@@ -27,15 +27,12 @@ export function CombiProductCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('combi.prodTitle')}</h2>
+        <h2>{t('combi.q1')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="combi.prodIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="combi.prodIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="combi.prodIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -75,7 +72,7 @@ export function CombiProductCard({ id }: { id: string }) {
       />
 
       <Tex block tex={`${sizes.join(' \\cdot ')} = ${total}`} />
-      <p className="card-note lesson-text">{t('combi.prodLeaves', { total })}</p>
+      <p className="lin-result">{t('combi.prodLeaves', { total })}</p>
 
       <p className="card-note lesson-text">
         <Trans i18nKey="combi.prodRule" components={{ b: <strong />, i: <em /> }} />
