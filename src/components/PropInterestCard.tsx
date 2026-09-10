@@ -1,23 +1,16 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { formatDecimal } from '../lib/numbers'
-import {
-  compound,
-  groupThousands,
-  INTEREST_ANSWER,
-  multiplier,
-  purchasingPower,
-  simpleInterest,
-} from '../lib/proportion'
+import { compound, groupThousands, INTEREST_ANSWER, multiplier, simpleInterest } from '../lib/proportion'
 import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { LineChart } from './LineChart'
 import { Tex } from './Tex'
 
 /**
- * Kamat és infláció. Interest on the interest is a multiplication repeated,
- * so the two curves cannot stay together: the table's last column is the gap,
- * and it grows every year. Inflation runs the same multiplier backwards.
+ * Kamatos kamat. Interest on the interest is a multiplication repeated, so the
+ * two curves cannot stay together: the table's last column is the gap between
+ * them, and it grows every year.
  */
 export function PropInterestCard({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -25,7 +18,6 @@ export function PropInterestCard({ id }: { id: string }) {
   const [amount, setAmount] = useState(200000)
   const [rate, setRate] = useState(5)
   const [years, setYears] = useState(5)
-  const [inflation, setInflation] = useState(10)
   const [answer, setAnswer] = useState('')
 
   const withInterest = compound(amount, rate, years)
@@ -33,24 +25,19 @@ export function PropInterestCard({ id }: { id: string }) {
   const xs = Array.from({ length: years + 1 }, (_, n) => n)
   const gap = withInterest[years] - without[years]
 
-  const future = Math.round(amount * Math.pow(multiplier(inflation), years))
-  const power = purchasingPower(amount, inflation, years)[years]
   const factorTex = formatDecimal(String(multiplier(rate)), sep, true)
 
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('prop.interestTitle')}</h2>
+        <h2>{t('prop.q6')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="prop.interestIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="prop.interestIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <Definition i18nKey={['prop.interestDef1', 'prop.interestDef2']} />
-        <p className="card-note">
-          <Trans i18nKey="prop.interestIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey="prop.interestDef" />
       </div>
 
       <div className="controls-inline">
@@ -128,39 +115,10 @@ export function PropInterestCard({ id }: { id: string }) {
 
       <Tex block tex={`${amount} \\cdot ${factorTex}^{${years}} = ${withInterest[years]}`} />
 
-      <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
         <Trans
           i18nKey="prop.interestGap"
           values={{ years, diff: groupThousands(gap) }}
-          components={{ b: <strong />, i: <em /> }}
-        />
-      </p>
-
-      <p className="mini-title">{t('prop.interestInflationTitle')}</p>
-      <div className="controls-inline">
-        <label className="field field-wide">
-          <span className="field-label">
-            {t('prop.interestPickInflation')} <strong>{`${inflation}%`}</strong>
-          </span>
-          <input
-            type="range"
-            min={0}
-            max={20}
-            step={1}
-            value={inflation}
-            onChange={(e) => setInflation(Number(e.target.value))}
-          />
-        </label>
-      </div>
-      <p className="card-note lesson-text">
-        <Trans
-          i18nKey="prop.interestInflation"
-          values={{
-            amount: groupThousands(amount),
-            years,
-            future: groupThousands(future),
-            power: groupThousands(power),
-          }}
           components={{ b: <strong />, i: <em /> }}
         />
       </p>

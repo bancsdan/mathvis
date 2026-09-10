@@ -27,17 +27,14 @@ export function PropGraphsCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('prop.graphsTitle')}</h2>
+        <h2>{t('prop.q3')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="prop.graphsIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="prop.graphsIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey={['prop.graphsDef1', 'prop.graphsDef2']} />
-        <p className="card-note">
-          <Trans i18nKey="prop.graphsIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="prop-multiples">
@@ -78,7 +75,7 @@ export function PropGraphsCard({ id }: { id: string }) {
         ))}
       </div>
 
-      <p className="card-note lesson-text">
+      <p className="lin-result lesson-text">
         {picked === '' ? t('prop.graphsPickPrompt') : t(`prop.sitWhy_${picked}`)}
       </p>
 

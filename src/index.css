@@ -1368,48 +1368,6 @@ p.card-note.lesson-text {
   border-color: var(--accent-select);
 }
 
-/* The ladder of units: rungs with the factor between them. */
-.prop-ladder {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
-  margin: 8px 0;
-}
-
-.prop-rung-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.prop-rung {
-  display: inline-block;
-  min-width: 34px;
-  padding: 3px 8px;
-  text-align: center;
-  border-radius: 5px;
-  border: 1px solid var(--series-1);
-  background: color-mix(in srgb, var(--series-1) 18%, transparent);
-  font-variant-numeric: tabular-nums;
-}
-
-.prop-rung.lit {
-  border: 2px solid var(--accent-select);
-  padding: 2px 7px;
-  font-weight: 600;
-}
-
-.prop-hop {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.prop-hop.lit {
-  color: var(--accent-select);
-  font-weight: 600;
-}
-
 /* The percentage bar: the whole is the base, the shaded part is the value. */
 .prop-bar {
   display: block;
@@ -1431,17 +1389,6 @@ p.card-note.lesson-text {
 .prop-bar-label {
   font-size: 11px;
   fill: var(--text-secondary);
-}
-
-/* The bill: amounts right aligned, the payable line ruled off. */
-.prop-bill td:last-child,
-.prop-bill th:last-child {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-.prop-bill .prop-total td {
-  border-top: 2px solid var(--border);
 }
 
 /* --- elsőfokú egyenletek, egyenlőtlenségek ----------------------------- */
