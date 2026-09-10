@@ -917,30 +917,6 @@ p.card-note.lesson-text {
   font-size: 13px;
 }
 
-.sentence-row .pill-row {
-  margin: 0;
-}
-
-.sentence-badge {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-}
-
-.sentence-badge.kind-true {
-  border-color: var(--series-3);
-}
-
-.sentence-badge.kind-false {
-  border-color: var(--critical);
-}
-
-.sentence-badge.kind-none {
-  border-color: var(--accent-select);
-}
-
 /* Truth-table cells: the verdict column gets a coloured left edge. */
 .paper-table td.cell-ok {
   box-shadow: inset 3px 0 0 var(--series-3);

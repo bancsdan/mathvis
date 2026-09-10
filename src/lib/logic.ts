@@ -134,30 +134,6 @@ export function implicationReport(p: Predicate, q: Predicate): ImplicationReport
 }
 
 /* ------------------------------------------------------------------ */
-/* Statements: true, false, or not a statement at all                  */
-/* ------------------------------------------------------------------ */
-
-export type SentenceKind = 'true' | 'false' | 'none'
-
-export interface Sentence {
-  id: string
-  labelKey: string
-  kind: SentenceKind
-}
-
-/** A mix of maths, everyday facts, questions, commands and an open sentence. */
-export const SENTENCES: readonly Sentence[] = [
-  { id: 'prime7', labelKey: 'logic.sentPrime7', kind: 'true' },
-  { id: 'div15', labelKey: 'logic.sentDiv15', kind: 'false' },
-  { id: 'question', labelKey: 'logic.sentQuestion', kind: 'none' },
-  { id: 'squares', labelKey: 'logic.sentSquares', kind: 'true' },
-  { id: 'open', labelKey: 'logic.sentOpen', kind: 'none' },
-  { id: 'angles', labelKey: 'logic.sentAngles', kind: 'false' },
-  { id: 'command', labelKey: 'logic.sentCommand', kind: 'none' },
-  { id: 'smallestPrime', labelKey: 'logic.sentSmallestPrime', kind: 'true' },
-] as const
-
-/* ------------------------------------------------------------------ */
 /* Proof: examples do not prove, one counterexample refutes            */
 /* ------------------------------------------------------------------ */
 
@@ -188,94 +164,6 @@ export const PROOF_STEPS_SHUFFLED: readonly ProofStep[] = ['factor', 'name', 'co
 
 export const proofOrderCorrect = (order: readonly ProofStep[]): boolean =>
   order.length === PROOF_STEPS.length && order.every((s, i) => s === PROOF_STEPS[i])
-
-/* ------------------------------------------------------------------ */
-/* Knights and knaves ("Mit állít a szigetlakó?")                      */
-/* ------------------------------------------------------------------ */
-
-export type Islander = 'A' | 'B'
-export type Kind = 'knight' | 'knave'
-export type Assignment = Readonly<Record<Islander, Kind>>
-
-export type Claim =
-  | { kind: 'isKnight'; who: Islander }
-  | { kind: 'isKnave'; who: Islander }
-  | { kind: 'bothKnights' }
-  | { kind: 'bothKnaves' }
-  | { kind: 'atLeastOneKnave' }
-  | { kind: 'differentKinds' }
-
-export interface Statement {
-  speaker: Islander
-  claim: Claim
-  labelKey: string
-}
-
-export interface Puzzle {
-  id: string
-  statements: readonly Statement[]
-}
-
-export const PUZZLES: readonly Puzzle[] = [
-  {
-    id: 'bothKnaves',
-    statements: [{ speaker: 'A', claim: { kind: 'bothKnaves' }, labelKey: 'logic.sayBothKnaves' }],
-  },
-  {
-    id: 'vouch',
-    statements: [
-      { speaker: 'A', claim: { kind: 'isKnight', who: 'B' }, labelKey: 'logic.sayBKnight' },
-      { speaker: 'B', claim: { kind: 'differentKinds' }, labelKey: 'logic.sayDifferent' },
-    ],
-  },
-  {
-    id: 'atLeastOne',
-    statements: [{ speaker: 'A', claim: { kind: 'atLeastOneKnave' }, labelKey: 'logic.sayAtLeastOneKnave' }],
-  },
-  {
-    id: 'accuse',
-    statements: [
-      { speaker: 'A', claim: { kind: 'isKnave', who: 'B' }, labelKey: 'logic.sayBKnave' },
-      { speaker: 'B', claim: { kind: 'isKnave', who: 'A' }, labelKey: 'logic.sayAKnave' },
-    ],
-  },
-] as const
-
-export const puzzleById = (id: string): Puzzle => PUZZLES.find((p) => p.id === id) ?? PUZZLES[0]
-
-export const ALL_ASSIGNMENTS: readonly Assignment[] = [
-  { A: 'knight', B: 'knight' },
-  { A: 'knight', B: 'knave' },
-  { A: 'knave', B: 'knight' },
-  { A: 'knave', B: 'knave' },
-]
-
-/** Is the claim true of the island, supposing this is who everyone is? */
-export function claimHolds(claim: Claim, a: Assignment): boolean {
-  switch (claim.kind) {
-    case 'isKnight':
-      return a[claim.who] === 'knight'
-    case 'isKnave':
-      return a[claim.who] === 'knave'
-    case 'bothKnights':
-      return a.A === 'knight' && a.B === 'knight'
-    case 'bothKnaves':
-      return a.A === 'knave' && a.B === 'knave'
-    case 'atLeastOneKnave':
-      return a.A === 'knave' || a.B === 'knave'
-    case 'differentKinds':
-      return a.A !== a.B
-  }
-}
-
-/** Knights only say true things and knaves only false ones: a statement fits when that matches. */
-export const statementFits = (s: Statement, a: Assignment): boolean => (a[s.speaker] === 'knight') === claimHolds(s.claim, a)
-
-export const isConsistent = (puzzle: Puzzle, a: Assignment): boolean => puzzle.statements.every((s) => statementFits(s, a))
-
-export const solutions = (puzzle: Puzzle): Assignment[] => ALL_ASSIGNMENTS.filter((a) => isConsistent(puzzle, a))
-
-export const assignmentKey = (a: Assignment): string => `${a.A}|${a.B}`
 
 /* ------------------------------------------------------------------ */
 /* NIM                                                                 */

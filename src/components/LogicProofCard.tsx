@@ -74,23 +74,16 @@ export function LogicProofCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('logic.proofTitle')}</h2>
+        <h2>{t('logic.q5')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="logic.proofIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="logic.proofIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey="logic.proofDef" />
-        <p className="card-note">
-          <Trans i18nKey="logic.proofIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
-      <p className="mini-title">{t('logic.proofEulerTitle')}</p>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="logic.proofEulerIntro" components={{ b: <strong />, i: <em /> }} />
-      </p>
       <Tex block tex="n^2 + n + 41" />
 
       <EulerStrip selected={n} onSelect={setN} />
@@ -116,7 +109,7 @@ export function LogicProofCard({ id }: { id: string }) {
         </button>
       </div>
       <Tex block tex={`${n}^2 + ${n} + 41 = ${value}${prime ? '' : ` = ${factor} \\cdot ${value / factor}`}`} />
-      <p className={`alias-verdict ${prime ? 'verdict-ok' : 'verdict-bad'}`}>
+      <p className="lin-result">
         {prime
           ? t('logic.proofIsPrime', { n, value })
           : t('logic.proofNotPrime', {
@@ -129,16 +122,6 @@ export function LogicProofCard({ id }: { id: string }) {
       <p className="card-note lesson-text">
         <Trans i18nKey="logic.proofEulerMoral" values={{ first: firstFail }} components={{ b: <strong /> }} />
       </p>
-
-      <p className="mini-title">{t('logic.proofCourtTitle')}</p>
-      <div className="lesson-text">
-        <p className="card-note">
-          <Trans i18nKey="logic.proofCourt1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="logic.proofCourt2" components={{ b: <strong />, i: <em /> }} />
-        </p>
-      </div>
 
       <Exercise
         promptKey="logic.proofTask"

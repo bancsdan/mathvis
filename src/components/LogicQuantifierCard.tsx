@@ -36,17 +36,14 @@ export function LogicQuantifierCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('logic.quantTitle')}</h2>
+        <h2>{t('logic.q3')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="logic.quantIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="logic.quantIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey={['logic.quantDef1', 'logic.quantDef2']} />
-        <p className="card-note">
-          <Trans i18nKey="logic.quantIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="pill-row" role="group" aria-label={t('logic.quantPickAria')}>
@@ -68,7 +65,7 @@ export function LogicQuantifierCard({ id }: { id: string }) {
       </div>
 
       <Tex block tex={`${quant === 'all' ? '\\forall' : '\\exists'} x\\; P(x)`} />
-      <p className={`alias-verdict ${report.value ? 'verdict-ok' : 'verdict-bad'}`}>
+      <p className="lin-result">
         {t(`logic.quantSentence_${quant}`, values)} {verdict(report.value)}
         {quant === 'all' && !report.value && ` ${t('logic.quantCounter', { list: report.counterexamples.join(', ') })}`}
         {quant === 'all' && report.value && ` ${t('logic.quantNoCounter')}`}
@@ -84,7 +81,6 @@ export function LogicQuantifierCard({ id }: { id: string }) {
         onToggle={() => {}}
       />
 
-      <p className="mini-title">{t('logic.quantNegTitle')}</p>
       <Tex
         block
         tex={

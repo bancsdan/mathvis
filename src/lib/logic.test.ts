@@ -1,16 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { interR, regionsOf, unionR, circleRegions, diffR } from './sets'
 import {
-  ALL_ASSIGNMENTS,
   applyConnective,
-  claimHolds,
   connectiveRegions,
   domainOf,
   eulerPolynomial,
   evalQuantified,
   idsWhere,
   implicationReport,
-  isConsistent,
   isPrime,
   LOGIC_PREDICATES,
   logicPredicateById,
@@ -21,11 +18,7 @@ import {
   PROOF_STEPS,
   PROOF_STEPS_SHUFFLED,
   proofOrderCorrect,
-  PUZZLES,
-  puzzleById,
-  SENTENCES,
   smallestFactor,
-  solutions,
 } from './logic'
 
 describe('connectives', () => {
@@ -116,14 +109,6 @@ describe('implication', () => {
   })
 })
 
-describe('sentences', () => {
-  it('has all three kinds and unique ids', () => {
-    const kinds = new Set(SENTENCES.map((s) => s.kind))
-    expect(kinds).toEqual(new Set(['true', 'false', 'none']))
-    expect(new Set(SENTENCES.map((s) => s.id)).size).toBe(SENTENCES.length)
-  })
-})
-
 describe('proof', () => {
   it('primes and factors', () => {
     expect([1, 2, 3, 4, 41, 1681].map(isPrime)).toEqual([false, true, true, false, true, false])
@@ -142,33 +127,6 @@ describe('proof', () => {
     expect(proofOrderCorrect(PROOF_STEPS)).toBe(true)
     expect(proofOrderCorrect(PROOF_STEPS_SHUFFLED)).toBe(false)
     expect(proofOrderCorrect(PROOF_STEPS.slice(0, 3))).toBe(false)
-  })
-})
-
-describe('knights and knaves', () => {
-  it('evaluates claims against an assignment', () => {
-    const a = { A: 'knight', B: 'knave' } as const
-    expect(claimHolds({ kind: 'isKnave', who: 'B' }, a)).toBe(true)
-    expect(claimHolds({ kind: 'bothKnights' }, a)).toBe(false)
-    expect(claimHolds({ kind: 'atLeastOneKnave' }, a)).toBe(true)
-    expect(claimHolds({ kind: 'differentKinds' }, a)).toBe(true)
-  })
-
-  it('"we are both knaves" can only come from a knave with a knight beside him', () => {
-    expect(solutions(puzzleById('bothKnaves'))).toEqual([{ A: 'knave', B: 'knight' }])
-  })
-
-  it('solves the remaining puzzles', () => {
-    expect(solutions(puzzleById('vouch'))).toEqual([{ A: 'knave', B: 'knave' }])
-    expect(solutions(puzzleById('atLeastOne'))).toEqual([{ A: 'knight', B: 'knave' }])
-    // Mutual accusation is satisfied by either being the knight, so it is undecidable.
-    expect(solutions(puzzleById('accuse'))).toHaveLength(2)
-  })
-
-  it('every puzzle has at least one solution and the fallback puzzle exists', () => {
-    for (const p of PUZZLES) expect(solutions(p).length).toBeGreaterThan(0)
-    expect(puzzleById('nope')).toBe(PUZZLES[0])
-    expect(ALL_ASSIGNMENTS.filter((a) => isConsistent(PUZZLES[0], a))).toHaveLength(1)
   })
 })
 

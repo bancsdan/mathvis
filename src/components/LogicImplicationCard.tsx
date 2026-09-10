@@ -1,16 +1,40 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { connectiveRegions, implicationReport, logicPredicateById } from '../lib/logic'
-import { bucketByRegion, inR } from '../lib/sets'
+import { implicationReport, logicPredicateById } from '../lib/logic'
+import { bucketByRegion, complR, inR, type RegionSet } from '../lib/sets'
 import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { LogicPredicateSelect } from './LogicPredicateSelect'
 import { Tex } from './Tex'
 import { VennDiagram } from './VennDiagram'
 
-const IMP = connectiveRegions('imp')
-/** Inside A but outside B: the only region that can refute "if A then B". */
-const DANGER_REGION = 1 << 1
+/** Which statement about P and Q the diagram and the table are showing. */
+type Mode = 'imp' | 'conv' | 'iff'
+
+const MODES: readonly Mode[] = ['imp', 'conv', 'iff']
+
+/**
+ * The regions that refute each statement: P but not Q for the implication, Q
+ * but not P for the converse, and both for the equivalence — which is why
+ * "if and only if" is the two implications at once.
+ */
+const REFUTING: Record<Mode, RegionSet> = {
+  imp: 1 << 1,
+  conv: 1 << 2,
+  iff: (1 << 1) | (1 << 2),
+}
+
+const TEX: Record<Mode, string> = {
+  imp: 'P \\Rightarrow Q',
+  conv: 'Q \\Rightarrow P',
+  iff: 'P \\Leftrightarrow Q',
+}
+
+const SENTENCE_KEY: Record<Mode, string> = {
+  imp: 'logic.impSentence',
+  conv: 'logic.impConverseSentence',
+  iff: 'logic.iffSentence',
+}
 
 /**
  * Exercise: the converse of "if divisible by 6 then even". The distractors are
@@ -23,6 +47,7 @@ const TRUTH_ANSWER = 'false'
 
 export function LogicImplicationCard({ id }: { id: string }) {
   const { t } = useTranslation()
+  const [mode, setMode] = useState<Mode>('imp')
   const [pId, setPId] = useState('div6')
   const [qId, setQId] = useState('even')
   const [hovered, setHovered] = useState<number | null>(null)
@@ -34,39 +59,60 @@ export function LogicImplicationCard({ id }: { id: string }) {
   const report = implicationReport(p, q)
   const buckets = bucketByRegion([p, q])
   const values = { p: t(p.labelKey), q: t(q.labelKey) }
-  const verdict = (v: boolean) => t(v ? 'logic.true' : 'logic.false')
+
+  const holds = mode === 'imp' ? report.forward : mode === 'conv' ? report.converse : report.iff
+  const counters =
+    mode === 'imp'
+      ? report.counterForward
+      : mode === 'conv'
+        ? report.counterConverse
+        : [...report.counterForward, ...report.counterConverse].sort((a, b) => a - b)
+
+  const refuting = REFUTING[mode]
+  // Everything the refuting regions leave over is where the statement holds.
+  const trueRegions = complR(refuting, 2)
 
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('logic.impTitle')}</h2>
+        <h2>{t('logic.q4')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="logic.impIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="logic.impIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <Definition i18nKey="logic.impDef" />
-        <p className="card-note">
-          <Trans i18nKey="logic.impIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey={['logic.impDef', 'logic.impConverseDef']} />
       </div>
 
+      <div className="pill-row" role="group" aria-label={t('logic.impModeAria')}>
+        {MODES.map((m) => (
+          <button
+            key={m}
+            type="button"
+            className={mode === m ? 'pill active' : 'pill'}
+            aria-pressed={mode === m}
+            onClick={() => setMode(m)}
+          >
+            {t(`logic.impMode_${m}`)}
+          </button>
+        ))}
+      </div>
       <div className="controls-inline">
         <LogicPredicateSelect value={pId} onChange={setPId} labelKey="logic.impPickP" />
         <LogicPredicateSelect value={qId} onChange={setQId} labelKey="logic.impPickQ" />
       </div>
 
-      <Tex block tex="P \Rightarrow Q" />
-      <p className={`alias-verdict ${report.forward ? 'verdict-ok' : 'verdict-bad'}`}>
-        {t('logic.impSentence', values)} {verdict(report.forward)}
-        {report.forward ? ` ${t('logic.impHolds')}` : ` ${t('logic.impCounter', { list: report.counterForward.join(', ') })}`}
+      <Tex block tex={TEX[mode]} />
+      <p className="lin-result">
+        {t(SENTENCE_KEY[mode], values)} {t(holds ? 'logic.true' : 'logic.false')}
+        {holds ? ` ${t('logic.impHolds')}` : ` ${t('logic.impCounter', { list: counters.join(', ') })}`}
       </p>
 
       <div className="venn-row">
         <VennDiagram
           n={2}
-          shaded={DANGER_REGION}
+          shaded={refuting}
           elements={buckets}
           highlight={hovered}
           onHoverRegion={setHovered}
@@ -80,7 +126,7 @@ export function LogicImplicationCard({ id }: { id: string }) {
                 <th>P</th>
                 <th>Q</th>
                 <th>
-                  <Tex tex="P \Rightarrow Q" />
+                  <Tex tex={TEX[mode]} />
                 </th>
                 <th>{t('logic.connColElems')}</th>
               </tr>
@@ -95,7 +141,9 @@ export function LogicImplicationCard({ id }: { id: string }) {
                 >
                   <td>{t(sig & 1 ? 'logic.true' : 'logic.false')}</td>
                   <td>{t(sig & 2 ? 'logic.true' : 'logic.false')}</td>
-                  <td className={inR(IMP, sig) ? 'cell-ok' : 'cell-bad'}>{t(inR(IMP, sig) ? 'logic.true' : 'logic.false')}</td>
+                  <td className={inR(trueRegions, sig) ? 'cell-ok' : 'cell-bad'}>
+                    {t(inR(trueRegions, sig) ? 'logic.true' : 'logic.false')}
+                  </td>
                   <td>{buckets[sig].length ? buckets[sig].join(', ') : '–'}</td>
                 </tr>
               ))}
@@ -106,26 +154,7 @@ export function LogicImplicationCard({ id }: { id: string }) {
       </div>
 
       <p className="card-note lesson-text">
-        <Trans i18nKey="logic.impSetLink" components={{ b: <strong /> }} />
-      </p>
-      <Tex block tex="P \Rightarrow Q \;\longleftrightarrow\; A \subseteq B" />
-
-      <p className="mini-title">{t('logic.impConverseTitle')}</p>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="logic.impConverseIntro" components={{ b: <strong />, i: <em /> }} />
-      </p>
-      <Definition i18nKey="logic.impConverseDef" />
-      <Tex block tex="Q \Rightarrow P" />
-      <p className={`alias-verdict ${report.converse ? 'verdict-ok' : 'verdict-bad'}`}>
-        {t('logic.impConverseSentence', values)} {verdict(report.converse)}
-        {report.converse ? ` ${t('logic.impHolds')}` : ` ${t('logic.impCounter', { list: report.counterConverse.join(', ') })}`}
-      </p>
-      <Tex block tex="\neg Q \Rightarrow \neg P" />
-      <p className={`alias-verdict ${report.forward ? 'verdict-ok' : 'verdict-bad'}`}>
-        {t('logic.impContraSentence', values)} {verdict(report.forward)}
-      </p>
-      <p className="card-note lesson-text">
-        <Trans i18nKey="logic.impContraNote" components={{ b: <strong /> }} />
+        <Trans i18nKey="logic.impContraNote" components={{ b: <strong />, i: <em /> }} />
       </p>
 
       <Exercise

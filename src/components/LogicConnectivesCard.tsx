@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { applyConnective, connectiveRegions, idsWhere, logicPredicateById, type Connective } from '../lib/logic'
 import { bucketByRegion, inR, setsEqual } from '../lib/sets'
-import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { LogicPredicateSelect } from './LogicPredicateSelect'
 import { SetsElementGrid } from './SetsElementGrid'
@@ -17,15 +16,6 @@ const SYMBOL: Record<Connective, string> = {
   xor: '\\oplus',
   imp: '\\Rightarrow',
   iff: '\\Leftrightarrow',
-}
-
-/** The set operation each connective turns into on the diagram. */
-const SET_TEX: Record<Connective, string> = {
-  and: 'A \\cap B',
-  or: 'A \\cup B',
-  xor: '(A \\setminus B) \\cup (B \\setminus A)',
-  imp: '\\overline{A} \\cup B',
-  iff: '\\overline{(A \\setminus B) \\cup (B \\setminus A)}',
 }
 
 /** Exercise: even XOR divisible by 3. Six and twelve satisfy both, so they drop out. */
@@ -44,7 +34,6 @@ export function LogicConnectivesCard({ id }: { id: string }) {
   const pb = logicPredicateById(bId)
   const shaded = connectiveRegions(conn)
   const buckets = bucketByRegion([pa, pb])
-  const result = idsWhere((e) => applyConnective(conn, pa.test(e), pb.test(e)))
 
   const toggleAnswer = (elemId: number) => {
     const next = new Set(answer)
@@ -56,16 +45,12 @@ export function LogicConnectivesCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('logic.connTitle')}</h2>
+        <h2>{t('logic.q2')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="logic.connIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <Definition i18nKey={['logic.connDef1', 'logic.connDef2', 'logic.connDef3']} />
-        <p className="card-note">
-          <Trans i18nKey="logic.connIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="logic.connIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -87,7 +72,7 @@ export function LogicConnectivesCard({ id }: { id: string }) {
         ))}
       </div>
 
-      <p className="alias-verdict">{t(`logic.connSentence_${conn}`, { a: t(pa.labelKey), b: t(pb.labelKey) })}</p>
+      <p className="lin-result">{t(`logic.connSentence_${conn}`, { a: t(pa.labelKey), b: t(pb.labelKey) })}</p>
 
       <div className="venn-row">
         <VennDiagram
@@ -132,10 +117,8 @@ export function LogicConnectivesCard({ id }: { id: string }) {
       </div>
 
       <p className="card-note lesson-text">
-        <Trans i18nKey="logic.connSetLink" components={{ b: <strong /> }} />
+        <Trans i18nKey="logic.connOrNote" components={{ b: <strong />, i: <em /> }} />
       </p>
-      <Tex block tex={`A ${SYMBOL[conn]} B \\;\\longleftrightarrow\\; ${SET_TEX[conn]}`} />
-      <p className="card-note">{t('logic.connResult', { list: result.length ? result.join(', ') : '–' })}</p>
 
       <Exercise
         promptKey="logic.connTask"
