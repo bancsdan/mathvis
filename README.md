@@ -120,38 +120,29 @@ reusable parts worth knowing about:
   ordinary form controls, so the picture stays keyboard-operable.
 - [src/lib/](src/lib/) holds the pure logic, all unit tested: `sets.ts` and
   `venn.ts` (set operations and Venn geometry), `logic.ts` (truth tables,
-  quantifier and implication checks, the knights-and-knaves solver and the NIM
-  strategy), `combinatorics.ts` (counting, choice trees, the timetable
-  constraint solver, graph helpers and the number sieve) and `numbers.ts` (set
-  membership, long division, decimal to fraction, nested intervals, interval
-  notation, estimation and string-based rounding) and `powers.ts` (integer,
-  zero and negative exponents, the laws of powers as factor groups,
-  string-based normal form and arithmetic in it, square roots and their
-  neighbouring squares, and n-th roots with rational exponents) and
-  `algebra.ts` (terms and polynomials with one tex writer, collecting like
-  terms, the linear tracker behind the number tricks, monomial arithmetic, the
-  named identities with their mental-arithmetic forms, and completing the
-  square) and `proportion.ts` (direct and inverse proportion with the table
-  checks that tell them apart, the graph shapes, the unit ladders and the walk
-  between two rungs, the three percent questions, chained percentage changes,
-  the lines of a household bill, and compound interest against simple interest
-  and inflation) and `linear.ts` (sides and fractions so a root stays 3/2, the
-  balance moves that only exist when both pans can afford them, solution sets
-  over N, Z and Q, the inequality solver that records where the sign turns,
-  substitution and equal coefficients for a two-by-two system, and the
-  word-problem models behind meeting cars, joint work, mixtures and two bills)
-  and `quadratic.ts` (standard form and the step that loses a root, factoring
-  with the Viéta pair, completing the square as a run of steps that stops where
-  a square would have to be negative, the formula derived in letters and in
-  numbers at once, the four shapes a quadratic inequality's answer can take,
-  substitution with the u values no x can produce, and the two word-problem
-  models) and `functions.ts` (assignments between two finite sets and the first
-  node that stops them being a function or one-to-one, rules on a finite domain
-  with their table, range and preimages, the zeros, extremes and monotone runs
-  of a polyline graph, the linear function, the three elementary graphs with the
-  solution counts of f(x) = c, the transformation steps in the order they
-  happen, the inverse of a linear assignment, and the distance–time and fenced
-  rectangle models).
+  quantifier and implication checks and the NIM strategy), `combinatorics.ts`
+  (counting, choice trees and graph helpers), `numbers.ts` (set membership,
+  decimal to fraction, nested intervals, interval notation and the shared
+  decimal helpers), `powers.ts` (integer, zero and negative exponents, the laws
+  of powers as factor groups, string-based normal form, square roots and n-th
+  roots with rational exponents), `algebra.ts` (terms and polynomials with one
+  tex writer, the linear tracker behind the number tricks, the named identities
+  with their mental-arithmetic forms, and completing the square),
+  `proportion.ts` (direct and inverse proportion with the table checks that
+  tell them apart, the graph shapes, the three percent questions, chained
+  percentage changes, and compound interest against simple interest),
+  `linear.ts` (sides and fractions so a root stays 3/2, the balance moves that
+  only exist when both pans can afford them, the inequality solver that records
+  where the sign turns, substitution and equal coefficients for a two-by-two
+  system, and the word-problem models behind meeting cars, joint work and
+  mixtures), `quadratic.ts` (the step that loses a root, factoring from the
+  roots, the formula derived in letters and in numbers at once, the shapes a
+  quadratic inequality's answer can take, substitutions that reduce to a
+  quadratic, and the garden and ball models) and `functions.ts` (assignment
+  kinds with the node that spoils them, the zeros, extremes and monotone runs
+  of a polyline, the three elementary graphs with the solution counts of
+  f(x) = c, the transformation steps, the linear inverse and the trip and
+  fence models).
 
 The lessons share this kit rather than growing their own: the logic lesson puts
 the same twelve elements on a `VennDiagram` as the sets lesson, so "and" is
