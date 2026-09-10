@@ -104,17 +104,14 @@ export function SetsRelationsCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('sets.relTitle')}</h2>
+        <h2>{t('sets.q2')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="sets.relIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="sets.relIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <Definition i18nKey={['sets.relDef1', 'sets.relDef2']} />
-        <p className="card-note">
-          <Trans i18nKey="sets.relIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
+        <Definition i18nKey="sets.relDef" />
       </div>
 
       <div className="controls-inline">
@@ -148,7 +145,7 @@ export function SetsRelationsCard({ id }: { id: string }) {
             </div>
           </div>
           <Tex block tex={TEX[relation]} />
-          <p className="alias-verdict">{t(`sets.rel_${relation}`)}</p>
+          <p className="lin-result">{t(`sets.rel_${relation}`)}</p>
         </div>
       </div>
 

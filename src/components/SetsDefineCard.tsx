@@ -27,7 +27,7 @@ export function SetsDefineCard({ id }: { id: string }) {
   }
 
   // A set given by listing may also happen to be describable by a rule. Saying
-  // so is the whole point of the section.
+  // so is the whole point of the explorer.
   const matchingRule = useMemo(
     () => PREDICATES.find((p) => setsEqual(selectBy(p), picked)) ?? null,
     [picked],
@@ -38,17 +38,14 @@ export function SetsDefineCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('sets.defineTitle')}</h2>
+        <h2>{t('sets.q1')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="sets.defineIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="sets.defineIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
-        <p className="card-note">
-          <Trans i18nKey="sets.defineIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <Definition i18nKey={['sets.defineDef1', 'sets.defineDef2', 'sets.defineDef3']} />
+        <Definition i18nKey={['sets.defineDef1', 'sets.defineDef2']} />
       </div>
 
       <div className="controls-inline">
@@ -75,17 +72,19 @@ export function SetsDefineCard({ id }: { id: string }) {
       <p className="card-note">{t('sets.defineRosterLabel')}</p>
       <Tex block tex={`A = ${rosterTex([...picked])}`} />
 
-      {matchingRule ? (
+      {matchingRule && (
         <>
           <p className="card-note">{t('sets.defineRuleLabel')}</p>
           <Tex block tex={`A = \\{\\, x \\in U \\;:\\; \\text{${t(matchingRule.labelKey)}} \\,\\}`} />
         </>
-      ) : (
-        <p className="card-note lesson-text">{t('sets.defineNoRule')}</p>
       )}
 
-      <p className="card-note lesson-text">
-        <Trans i18nKey="sets.defineCardinality" values={{ size: picked.size }} components={{ b: <strong /> }} />
+      <p className="lin-result">
+        <Trans
+          i18nKey={matchingRule ? 'sets.defineResult' : 'sets.defineResultNone'}
+          values={{ size: picked.size }}
+          components={{ b: <strong /> }}
+        />
       </p>
 
       <Exercise

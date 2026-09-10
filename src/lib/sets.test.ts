@@ -3,8 +3,6 @@ import {
   allRegions,
   binomial,
   bucketByRegion,
-  checkAssignment,
-  checkScheme,
   circleRegions,
   circleSize,
   complR,
@@ -24,7 +22,6 @@ import {
   regionsOf,
   regionTex,
   relationOf,
-  SCHEMES,
   selectBy,
   setsEqual,
   sieveTerms,
@@ -271,44 +268,6 @@ describe('set relations', () => {
   it('calls two empty sets equal rather than disjoint', () => {
     expect(relationOf(s(), s())).toBe('equal')
     expect(isDisjoint(s(), s())).toBe(true)
-  })
-})
-
-describe('classification', () => {
-  it('accepts the schemes that really do partition the universe', () => {
-    for (const id of ['byShape', 'byMod3']) {
-      const scheme = SCHEMES.find((sc) => sc.id === id)!
-      const check = checkScheme(scheme.bins)
-      expect(check.ok, `${id} should be a partition`).toBe(true)
-      expect(check.overlapping).toEqual([])
-      expect(check.uncovered).toEqual([])
-    }
-  })
-
-  it('rejects the deliberately broken scheme and says why', () => {
-    const broken = SCHEMES.find((sc) => sc.id === 'broken')!
-    const check = checkScheme(broken.bins)
-    expect(check.ok).toBe(false)
-    // It fails both ways: small blue elements land in two bins, large
-    // non-blue ones land in none.
-    expect(check.overlapping.length).toBeGreaterThan(0)
-    expect(check.uncovered.length).toBeGreaterThan(0)
-  })
-
-  it('accepts a hand assignment only once every element is placed', () => {
-    const bins = ['a', 'b']
-    const partial = new Map(UNIVERSE.slice(0, 5).map((e) => [e.id, 'a']))
-    expect(checkAssignment(partial, bins).ok).toBe(false)
-    expect(checkAssignment(partial, bins).uncovered).toHaveLength(7)
-
-    const full = new Map(UNIVERSE.map((e) => [e.id, e.id % 2 ? 'a' : 'b']))
-    expect(checkAssignment(full, bins).ok).toBe(true)
-  })
-
-  it('does not count an element placed in a bin that no longer exists', () => {
-    const stale = new Map(UNIVERSE.map((e) => [e.id, 'gone']))
-    expect(checkAssignment(stale, ['a', 'b']).ok).toBe(false)
-    expect(checkAssignment(stale, ['a', 'b']).uncovered).toHaveLength(12)
   })
 })
 

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { MAPPINGS } from '../lib/sets'
-import { Definition } from './Definition'
 import { Exercise } from './Exercise'
 import { Tex } from './Tex'
 import { useWidth } from './useWidth'
@@ -99,16 +98,12 @@ export function SetsInfinityCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('sets.infTitle')}</h2>
+        <h2>{t('sets.q6')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="sets.infIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <Definition i18nKey="sets.infDef" />
-        <p className="card-note">
-          <Trans i18nKey="sets.infIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="sets.infIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -156,7 +151,7 @@ export function SetsInfinityCard({ id }: { id: string }) {
         </div>
       </div>
 
-      <p className="alias-verdict">
+      <p className="lin-result">
         <Trans i18nKey="sets.infParadox" components={{ b: <strong />, i: <em /> }} />
       </p>
 

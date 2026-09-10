@@ -887,36 +887,6 @@ p.card-note.lesson-text {
   margin: 6px 0;
 }
 
-.bin-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 10px 0;
-}
-
-.bin {
-  flex: 1 1 150px;
-  min-height: 84px;
-  border: 1px dashed var(--axis);
-  border-radius: 8px;
-  padding: 8px;
-  background: var(--page);
-}
-
-.bin.active {
-  border-color: var(--accent-select);
-  border-style: solid;
-}
-
-.bin-title {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-
 @media (max-width: 760px) {
   .venn-row {
     grid-template-columns: 1fr;

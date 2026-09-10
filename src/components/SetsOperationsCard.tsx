@@ -68,17 +68,14 @@ export function SetsOperationsCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('sets.opsTitle')}</h2>
+        <h2>{t('sets.q3')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="sets.opsIntro1" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="sets.opsIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
         <Definition i18nKey={['sets.opsDef1', 'sets.opsDef2', 'sets.opsDef3', 'sets.opsDef4']} />
-        <p className="card-note">
-          <Trans i18nKey="sets.opsIntro2" components={{ b: <strong />, i: <em /> }} />
-        </p>
       </div>
 
       <div className="controls-inline">
@@ -113,19 +110,20 @@ export function SetsOperationsCard({ id }: { id: string }) {
         onHoverRegion={setHovered}
       />
 
-      {freeDraw ? (
-        <>
-          <RegionPills n={n} value={painted} onToggle={toggleIn(painted, setPainted)} onHover={setHovered} />
-          {paintedName ? (
-            <p className="alias-verdict">
-              {t('sets.opsYouShaded')} <Tex tex={paintedName.tex} />
-            </p>
-          ) : (
-            <p className="alias-verdict">{t('sets.opsNoName')}</p>
-          )}
-        </>
+      {freeDraw && (
+        <RegionPills n={n} value={painted} onToggle={toggleIn(painted, setPainted)} onHover={setHovered} />
+      )}
+
+      {!freeDraw ? (
+        <p className="lin-result">
+          {t('sets.opsShowing')} <Tex tex={expr.tex} />
+        </p>
+      ) : paintedName ? (
+        <p className="lin-result">
+          {t('sets.opsYouShaded')} <Tex tex={paintedName.tex} />
+        </p>
       ) : (
-        <Tex block tex={expr.tex} />
+        <p className="lin-result">{t('sets.opsNoName')}</p>
       )}
 
       <Exercise

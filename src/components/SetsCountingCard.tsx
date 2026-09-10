@@ -47,15 +47,12 @@ export function SetsCountingCard({ id }: { id: string }) {
   return (
     <section className="card" id={id}>
       <div className="card-head">
-        <h2>{t('sets.countTitle')}</h2>
+        <h2>{t('sets.q5')}</h2>
       </div>
 
       <div className="lesson-text">
         <p className="card-note">
-          <Trans i18nKey="sets.countIntro1" components={{ b: <strong />, i: <em /> }} />
-        </p>
-        <p className="card-note">
-          <Trans i18nKey="sets.countIntro2" components={{ b: <strong />, i: <em /> }} />
+          <Trans i18nKey="sets.countIntro" components={{ b: <strong />, i: <em /> }} />
         </p>
       </div>
 
@@ -83,7 +80,6 @@ export function SetsCountingCard({ id }: { id: string }) {
 
       <VennDiagram n={n} shaded={0} counts={counts} badges={badges} height={300} />
 
-      <p className="card-note lesson-text">{t(depth === 0 ? 'sets.countStep0' : depth < n ? 'sets.countStepMid' : 'sets.countStepDone')}</p>
 
       <div className="table-wrap">
         <table className="paper-table">
@@ -115,7 +111,6 @@ export function SetsCountingCard({ id }: { id: string }) {
         </table>
       </div>
 
-      <p className="mini-title">{t('sets.countSieveTitle')}</p>
       <Tex
         block
         tex={
@@ -138,8 +133,8 @@ export function SetsCountingCard({ id }: { id: string }) {
           <span className="stat-value">{plain}</span>
         </div>
       </div>
-      <p className={`alias-verdict ${total === plain ? 'verdict-ok' : 'verdict-bad'}`}>
-        {t(total === plain ? 'sets.countEqual' : 'sets.countNotEqual')}
+      <p className="lin-result">
+        {t(depth === 0 ? 'sets.countStep0' : depth < n ? 'sets.countStepMid' : 'sets.countStepDone')}
       </p>
 
       <Exercise
