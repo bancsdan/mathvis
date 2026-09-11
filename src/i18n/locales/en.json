@@ -1228,6 +1228,18 @@
     "tocAria": "Sections of this lesson",
     "dragHint": "drag with the mouse or move with the arrow keys"
   },
+  "tri": {
+    "tocAria": "Sections of this lesson"
+  },
+  "poly": {
+    "tocAria": "Sections of this lesson"
+  },
+  "circ": {
+    "tocAria": "Sections of this lesson"
+  },
+  "trans": {
+    "tocAria": "Sections of this lesson"
+  },
   "ex": {
     "task": "Exercise",
     "check": "Check",

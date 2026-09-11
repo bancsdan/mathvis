@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import en from './i18n/locales/en.json'
 import hu from './i18n/locales/hu.json'
-import { findExplorer, parseHash, SECTIONS, type Topic } from './topics'
+import { findExplorer, hasLesson, parseHash, SECTIONS, type Topic } from './topics'
 
 type Bundle = Record<string, Record<string, string>>
 const BUNDLES: Array<[string, Bundle]> = [
@@ -24,6 +24,14 @@ const lookup = (bundle: Bundle, key: string) => {
 describe('the explorer registry', () => {
   it('gives every lesson a prefix', () => {
     for (const topic of LESSONS) expect(topic.prefix, topic.id).toBeTruthy()
+  })
+
+  // A lesson is scaffolded before it is written: the prefix and an empty list
+  // of explorers land first, and until the first card arrives the topic has
+  // nothing to read — the menu and the home page must still say so.
+  it('counts an empty explorer list as no lesson yet', () => {
+    for (const topic of LESSONS) expect(hasLesson(topic), topic.id).toBe(topic.explorers!.length > 0)
+    expect(hasLesson({ id: 'x', labelKey: 'topics.x', prefix: 'x', explorers: [] })).toBe(false)
   })
 
   it('keeps slugs unique inside a topic', () => {

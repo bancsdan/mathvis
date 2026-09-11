@@ -701,7 +701,12 @@ p.card-note.lesson-text {
 .card[id^='prop-'],
 .card[id^='lin-'],
 .card[id^='quad-'],
-.card[id^='fn-'] {
+.card[id^='fn-'],
+.card[id^='geo-'],
+.card[id^='tri-'],
+.card[id^='poly-'],
+.card[id^='circ-'],
+.card[id^='trans-'] {
   scroll-margin-top: 64px;
 }
 
@@ -1521,3 +1526,23 @@ p.card-note.lesson-text {
 .geo-muted {
   opacity: 0.45;
 }
+
+
+
+/* ---- geo ---- */
+
+
+
+/* ---- tri ---- */
+
+
+
+/* ---- poly ---- */
+
+
+
+/* ---- circ ---- */
+
+
+
+/* ---- trans ---- */

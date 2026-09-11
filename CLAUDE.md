@@ -46,7 +46,7 @@ React 19 + TypeScript + Vite. KaTeX for math, react-i18next for all copy, mathjs
 
 | Path | What it is |
 |---|---|
-| `src/topics.ts` | The only registry of sections, topics and the `Explorer` type. `parseHash` resolves a hash to `{ section, topic, explorer }`; `findTopic`, `findExplorer` and `hasLesson` go with it. |
+| `src/topics.ts` | The only registry of sections, topics and the `Explorer` type. `parseHash` resolves a hash to `{ section, topic, explorer }`; `findTopic`, `findExplorer` and `hasLesson` go with it. A topic being written carries its prefix and an empty `explorers` list: `hasLesson` is false until the first card lands, so the placeholder stays. |
 | `src/App.tsx` | Shell and routing. The hash is `#` (home), `#<topic>` or `#<topic>/<slug>`; anything unknown is home. After a lesson mounts it scrolls to `${prefix}-${slug}`. |
 | `src/lessons/<prefix>.ts` | One per lesson: the ordered `Explorer[]` (`FN_EXPLORERS`), each entry naming a card, its `navKey` (short nav label) and its `questionKey` (the `h2` and the home card). |
 | `src/components/LessonPage.tsx` | The one generic lesson page: sticky `section-nav` plus one card per explorer, whose DOM id is `<prefix>-<slug>`. |

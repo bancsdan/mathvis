@@ -1228,6 +1228,18 @@
     "tocAria": "A lecke szakaszai",
     "dragHint": "húzd az egérrel vagy mozgasd a nyilakkal"
   },
+  "tri": {
+    "tocAria": "A lecke szakaszai"
+  },
+  "poly": {
+    "tocAria": "A lecke szakaszai"
+  },
+  "circ": {
+    "tocAria": "A lecke szakaszai"
+  },
+  "trans": {
+    "tocAria": "A lecke szakaszai"
+  },
   "ex": {
     "task": "Feladat",
     "check": "Ellenőrzés",

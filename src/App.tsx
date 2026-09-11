@@ -4,7 +4,7 @@ import { ComingSoonPage } from './components/ComingSoonPage'
 import { HomePage } from './components/HomePage'
 import { LessonPage } from './components/LessonPage'
 import { Sidebar } from './components/Sidebar'
-import { parseHash } from './topics'
+import { hasLesson, parseHash } from './topics'
 
 const LANGS = ['hu', 'en'] as const
 
@@ -86,14 +86,16 @@ export default function App() {
           onHome={goHome}
         />
         <main className="page" key={topic?.id ?? 'home'}>
+          {/* A topic being written carries an empty explorer list: it is
+              scaffolding, so the placeholder stays until the first card lands. */}
           {!topic ? (
             <HomePage />
-          ) : topic.explorers ? (
-            <LessonPage topic={topic} />
+          ) : !hasLesson(topic) ? (
+            <ComingSoonPage titleKey={topic.labelKey} />
           ) : topic.page ? (
             <topic.page />
           ) : (
-            <ComingSoonPage titleKey={topic.labelKey} />
+            <LessonPage topic={topic} />
           )}
         </main>
       </div>

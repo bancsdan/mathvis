@@ -3,15 +3,20 @@ import { DerivativePage } from './components/DerivativePage'
 import { FftPage } from './components/FftPage'
 import { IntegralPage } from './components/IntegralPage'
 import { ALG_EXPLORERS } from './lessons/alg'
+import { CIRC_EXPLORERS } from './lessons/circ'
 import { COMBI_EXPLORERS } from './lessons/combi'
 import { FN_EXPLORERS } from './lessons/fn'
+import { GEO_EXPLORERS } from './lessons/geo'
 import { LIN_EXPLORERS } from './lessons/lin'
 import { LOGIC_EXPLORERS } from './lessons/logic'
 import { NUM_EXPLORERS } from './lessons/num'
+import { POLY_EXPLORERS } from './lessons/poly'
 import { POW_EXPLORERS } from './lessons/pow'
 import { PROP_EXPLORERS } from './lessons/prop'
 import { QUAD_EXPLORERS } from './lessons/quad'
 import { SETS_EXPLORERS } from './lessons/sets'
+import { TRANS_EXPLORERS } from './lessons/trans'
+import { TRI_EXPLORERS } from './lessons/tri'
 
 export type SectionId = 'highschool' | 'university'
 
@@ -100,11 +105,21 @@ export const SECTIONS: Section[] = [
         explorers: QUAD_EXPLORERS,
       },
       { id: 'functions', labelKey: 'topics.functions', prefix: 'fn', explorers: FN_EXPLORERS },
-      { id: 'geometry-basics', labelKey: 'topics.geometryBasics' },
-      { id: 'triangles', labelKey: 'topics.triangles' },
-      { id: 'polygons', labelKey: 'topics.polygons' },
-      { id: 'circle', labelKey: 'topics.circle' },
-      { id: 'transformations', labelKey: 'topics.transformations' },
+      {
+        id: 'geometry-basics',
+        labelKey: 'topics.geometryBasics',
+        prefix: 'geo',
+        explorers: GEO_EXPLORERS,
+      },
+      { id: 'triangles', labelKey: 'topics.triangles', prefix: 'tri', explorers: TRI_EXPLORERS },
+      { id: 'polygons', labelKey: 'topics.polygons', prefix: 'poly', explorers: POLY_EXPLORERS },
+      { id: 'circle', labelKey: 'topics.circle', prefix: 'circ', explorers: CIRC_EXPLORERS },
+      {
+        id: 'transformations',
+        labelKey: 'topics.transformations',
+        prefix: 'trans',
+        explorers: TRANS_EXPLORERS,
+      },
       { id: 'statistics', labelKey: 'topics.statistics' },
       { id: 'probability', labelKey: 'topics.probability' },
     ],
@@ -124,9 +139,15 @@ export const SECTIONS: Section[] = [
 // main audience.
 export const DEFAULT_TOPIC_ID = 'sets'
 
-/** Whether the topic has anything to read yet, or only the placeholder. */
+/**
+ * Whether the topic has anything to read yet, or only the placeholder.
+ *
+ * A lesson being written already carries its prefix and its (still empty) list
+ * of explorers, so that its cards can be added one at a time without touching
+ * this file: an empty list is scaffolding, not a lesson.
+ */
 export function hasLesson(topic: Topic): boolean {
-  return topic.page !== undefined || topic.explorers !== undefined
+  return topic.page !== undefined || (topic.explorers?.length ?? 0) > 0
 }
 
 export function findTopic(id: string): { section: Section; topic: Topic } | null {

@@ -22,7 +22,7 @@ export function HomePage() {
         return (
           <div key={section.id} className="home-section">
             {section.topics
-              .filter((topic) => topic.explorers)
+              .filter((topic) => hasLesson(topic) && topic.explorers)
               .map((topic) => (
                 <div key={topic.id} className="home-group">
                   <h3>{t(topic.labelKey)}</h3>
