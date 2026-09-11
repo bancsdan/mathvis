@@ -1224,6 +1224,10 @@
     "modelAnswerLabel": "The area (m²)",
     "modelHint": "The top of the parabola is halfway between its two zeros, 0 and 10."
   },
+  "geo": {
+    "tocAria": "Sections of this lesson",
+    "dragHint": "drag with the mouse or move with the arrow keys"
+  },
   "ex": {
     "task": "Exercise",
     "check": "Check",

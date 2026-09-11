@@ -118,6 +118,11 @@ reusable parts worth knowing about:
   columns of labelled nodes with arrows between them, and tints the one node
   that spoils the property being tested. It only draws: the arrows are edited in
   ordinary form controls, so the picture stays keyboard-operable.
+- [GeoFigure.tsx](src/components/GeoFigure.tsx) is the figure every geometry
+  lesson draws with: a world box in math units with y up, a `Draw` kit of
+  segments, lines, rays, polygons, circles, arcs, angle marks, labels,
+  measurements and vectors, and points the reader drags with the pointer or
+  nudges with the arrow keys.
 - [src/lib/](src/lib/) holds the pure logic, all unit tested: `sets.ts` and
   `venn.ts` (set operations and Venn geometry), `logic.ts` (truth tables and
   quantifier and implication checks), `combinatorics.ts` (counting, choice
@@ -141,7 +146,9 @@ reusable parts worth knowing about:
   kinds with the node that spoils them, the zeros, extremes and monotone runs
   of a polyline, the three elementary graphs with the solution counts of
   f(x) = c, the transformation steps, the linear inverse and the trip and
-  fence models).
+  fence models), and `geometry.ts` (vectors and angles in degrees, the four
+  transformations, the notable points of a triangle, areas and convexity, the
+  circle's arc, sector and tangent points — all in math coordinates with y up).
 
 The lessons share this kit rather than growing their own: the logic lesson puts
 the same twelve elements on a `VennDiagram` as the sets lesson, so "and" is

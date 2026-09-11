@@ -1224,6 +1224,10 @@
     "modelAnswerLabel": "A terület (m²)",
     "modelHint": "A parabola legmagasabb pontja a két zérushelye, a 0 és a 10 között félúton van."
   },
+  "geo": {
+    "tocAria": "A lecke szakaszai",
+    "dragHint": "húzd az egérrel vagy mozgasd a nyilakkal"
+  },
   "ex": {
     "task": "Feladat",
     "check": "Ellenőrzés",

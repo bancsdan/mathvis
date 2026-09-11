@@ -1487,3 +1487,37 @@ p.card-note.lesson-text {
 .nav-home.active {
   border-color: var(--series-1);
 }
+
+
+/* --- the geometry kit -------------------------------------------------- */
+
+/* A point the reader can take hold of. `touch-action` keeps a finger drag from
+   scrolling the page instead of moving the point. */
+.geo-point {
+  cursor: grab;
+  touch-action: none;
+}
+
+.geo-point:active {
+  cursor: grabbing;
+}
+
+.geo-point:focus {
+  outline: none;
+}
+
+.geo-point:focus-visible {
+  outline: 2px solid var(--accent-select);
+  outline-offset: 2px;
+}
+
+/* Every caption inside a figure: plain Unicode, since KaTeX cannot go in an
+   SVG. */
+.geo-label {
+  font-size: 12px;
+}
+
+/* Scaffolding behind the subject of the figure. */
+.geo-muted {
+  opacity: 0.45;
+}
