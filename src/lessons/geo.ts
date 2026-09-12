@@ -1,3 +1,7 @@
+import { GeoAnglesCard } from '../components/GeoAnglesCard'
+import { GeoBisectorCard } from '../components/GeoBisectorCard'
+import { GeoConstructCard } from '../components/GeoConstructCard'
+import { GeoDistanceCard } from '../components/GeoDistanceCard'
 import type { Explorer } from '../topics'
 
 /**
@@ -5,8 +9,10 @@ import type { Explorer } from '../topics'
  * make, why the perpendicular is the distance to a line, the two loci that
  * turn "equally far" into a line, and what a compass-and-ruler construction is
  * really doing.
- *
- * Empty until the lesson is written: an empty list is not a lesson yet, so the
- * topic still shows the placeholder and the home grid skips it.
  */
-export const GEO_EXPLORERS: Explorer[] = []
+export const GEO_EXPLORERS: Explorer[] = [
+  { id: 'angles', navKey: 'geo.nav1', questionKey: 'geo.q1', Card: GeoAnglesCard },
+  { id: 'distance', navKey: 'geo.nav2', questionKey: 'geo.q2', Card: GeoDistanceCard },
+  { id: 'bisector', navKey: 'geo.nav3', questionKey: 'geo.q3', Card: GeoBisectorCard },
+  { id: 'construct', navKey: 'geo.nav4', questionKey: 'geo.q4', Card: GeoConstructCard },
+]
