@@ -40,11 +40,11 @@ Follows the topic overview table of the Hungarian framework curriculum.
 | Elsőfokú egyenletek, egyenlőtlenségek, egyenletrendszerek | Linear equations, inequalities, systems | [✅ open](https://bancsdan.github.io/mathvis/#linear-equations) |
 | Másodfokú egyenletek, egyenlőtlenségek | Quadratic equations, inequalities | [✅ open](https://bancsdan.github.io/mathvis/#quadratic-equations) |
 | A függvény fogalma, függvénytulajdonságok | Functions and their properties | [✅ open](https://bancsdan.github.io/mathvis/#functions) |
-| Geometriai alapismeretek | Geometry basics | soon |
-| Háromszögek | Triangles | soon |
-| Négyszögek, sokszögek | Quadrilaterals, polygons | soon |
-| A kör és részei | The circle and its parts | soon |
-| Transzformációk, szerkesztések | Transformations, constructions | soon |
+| Geometriai alapismeretek | Geometry basics | [✅ open](https://bancsdan.github.io/mathvis/#geometry-basics) |
+| Háromszögek | Triangles | [✅ open](https://bancsdan.github.io/mathvis/#triangles) |
+| Négyszögek, sokszögek | Quadrilaterals, polygons | [✅ open](https://bancsdan.github.io/mathvis/#polygons) |
+| A kör és részei | The circle and its parts | [✅ open](https://bancsdan.github.io/mathvis/#circle) |
+| Transzformációk, szerkesztések | Transformations, constructions | [✅ open](https://bancsdan.github.io/mathvis/#transformations) |
 | Leíró statisztika | Descriptive statistics | soon |
 | Valószínűség-számítás | Probability | soon |
 
