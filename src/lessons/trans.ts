@@ -1,3 +1,7 @@
+import { TransComposeCard } from '../components/TransComposeCard'
+import { TransCongruentCard } from '../components/TransCongruentCard'
+import { TransReflectCard } from '../components/TransReflectCard'
+import { TransSimilarCard } from '../components/TransSimilarCard'
 import type { Explorer } from '../topics'
 
 /**
@@ -5,8 +9,10 @@ import type { Explorer } from '../topics'
  * round, two reflections composing into a rotation or a translation, the three
  * data that pin a triangle down, and why doubling the sides quadruples the
  * area.
- *
- * Empty until the lesson is written: an empty list is not a lesson yet, so the
- * topic still shows the placeholder and the home grid skips it.
  */
-export const TRANS_EXPLORERS: Explorer[] = []
+export const TRANS_EXPLORERS: Explorer[] = [
+  { id: 'reflect', navKey: 'trans.nav1', questionKey: 'trans.q1', Card: TransReflectCard },
+  { id: 'compose', navKey: 'trans.nav2', questionKey: 'trans.q2', Card: TransComposeCard },
+  { id: 'congruent', navKey: 'trans.nav3', questionKey: 'trans.q3', Card: TransCongruentCard },
+  { id: 'similar', navKey: 'trans.nav4', questionKey: 'trans.q4', Card: TransSimilarCard },
+]
